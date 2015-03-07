@@ -1,0 +1,125 @@
+repositories {
+	mavenCentral()
+}
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+}
+
+apply plugin: 'java'
+project.sourceCompatibility = '1.8'
+project.targetCompatibility = '1.8'
+
+jar {
+	baseName = 'sorm'
+	group = "name.valery1707.megatel"
+	version = '0.1.0-SNAPSHOT'
+}
+
+apply plugin: 'application'
+applicationName = project.name
+
+buildscript {
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.3.RELEASE")
+	}
+}
+apply plugin: 'spring-boot'
+//http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-customize-dependency-versions
+ext['jetty.version'] = '9.3.7.v20160115'
+
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+jacoco {
+	toolVersion = "0.7.6.201602180812"
+}
+buildscript {
+	dependencies {
+		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
+	}
+}
+jacocoTestReport {
+	reports {
+		xml.enabled = true // coveralls plugin depends on xml format report
+		html.enabled = true
+	}
+}
+
+dependencies {
+	//Logging
+	compile "org.slf4j:slf4j-api:1.7.18"
+	runtime "org.slf4j:jcl-over-slf4j:1.7.18"
+	runtime 'ch.qos.logback:logback-classic:1.1.6'
+
+	//Apache commons
+	compile 'org.apache.commons:commons-lang3:3.4'
+
+	//Spring
+	compile "org.springframework:spring-context:4.2.5.RELEASE"
+	compile "org.springframework:spring-webmvc:4.2.5.RELEASE"
+	compile "org.springframework.boot:spring-boot:1.3.3.RELEASE"
+	compile "org.springframework.boot:spring-boot-autoconfigure:1.3.3.RELEASE"
+
+	//Spring security
+	compile "org.springframework.security:spring-security-config:4.0.4.RELEASE"
+	compile "org.springframework.security:spring-security-web:4.0.4.RELEASE"
+	compile 'org.aspectj:aspectjweaver:1.8.8'
+
+	//Database integration
+	compile "org.springframework:spring-jdbc:4.2.5.RELEASE"
+	compile "org.springframework:spring-tx:4.2.5.RELEASE"
+	compile "org.springframework:spring-orm:4.2.5.RELEASE"
+	compile "org.springframework.data:spring-data-jpa:1.9.4.RELEASE"
+	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+	compile 'org.hibernate:hibernate-core:5.1.0.Final'
+	compile 'org.hibernate:hibernate-entitymanager:5.1.0.Final'
+	compile 'org.hibernate:hibernate-java8:5.1.0.Final'
+	compile 'javax.transaction:javax.transaction-api:1.2'
+
+	//JSON parse library
+	compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.2'
+	compile 'com.fasterxml.jackson.core:jackson-core:2.7.2'
+	compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
+	compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.2'
+
+	//Servlet container
+	compile 'javax.servlet:javax.servlet-api:3.1.0'
+	runtime 'org.eclipse.jetty:jetty-webapp:9.3.7.v20160115'
+
+	//JDBC driver (and implicit in-memory database server)
+	runtime 'com.h2database:h2:1.4.191'
+	//JDBC Connection pooling
+	compile 'org.apache.tomcat:tomcat-jdbc:8.0.32'
+
+	//Database migration tool
+	compile 'org.flywaydb:flyway-core:3.2.1'
+
+	//Useful annotations
+	compile 'com.google.code.findbugs:jsr305:3.0.1'
+	compile 'org.jetbrains:annotations:15.0'
+	compile 'javax.inject:javax.inject:1'
+
+	//Validation
+	compile 'javax.validation:validation-api:1.1.0.Final'
+	compile 'org.hibernate:hibernate-validator:5.2.4.Final'
+	compile 'javax.el:javax.el-api:3.0.0'
+
+	//Testing
+	testCompile "junit:junit:4.+"
+	testCompile "org.mockito:mockito-core:1.10.19"
+	testCompile "org.hamcrest:hamcrest-core:1.3"
+	testCompile "org.hamcrest:hamcrest-library:1.3"
+	testCompile "org.springframework:spring-test:4.2.5.RELEASE"
+	testCompile "org.springframework.security:spring-security-test:4.0.4.RELEASE"
+	testCompile "com.jayway.jsonpath:json-path:2.2.0"
+	testCompile "com.jayway.jsonpath:json-path-assert:2.2.0"
+	testCompile "org.assertj:assertj-core:3.3.0"
+}
+configurations {
+	all*.exclude group: 'commons-logging'
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = "2.11"
+}
