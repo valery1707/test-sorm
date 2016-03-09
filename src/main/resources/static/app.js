@@ -27,11 +27,11 @@ controller('dataCtrl', ['$scope', 'dataService', function ($scope, service) {
 		//console.log(tableState);
 
 		var pagination = tableState.pagination;
+		var pageStartItemIndex = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
+		var pageSize = pagination.number || 10;  // Number of entries showed per page.
+		var pageIndex = pageStartItemIndex / pageSize;
 
-		var start = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
-		var number = pagination.number || 10;  // Number of entries showed per page.
-
-		service.query(function (data) {
+		service.query({size: pageSize, page: pageIndex}, function (data) {
 			//console.log(data);
 			$scope.displayed = data.content;
 			//set the number of pages so the pagination can update
