@@ -1,6 +1,6 @@
 'use strict';
 
-var apiBaseUrl = 'http://localhost:8080';
+var apiBaseUrl = '';
 
 // Declare app level module which depends on views, and components
 angular.module('app', [
