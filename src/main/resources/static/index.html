@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="javadocBadgeApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="javadocBadgeApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="javadocBadgeApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="javadocBadgeApp" class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html lang="en" ng-app="app" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="app" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="app" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="app" class="no-js"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,6 +23,9 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
+    <!--Table: Smart Table-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-smart-table/2.1.7/smart-table.min.js"></script>
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -41,6 +44,46 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
 
-Тут будет табличка с данными и фильтр к ней
+  <div class="row" ng-controller="dataCtrl">
+      <div class="col-lg-6 col-lg-offset-3 col-sm-10 col-sm-offset-1">
+          <table class="table table-striped" st-table="displayed" st-pipe="callServer">
+              <thead>
+              <tr>
+                  <th rowspan="2" st-sort="dateTime">Время</th>
+                  <th rowspan="2" st-sort="protocol">Протокол</th>
+                  <th colspan="2">Source</th>
+                  <th colspan="2">Destination</th>
+              </tr>
+              <tr>
+                  <th st-sort="srcIp">IP</th>
+                  <th st-sort="srcPort">Port</th>
+                  <th st-sort="dstIp">IP</th>
+                  <th st-sort="dstPort">Port</th>
+              </tr>
+              </thead>
+              <tbody ng-show="!isLoading">
+              <tr ng-repeat="row in displayed">
+                  <td>{{row.dateTime}}</td>
+                  <td>{{row.protocol}}</td>
+                  <td>{{row.srcIp}}</td>
+                  <td>{{row.srcPort}}</td>
+                  <td>{{row.dstIp}}</td>
+                  <td>{{row.dstPort}}</td>
+              </tr>
+              </tbody>
+              <tbody ng-show="isLoading">
+              <tr>
+                  <td colspan="6" class="text-center">Loading ...</td>
+              </tr>
+              </tbody>
+              <tfoot>
+              <tr>
+                  <td class="text-center" st-pagination="" st-items-by-page="20" colspan="6"></td>
+              </tr>
+              </tfoot>
+          </table>
+      </div>
+  </div>
+
 </body>
 </html>
