@@ -60,6 +60,10 @@
                   <th st-sort="dstIp">IP</th>
                   <th st-sort="dstPort">Port</th>
               </tr>
+              <tr>
+                  <th></th>
+                  <th><input st-search="protocol"/></th>
+              </tr>
               </thead>
               <tbody ng-show="!isLoading">
               <tr ng-repeat="row in displayed">
@@ -74,6 +78,11 @@
               <tbody ng-show="isLoading">
               <tr>
                   <td colspan="6" class="text-center">Loading ...</td>
+              </tr>
+              </tbody>
+              <tbody ng-show="displayed.length <= 0">
+              <tr>
+                  <td colspan="6" class="text-center">Empty data</td>
               </tr>
               </tbody>
               <tfoot>

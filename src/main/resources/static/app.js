@@ -16,6 +16,11 @@ factory('dataService', ['$resource', function ($resource) {
 			params: {},
 			isArray: false,
 			cache: false
+		},
+		filter: {
+			method: 'POST',
+			isArray: false,
+			cache: false
 		}
 	});
 }]).
@@ -24,14 +29,14 @@ controller('dataCtrl', ['$scope', 'dataService', function ($scope, service) {
 	$scope.callServer = function (tableState) {
 		$scope.isLoading = true;
 
-		//console.log(tableState);
+		console.log(tableState);
 
 		var pagination = tableState.pagination;
 		var pageStartItemIndex = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
 		var pageSize = pagination.number || 10;  // Number of entries showed per page.
 		var pageIndex = pageStartItemIndex / pageSize;
 
-		service.query({size: pageSize, page: pageIndex}, function (data) {
+		service.filter({size: pageSize, page: pageIndex}, tableState.search.predicateObject, function (data) {
 			//console.log(data);
 			$scope.displayed = data.content;
 			//set the number of pages so the pagination can update
