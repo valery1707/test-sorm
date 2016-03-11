@@ -7,6 +7,8 @@ angular.module('app', [
 	'ngRoute',
 	'ngResource'
 	, 'smart-table'
+	, 'ghiscoding.validation'
+	, 'pascalprecht.translate'
 ]).
 
 factory('dataService', ['$resource', function ($resource) {
@@ -25,11 +27,12 @@ factory('dataService', ['$resource', function ($resource) {
 	});
 }]).
 controller('dataCtrl', ['$scope', 'dataService', function ($scope, service) {
+	$scope.filterModel = {};
 	$scope.displayed = [];
 	$scope.callServer = function (tableState) {
 		$scope.isLoading = true;
 
-		console.log(tableState);
+		//console.log(tableState);
 
 		var pagination = tableState.pagination;
 		var pageStartItemIndex = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.

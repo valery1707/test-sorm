@@ -33,6 +33,13 @@
     <script src="//cdn.jsdelivr.net/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <!--https://github.com/angular-translate/angular-translate-->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-translate/2.10.0/angular-translate.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-translate-loader-static-files/2.10.0/angular-translate-loader-static-files.min.js"></script>
+
+    <!--https://github.com/ghiscoding/angular-validation-->
+    <script src="//cdn.rawgit.com/ghiscoding/angular-validation/v1.5.1/dist/angular-validation.min.js"></script>
+
     <base href="/"/>
     <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
 
@@ -63,6 +70,9 @@
               <tr>
                   <th></th>
                   <th><input st-search="protocol"/></th>
+                  <th><input type="text" name="srcIp" st-search="srcIp" ng-model="filterModel.srcIp" validation="ipv4"/></th>
+                  <th></th>
+                  <th><input type="text" name="dstIp" st-search="dstIp" ng-model="filterModel.dstIp" validation="ipv4"/></th>
               </tr>
               </thead>
               <tbody ng-show="!isLoading">
@@ -101,10 +111,6 @@
               <div class="panel-body">
                   <h4>В рамках демо</h4>
                   <ul>
-                      <li>Фильтр по IP: <ul>
-                          <li>простой</li>
-                          <li>с учётом маски подсети</li>
-                      </ul></li>
                       <li>Фильтр по порту: <ul>
                           <li>С условиями: <code>&lt;</code>, <code>=</code>, <code>&gt;</code></li>
                           <li>Дапазон: через <code>..</code></li>
@@ -112,6 +118,7 @@
                       </ul></li>
                       <li>Фильтр по дате</li>
                       <li>Улучшить пагинацию: отображать больше данных по страницам</li>
+                      <li>Сортировка по столбцам</li>
                   </ul>
                   <h4>В полноценной версии</h4>
                   <ul>
@@ -119,8 +126,9 @@
                       <li>Создание пользователей</li>
                       <li>Права пользователей</li>
                       <li>Нормальный внешний вид</li>
+                      <li>Валидация фильтров перед их преминением</li>
                   </ul>
-                  Затрачено чистого времени на данный момент: 5.41 часа
+                  Затрачено чистого времени на данный момент: 6.49 часа
               </div>
           </div>
       </div>

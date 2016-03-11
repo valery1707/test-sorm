@@ -1,5 +1,7 @@
 package name.valery1707.megatel.sorm;
 
+import org.apache.commons.net.util.SubnetUtils;
+
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -42,5 +44,20 @@ public final class IpUtils {
 			integer = integer.add(BigInteger.valueOf(l));
 		}
 		return integer;
+	}
+
+	public static SubnetUtils buildSubnet(String src) {
+		try {
+			SubnetUtils utils;
+			if (src.contains("/")) {
+				utils = new SubnetUtils(src);
+			} else {
+				utils = new SubnetUtils(src + "/32");
+			}
+			utils.setInclusiveHostCount(true);
+			return utils;
+		} catch (IllegalArgumentException ex) {
+			return null;
+		}
 	}
 }
