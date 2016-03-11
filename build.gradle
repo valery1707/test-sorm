@@ -120,6 +120,10 @@ configurations {
 	all*.exclude group: 'commons-logging'
 }
 
+task stage {
+	dependsOn build
+}
+
 task wrapper(type: Wrapper) {
 	gradleVersion = "2.11"
 }
