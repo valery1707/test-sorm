@@ -69,10 +69,10 @@
               </tr>
               <tr>
                   <th></th>
-                  <th><input st-search="protocol"/></th>
-                  <th><input type="text" name="srcIp" st-search="srcIp" ng-model="filterModel.srcIp" validation="ipv4"/></th>
+                  <th><input st-search="protocol" class="form-control"/></th>
+                  <th><input type="text" name="srcIp" st-search="srcIp" ng-model="filterModel.srcIp" validation="ipv4" placeholder="IP/CIRD" class="form-control"/></th>
                   <th></th>
-                  <th><input type="text" name="dstIp" st-search="dstIp" ng-model="filterModel.dstIp" validation="ipv4"/></th>
+                  <th><input type="text" name="dstIp" st-search="dstIp" ng-model="filterModel.dstIp" validation="ipv4" placeholder="IP/CIRD" class="form-control"/></th>
               </tr>
               </thead>
               <tbody ng-show="!isLoading">
