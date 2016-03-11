@@ -47,7 +47,7 @@ public class DataController {
 
 					if (filter.getProtocol() != null) {
 						predicates.add(
-								cb.equal(cb.lower(root.get("protocol")), filter.getProtocol().toLowerCase())
+								cb.like(cb.lower(root.get("protocol")), "%" + filter.getProtocol().toLowerCase() + "%")
 						);
 					}
 
