@@ -1,0 +1,6 @@
+{
+  "name": "Megatel SORM",
+  "description": "Megatel SORM app deployed to Heroku.",
+  "image": "heroku/gradle",
+  "addons": [ ]
+}
