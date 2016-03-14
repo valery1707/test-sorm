@@ -38,7 +38,7 @@ public class DataController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public Page<DataDto> findByFilter(
-			@PageableDefault(size = 20) @SortDefault("dateTime,ASC") Pageable pageable,
+			@PageableDefault(size = 20) @SortDefault("dateTime") Pageable pageable,
 			@RequestBody(required = false) DataDto filter
 	) {
 		Specification<Data> spec = null;
