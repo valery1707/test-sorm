@@ -41,13 +41,15 @@ controller('dataCtrl', ['$scope', 'dataService', 'uiGridConstants', function ($s
 		paginationPageSize: 25,
 		useExternalPagination: true,
 		useExternalSorting: true,
+		enableFiltering: true,
+		useExternalFiltering: true,
 		columnDefs: [
-			{field: 'dateTime', sort: {direction: uiGridConstants.ASC, priority: 0}},
+			{field: 'dateTime', sort: {direction: uiGridConstants.ASC, priority: 0}, enableFiltering: false},
 			{field: 'protocol'},
-			{field: 'srcIp'},
-			{field: 'srcPort'},
-			{field: 'dstIp'},
-			{field: 'dstPort'},
+			{field: 'srcIp', filter: {placeholder: 'IP/CIDR'}},
+			{field: 'srcPort', enableFiltering: false},
+			{field: 'dstIp', filter: {placeholder: 'IP/CIDR'}},
+			{field: 'dstPort', enableFiltering: false},
 		],
 		onRegisterApi: function(gridApi) {
 			$scope.gridApi = gridApi;
@@ -68,6 +70,15 @@ controller('dataCtrl', ['$scope', 'dataService', 'uiGridConstants', function ($s
 				paginationOptions.pageSize = pageSize;
 				getPage();
 			});
+			$scope.gridApi.core.on.filterChanged($scope, function () {
+				var grid = this.grid;
+				for (var i = 0; i < grid.columns.length; i++) {
+					var col = grid.columns[i];
+					var term = col.filters[0].term;
+					$scope.filterModel[col.field] = term;
+				}
+				getPage();
+			});
 		}
 	};
 
@@ -80,7 +91,7 @@ controller('dataCtrl', ['$scope', 'dataService', 'uiGridConstants', function ($s
 			sort: paginationOptions.sort
 		};
 
-		service.filter(pageable, null, function (data) {
+		service.filter(pageable, $scope.filterModel, function (data) {
 			//console.log(data);
 			$scope.gridOptions.totalItems = data.totalElements;
 			$scope.gridOptions.data = data.content;
