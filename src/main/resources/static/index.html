@@ -15,6 +15,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-resource.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-mocks.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-touch.min.js"></script>
 
     <!--jQuery-->
     <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
@@ -23,8 +24,12 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-    <!--Table: Smart Table-->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-smart-table/2.1.7/smart-table.min.js"></script>
+    <!--Table: UI Grid http://ui-grid.info/-->
+    <script src="//ui-grid.info/docs/grunt-scripts/csv.js"></script>
+    <script src="//ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>
+    <script src="//ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+    <script src="//ui-grid.info/release/ui-grid.min.js"></script>
+    <link rel="stylesheet" href="//ui-grid.info/release/ui-grid.min.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -61,54 +66,7 @@
 
   <div class="row" ng-controller="dataCtrl">
       <div class="col-lg-6 col-lg-offset-3 col-sm-10 col-sm-offset-1">
-          <table class="table table-striped" st-table="displayed" st-pipe="callServer">
-              <thead>
-              <tr>
-                  <th rowspan="2" st-sort="dateTime">Время</th>
-                  <th rowspan="2" st-sort="protocol">Протокол</th>
-                  <th colspan="2">Source</th>
-                  <th colspan="2">Destination</th>
-              </tr>
-              <tr>
-                  <th st-sort="srcIp">IP</th>
-                  <th st-sort="srcPort">Port</th>
-                  <th st-sort="dstIp">IP</th>
-                  <th st-sort="dstPort">Port</th>
-              </tr>
-              <tr>
-                  <th></th>
-                  <th><input st-search="protocol" class="form-control"/></th>
-                  <th><input type="text" name="srcIp" st-search="srcIp" ng-model="filterModel.srcIp" validation="ipv4" placeholder="IP/CIRD" class="form-control"/></th>
-                  <th></th>
-                  <th><input type="text" name="dstIp" st-search="dstIp" ng-model="filterModel.dstIp" validation="ipv4" placeholder="IP/CIRD" class="form-control"/></th>
-              </tr>
-              </thead>
-              <tbody ng-show="!isLoading">
-              <tr ng-repeat="row in displayed">
-                  <td>{{row.dateTime}}</td>
-                  <td>{{row.protocol}}</td>
-                  <td>{{row.srcIp}}</td>
-                  <td>{{row.srcPort}}</td>
-                  <td>{{row.dstIp}}</td>
-                  <td>{{row.dstPort}}</td>
-              </tr>
-              </tbody>
-              <tbody ng-show="isLoading">
-              <tr>
-                  <td colspan="6" class="text-center">Loading ...</td>
-              </tr>
-              </tbody>
-              <tbody ng-show="displayed.length <= 0 && !isLoading">
-              <tr>
-                  <td colspan="6" class="text-center">Empty data</td>
-              </tr>
-              </tbody>
-              <tfoot>
-              <tr>
-                  <td class="text-center" st-pagination="" st-items-by-page="20" colspan="6"></td>
-              </tr>
-              </tfoot>
-          </table>
+          <div ui-grid="gridOptions" ui-grid-pagination class="grid"></div>
       </div>
 
       <div class="col-lg-3 col-sm-1">
@@ -136,7 +94,7 @@
                       <li>Нормальный внешний вид</li>
                       <li>Валидация фильтров перед их преминением</li>
                   </ul>
-                  Затрачено чистого времени на данный момент: 6.49 часа
+                  Затрачено чистого времени на данный момент: 8.47 часа
               </div>
           </div>
       </div>

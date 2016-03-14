@@ -6,7 +6,8 @@ var apiBaseUrl = '';
 angular.module('app', [
 	'ngRoute',
 	'ngResource'
-	, 'smart-table'
+	, 'ngTouch'
+	, 'ui.grid', 'ui.grid.pagination'
 	, 'ghiscoding.validation'
 	, 'pascalprecht.translate'
 ]).
@@ -26,26 +27,67 @@ factory('dataService', ['$resource', function ($resource) {
 		}
 	});
 }]).
-controller('dataCtrl', ['$scope', 'dataService', function ($scope, service) {
+controller('dataCtrl', ['$scope', 'dataService', 'uiGridConstants', function ($scope, service, uiGridConstants) {
 	$scope.filterModel = {};
-	$scope.displayed = [];
-	$scope.callServer = function (tableState) {
+
+	var paginationOptions = {
+		pageNumber: 1,
+		pageSize: 25,
+		sort: ["dateTime,ASC"]
+	};
+
+	$scope.gridOptions = {
+		paginationPageSizes: [25, 50, 75],
+		paginationPageSize: 25,
+		useExternalPagination: true,
+		useExternalSorting: true,
+		columnDefs: [
+			{field: 'dateTime', sort: {direction: uiGridConstants.ASC, priority: 0}},
+			{field: 'protocol'},
+			{field: 'srcIp'},
+			{field: 'srcPort'},
+			{field: 'dstIp'},
+			{field: 'dstPort'},
+		],
+		onRegisterApi: function(gridApi) {
+			$scope.gridApi = gridApi;
+			$scope.gridApi.core.on.sortChanged($scope, function(grid, sortColumns) {
+				if (sortColumns.length == 0) {
+					paginationOptions.sort = null;
+				} else {
+					paginationOptions.sort = [];
+					for (var i = 0; i < sortColumns.length; i++) {
+						var col = sortColumns[i];
+						paginationOptions.sort.push(col.field + ',' + col.sort.direction.toUpperCase())
+					}
+				}
+				getPage();
+			});
+			gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
+				paginationOptions.pageNumber = newPage;
+				paginationOptions.pageSize = pageSize;
+				getPage();
+			});
+		}
+	};
+
+	var getPage = function () {
 		$scope.isLoading = true;
 
-		//console.log(tableState);
+		var pageable = {
+			size: paginationOptions.pageSize,
+			page: (paginationOptions.pageNumber - 1),
+			sort: paginationOptions.sort
+		};
 
-		var pagination = tableState.pagination;
-		var pageStartItemIndex = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
-		var pageSize = pagination.number || 10;  // Number of entries showed per page.
-		var pageIndex = pageStartItemIndex / pageSize;
-
-		service.filter({size: pageSize, page: pageIndex}, tableState.search.predicateObject, function (data) {
+		service.filter(pageable, null, function (data) {
 			//console.log(data);
-			$scope.displayed = data.content;
-			//set the number of pages so the pagination can update
-			tableState.pagination.numberOfPages = data.totalPages;
+			$scope.gridOptions.totalItems = data.totalElements;
+			$scope.gridOptions.data = data.content;
 			$scope.isLoading = false;
 		});
 	};
+
+	getPage();
 }])
 ;

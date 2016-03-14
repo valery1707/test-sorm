@@ -1,6 +1,8 @@
 /* app css stylesheet */
 
-/* AngularJS Form validation styling */
+/**
+ * AngularJS Form validation styling
+ */
 .validation.help-block {
 	color: #E07676;
 	font-style: italic;
@@ -20,4 +22,11 @@
 /* error display font italic, text-danger is red in BS */
 .validation.text-danger {
 	font-style: italic;
+}
+
+/**
+ * UI Grid
+ */
+.grid {
+	width: 100%;
 }
