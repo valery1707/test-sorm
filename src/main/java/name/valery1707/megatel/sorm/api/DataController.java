@@ -2,6 +2,7 @@ package name.valery1707.megatel.sorm.api;
 
 import name.valery1707.megatel.sorm.domain.Data;
 import name.valery1707.megatel.sorm.dto.DataDto;
+import name.valery1707.megatel.sorm.dto.DataFilter;
 import org.apache.commons.net.util.SubnetUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.persistence.criteria.*;
 import java.math.BigInteger;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 import static name.valery1707.megatel.sorm.IpUtils.buildSubnet;
 import static name.valery1707.megatel.sorm.IpUtils.ipToNumber;
@@ -39,7 +43,7 @@ public class DataController {
 	@RequestMapping(method = RequestMethod.POST)
 	public Page<DataDto> findByFilter(
 			@PageableDefault(size = 20) @SortDefault("dateTime") Pageable pageable,
-			@RequestBody(required = false) DataDto filter
+			@RequestBody(required = false) DataFilter filter
 	) {
 		Specification<Data> spec = null;
 		if (filter != null) {
@@ -57,6 +61,12 @@ public class DataController {
 					predicates.add(buildIpFilter(root.get("srcIp"), cb, filter.getSrcIp()));
 					predicates.add(buildIpFilter(root.get("dstIp"), cb, filter.getDstIp()));
 
+					List<ZonedDateTime> times = filter.getDateTime();
+					if (times != null && times.stream().anyMatch(Objects::nonNull) && times.size() == 2) {
+						predicates.add(buildTimeFilter(root.get("dateTime"), cb::greaterThanOrEqualTo, times.get(0)));
+						predicates.add(buildTimeFilter(root.get("dateTime"), cb::lessThanOrEqualTo, times.get(1)));
+					}
+
 					predicates.removeIf(Objects::isNull);
 					if (predicates.isEmpty()) {
 						return null;
@@ -68,6 +78,13 @@ public class DataController {
 		}
 		return repo.findAll(spec, pageable)
 				.map(DataDto::fromEntity);
+	}
+
+	private <F extends ZonedDateTime> Predicate buildTimeFilter(Expression<F> field, BiFunction<Expression<F>, F, Predicate> filter, @Nullable F time) {
+		if (time == null) {
+			return null;
+		}
+		return filter.apply(field, time);
 	}
 
 	private <F extends BigInteger> Predicate buildIpFilter(Expression<F> field, CriteriaBuilder cb, String ip) {

@@ -12,6 +12,33 @@ angular.module('app', [
 	, 'pascalprecht.translate'
 ]).
 
+directive('dateTimePicker', function(){
+	return {
+		restrict : "A",
+		require: 'ngModel',
+		link : function(scope, element, attrs, ngModel){
+			$(function(){
+				$(element).datetimepicker({
+					format: 'Y-m-d H:i',
+					step: 15,
+					lang: 'ru',
+					dayOfWeekStart: 1,
+					onChangeDateTime: function (dp, $input) {
+						scope.$apply(function () {
+							ngModel.$setViewValue($input.val());
+						});
+					},
+					onClose: function (dp, $input) {
+						scope.$apply(function () {
+							ngModel.$setViewValue($input.val());
+						});
+					}
+				});
+			})
+		}
+	}
+}).
+
 factory('dataService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/data', {}, {
 		query: {
@@ -44,7 +71,18 @@ controller('dataCtrl', ['$scope', 'dataService', 'uiGridConstants', function ($s
 		enableFiltering: true,
 		useExternalFiltering: true,
 		columnDefs: [
-			{field: 'dateTime', sort: {direction: uiGridConstants.ASC, priority: 0}, enableFiltering: false},
+			{
+				field: 'dateTime',
+				sort: {direction: uiGridConstants.ASC, priority: 0},
+				filterHeaderTemplate: '<div class="ui-grid-filter-container">' +
+									  '<input style="display:inline; width:100%" class="ui-grid-filter-input" date-time-picker type="text" ng-model="col.filters[0].term" placeholder="from"/> ' +
+									  '<input style="display:inline; width:100%" class="ui-grid-filter-input" date-time-picker type="text" ng-model="col.filters[1].term" placeholder="to"/>' +
+									  '</div>',
+				filters: [{}, {}],
+				filterTermMapper: function(value) {
+					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
+				}
+			},
 			{field: 'protocol'},
 			{field: 'srcIp', filter: {placeholder: 'IP/CIDR'}},
 			{field: 'srcPort', enableFiltering: false},
@@ -74,8 +112,29 @@ controller('dataCtrl', ['$scope', 'dataService', 'uiGridConstants', function ($s
 				var grid = this.grid;
 				for (var i = 0; i < grid.columns.length; i++) {
 					var col = grid.columns[i];
-					var term = col.filters[0].term;
-					$scope.filterModel[col.field] = term;
+					var mapper = col.colDef.filterTermMapper;
+					var getter = function (filter, mapper) {
+						var term = filter.term;
+						var type = typeof term;
+						if (type != 'boolean' && type != 'number') {
+							if (!term) {
+								return undefined;
+							}
+						}
+						mapper = filter.filterTermMapper || mapper;
+						if (mapper) {
+							term = mapper(term);
+						}
+						return term;
+					};
+					if (col.filters.length == 1) {
+						$scope.filterModel[col.field] = getter(col.filters[0], mapper);
+					} else {
+						$scope.filterModel[col.field] = [];
+						for (var t = 0; t < col.filters.length; t++) {
+							$scope.filterModel[col.field].push(getter(col.filters[t], mapper))
+						}
+					}
 				}
 				getPage();
 			});
