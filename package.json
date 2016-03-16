@@ -1,5 +1,5 @@
 {
-  "name": "Megatel SORM",
+  "name": "megatel-sorm",
   "version": "0.1.0-SNAPSHOT",
   "description": "Megatel SORM app deployed to Heroku.",
   "main": "gulpfile.js",

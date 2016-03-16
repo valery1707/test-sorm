@@ -133,6 +133,12 @@ buildscript {
 		classpath 'com.moowork.gradle:gradle-gulp-plugin:0.12'
 	}
 }
+apply plugin: 'com.moowork.node'
+node {
+	version = '4.4.0'
+	npmVersion = '2.14.20'
+	download = true
+}
 apply plugin: 'com.moowork.gulp'
 task webClean << {
 	file('node_modules').deleteDir()
