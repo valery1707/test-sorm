@@ -121,6 +121,34 @@ configurations {
 	all*.exclude group: 'commons-logging'
 }
 
+//Gulp
+buildscript {
+	repositories {
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		classpath "com.moowork.gradle:gradle-node-plugin:0.12"
+		classpath 'com.moowork.gradle:gradle-gulp-plugin:0.12'
+	}
+}
+apply plugin: 'com.moowork.gulp'
+task webClean << {
+	file('node_modules').deleteDir()
+	file('src/main/webapp/public').deleteDir()
+}
+task webPrepare {
+	dependsOn installGulp, npmInstall
+	mustRunAfter webClean
+}
+task webBuild {
+	dependsOn gulp_images, gulp_styles, gulp_scripts
+	mustRunAfter webPrepare
+}
+build.dependsOn webPrepare, webBuild
+
+// Heroku special task
 task stage {
 	dependsOn build
 }
