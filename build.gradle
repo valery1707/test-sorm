@@ -154,6 +154,14 @@ task webBuild {
 }
 build.dependsOn webPrepare, webBuild
 
+//Version Eye
+buildscript {
+	dependencies {
+		classpath 'org.standardout:gradle-versioneye-plugin:1.2.0'
+	}
+}
+apply plugin: 'org.standardout.versioneye'
+
 // Heroku special task
 task stage {
 	dependsOn build
