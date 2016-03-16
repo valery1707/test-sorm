@@ -152,6 +152,9 @@ task webBuild {
 	dependsOn gulp_images, gulp_styles, gulp_scripts
 	mustRunAfter webPrepare
 }
+task webWatch {
+	dependsOn gulp_default
+}
 build.dependsOn webPrepare, webBuild
 
 //Version Eye
