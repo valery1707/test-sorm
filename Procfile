@@ -1,1 +1,1 @@
-web: java -jar build/libs/sorm-*.jar --server.port=${PORT}
+web: java -jar build/libs/sorm-*.war --server.port=${PORT}

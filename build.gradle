@@ -11,10 +11,15 @@ apply plugin: 'java'
 project.sourceCompatibility = '1.8'
 project.targetCompatibility = '1.8'
 
+apply plugin: 'war'
+
+version = '0.1.0-SNAPSHOT'
+group = "name.valery1707.megatel"
 jar {
 	baseName = 'sorm'
-	group = "name.valery1707.megatel"
-	version = '0.1.0-SNAPSHOT'
+}
+war {
+	baseName = 'sorm'
 }
 
 apply plugin: 'application'
@@ -46,6 +51,9 @@ jacocoTestReport {
 	}
 }
 
+configurations {
+	providedRuntime
+}
 dependencies {
 	//Logging
 	compile "org.slf4j:slf4j-api:1.7.18"
@@ -86,7 +94,7 @@ dependencies {
 
 	//Servlet container
 	compile 'javax.servlet:javax.servlet-api:3.1.0'
-	runtime 'org.eclipse.jetty:jetty-webapp:9.3.7.v20160115'
+	providedRuntime 'org.eclipse.jetty:jetty-webapp:9.3.7.v20160115'
 
 	//JDBC driver (and implicit in-memory database server)
 	runtime 'com.h2database:h2:1.4.191'
@@ -158,6 +166,7 @@ task webWatch {
 	dependsOn gulp_default
 }
 build.dependsOn webPrepare, webBuild
+war.mustRunAfter webBuild
 
 //Version Eye
 buildscript {
