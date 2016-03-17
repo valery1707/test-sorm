@@ -1,4 +1,4 @@
-# Created by https://www.gitignore.io/api/java,gradle,jetbrains,node
+# Created by https://www.gitignore.io/api/java,gradle,jetbrains,node,bower
 
 ### Java ###
 *.class
@@ -119,6 +119,12 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+### Bower ###
+bower_components
+.bower-cache
+.bower-registry
+.bower-tmp
 
 
 ### Project specific ###
