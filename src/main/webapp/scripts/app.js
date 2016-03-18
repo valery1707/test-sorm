@@ -107,9 +107,9 @@ controller('dataCtrl', ['$scope', 'dataService', 'uiGridConstants', function ($s
 			},
 			{field: 'protocol'},
 			{field: 'srcIp', filter: {placeholder: 'IP/CIDR'}},
-			{field: 'srcPort', enableFiltering: false},
+			{field: 'srcPort', filter: {placeholder: '<, <=, =, >, >=, ...'}},
 			{field: 'dstIp', filter: {placeholder: 'IP/CIDR'}},
-			{field: 'dstPort', enableFiltering: false},
+			{field: 'dstPort', filter: {placeholder: '<, <=, =, >, >=, ... '}},
 		],
 		onRegisterApi: function(gridApi) {
 			$scope.gridApi = gridApi;

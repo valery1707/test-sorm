@@ -6,13 +6,12 @@ import name.valery1707.megatel.sorm.domain.Data;
 
 import java.time.format.DateTimeFormatter;
 
+@SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DataDto {
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	private String dateTime;
-	private String dateTimeFrom;
-	private String dateTimeTo;
 	private String srcIp;
 	private int srcPort;
 	private String dstIp;
@@ -25,22 +24,6 @@ public class DataDto {
 
 	public void setDateTime(String dateTime) {
 		this.dateTime = dateTime;
-	}
-
-	public String getDateTimeFrom() {
-		return dateTimeFrom;
-	}
-
-	public void setDateTimeFrom(String dateTimeFrom) {
-		this.dateTimeFrom = dateTimeFrom;
-	}
-
-	public String getDateTimeTo() {
-		return dateTimeTo;
-	}
-
-	public void setDateTimeTo(String dateTimeTo) {
-		this.dateTimeTo = dateTimeTo;
 	}
 
 	public String getSrcIp() {

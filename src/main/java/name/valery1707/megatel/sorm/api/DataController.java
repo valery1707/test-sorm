@@ -23,7 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
 import static name.valery1707.megatel.sorm.IpUtils.buildSubnet;
 import static name.valery1707.megatel.sorm.IpUtils.ipToNumber;
 
@@ -67,6 +70,9 @@ public class DataController {
 						predicates.add(buildTimeFilter(root.get("dateTime"), cb::lessThanOrEqualTo, times.get(1)));
 					}
 
+					predicates.add(buildPortFilter(root.get("srcPort"), cb, filter.getSrcPort()));
+					predicates.add(buildPortFilter(root.get("dstPort"), cb, filter.getDstPort()));
+
 					predicates.removeIf(Objects::isNull);
 					if (predicates.isEmpty()) {
 						return null;
@@ -78,6 +84,55 @@ public class DataController {
 		}
 		return repo.findAll(spec, pageable)
 				.map(DataDto::fromEntity);
+	}
+
+	private static final Pattern PORT_FILTER_PATTERN = Pattern.compile("^([>=<]?[=]?\\d+)|(\\d+\\.\\.\\d+)$");
+
+	private Predicate buildPortFilter(Expression<Integer> field, CriteriaBuilder cb, String portsRaw) {
+		if (portsRaw == null) {
+			return null;
+		}
+		List<Predicate> predicates = Stream.of(portsRaw.split(","))
+				.filter(Objects::nonNull)
+				.map(String::trim)
+				.filter(s -> !s.isEmpty() && PORT_FILTER_PATTERN.matcher(s).matches())
+				.map(s -> {
+					if (s.contains("..")) {
+						int i1 = s.indexOf("..");
+						int i2 = s.lastIndexOf("..");
+						String s1 = s.substring(0, i1);
+						String s2 = s.substring(i2 + 2);
+						return cb.between(field, Integer.valueOf(s1), Integer.valueOf(s2));
+					} else {
+						String mode = (s.charAt(1) == '=')
+								? s.substring(0, 2)
+								: (s.charAt(0) == '>' || s.charAt(0) == '=' || s.charAt(0) == '<' ? s.substring(0, 1) : "");
+						String s1 = s.substring(mode.length());
+						int value = Integer.valueOf(s1);
+						switch (mode) {
+							case ">":
+								return cb.greaterThan(field, value);
+							case ">=":
+								return cb.greaterThanOrEqualTo(field, value);
+							case "<":
+								return cb.lessThan(field, value);
+							case "<=":
+								return cb.lessThanOrEqualTo(field, value);
+							case "=":
+							case "==":
+							default://implicit equal
+								return cb.equal(field, value);
+						}
+					}
+				})
+				.collect(toList());
+
+		predicates.removeIf(Objects::isNull);
+		if (predicates.isEmpty()) {
+			return null;
+		} else {
+			return cb.or(predicates.toArray(new Predicate[predicates.size()]));
+		}
 	}
 
 	private <F extends ZonedDateTime> Predicate buildTimeFilter(Expression<F> field, BiFunction<Expression<F>, F, Predicate> filter, @Nullable F time) {
