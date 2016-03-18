@@ -18,6 +18,7 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 @EnableAutoConfiguration
 @EnableWebMvc
 @ComponentScan
+//todo For deploy this war in Servlet container we need use SpringBootServletInitializer
 public class Launcher extends WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter {
 	private static final Logger LOG = LoggerFactory.getLogger(Launcher.class);
 

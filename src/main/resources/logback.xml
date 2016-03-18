@@ -8,6 +8,13 @@
 	</appender>
 
 	<logger name="org.eclipse.jetty.server.Server" level="INFO"/>
+	<!--Расширенное логирование обработки запросов-->
+<!--
+	<logger name="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" level="DEBUG"/>
+	<logger name="org.springframework.web.servlet.resource.PathResourceResolver" level="TRACE"/>
+	<logger name="org.springframework.web.servlet.resource.AbstractResourceResolver" level="TRACE"/>
+-->
+	<!-- Логирование игнорируемых ошибок: -Dorg.eclipse.jetty.util.log.IGNORED=true -->
 
 	<root level="info">
 		<appender-ref ref="STDOUT"/>
