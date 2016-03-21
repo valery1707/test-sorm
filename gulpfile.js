@@ -24,7 +24,10 @@ var paths = {
 	images: [
 		'src/main/webapp/images/**/*'
 	],
-	scripts: [
+	scriptsApp: [
+		'src/main/webapp/scripts/**/*.js'
+	],
+	scriptsLibCommon: [
 		'node_modules/angular/angular.js'
 		, 'node_modules/angular-route/angular-route.js'
 		, 'node_modules/angular-resource/angular-resource.js'
@@ -40,9 +43,6 @@ var paths = {
 		, 'bower_components/pdfmake/build/pdfmake.js'
 		, 'bower_components/pdfmake/build/vfs_fonts.js'
 
-		, 'bower_components/html5shiv/dist/html5shiv.js'
-		, 'bower_components/respond/dest/respond.src.js'
-
 		, 'bower_components/angular-translate/angular-translate.js'
 		, 'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js'
 
@@ -51,23 +51,28 @@ var paths = {
 		, 'bower_components/moment/moment.js'
 
 		, 'bower_components/jquery-datetimepicker/jquery.datetimepicker.js'
-
-		, 'src/main/webapp/scripts/**/*.js'
 	],
-	styles: [
+	scriptsLibIE: [
+		'bower_components/html5shiv/dist/html5shiv.js'
+		, 'bower_components/respond/dest/respond.src.js'
+	],
+	stylesApp: [
+		'src/main/webapp/styles/**/*.scss'
+		, 'src/main/webapp/styles/**/*.css'
+	],
+	stylesLibCommon: [
 		'node_modules/bootstrap/dist/css/bootstrap.css'
 
 		, 'node_modules/angular-ui-grid/ui-grid.css'
 
 		, 'bower_components/github-fork-ribbon-css/gh-fork-ribbon.css'
-		, 'bower_components/github-fork-ribbon-css/gh-fork-ribbon.ie.css'
 
 		, 'bower_components/jquery-datetimepicker/jquery.datetimepicker.css'
-
-		, 'src/main/webapp/styles/**/*.scss'
-		, 'src/main/webapp/styles/**/*.css'
 	],
-	stylesCopy: [
+	stylesLibIE: [
+		'bower_components/github-fork-ribbon-css/gh-fork-ribbon.ie.css'
+	],
+	stylesLibCommonAssets: [
 		'node_modules/angular-ui-grid/ui-grid.woff',
 		'node_modules/angular-ui-grid/ui-grid.ttf'
 	]
@@ -79,8 +84,8 @@ gulp.task('images', function () {
 			.pipe(gulp.dest('src/main/webapp/public/'));
 });
 
-gulp.task('styles', function () {
-	gulp.src(paths.styles)
+gulp.task('stylesApp', function () {
+	gulp.src(paths.stylesApp)
 			.pipe(plumber({
 				errorHandler: function (error) {
 					console.log(error.message);
@@ -89,32 +94,93 @@ gulp.task('styles', function () {
 			}))
 			.pipe(sass())
 			.pipe(postcss([autoprefixer({browsers: ['last 2 versions']})]))
-			.pipe(gulp.dest('src/main/webapp/public/'))
+			.pipe(gulp.dest('src/main/webapp/public/css/'))
 			.pipe(rename({suffix: '.min'}))
 			.pipe(cleanCss())
-			.pipe(gulp.src(paths.stylesCopy))
-			.pipe(gulp.dest('src/main/webapp/public/'))
+			.pipe(gulp.dest('src/main/webapp/public/css/'));
 });
-
-gulp.task('scripts', function () {
-	return gulp.src(paths.scripts)
+gulp.task('stylesLibCommon', function () {
+	gulp.src(paths.stylesLibCommon)
 			.pipe(plumber({
 				errorHandler: function (error) {
 					console.log(error.message);
 					this.emit('end');
 				}
 			}))
-			.pipe(gulp.dest('src/main/webapp/public/debug/'))
-			.pipe(concat('main.js'))
-			.pipe(gulp.dest('src/main/webapp/public/'))
+			.pipe(gulp.dest('src/main/webapp/public/css/common/'))
+			.pipe(concat('lib.common.css'))
+			.pipe(gulp.dest('src/main/webapp/public/css/'))
+			.pipe(rename({suffix: '.min'}))
+			.pipe(cleanCss())
+			.pipe(gulp.dest('src/main/webapp/public/css/'));
+	gulp.src(paths.stylesLibCommonAssets)
+			.pipe(gulp.dest('src/main/webapp/public/css/common/'))
+			.pipe(gulp.dest('src/main/webapp/public/css/'));
+});
+gulp.task('stylesLibIE', function () {
+	gulp.src(paths.stylesLibIE)
+			.pipe(plumber({
+				errorHandler: function (error) {
+					console.log(error.message);
+					this.emit('end');
+				}
+			}))
+			.pipe(gulp.dest('src/main/webapp/public/css/ie/'))
+			.pipe(concat('lib.ie.css'))
+			.pipe(gulp.dest('src/main/webapp/public/css/'))
+			.pipe(rename({suffix: '.min'}))
+			.pipe(cleanCss())
+			.pipe(gulp.dest('src/main/webapp/public/css/'));
+});
+
+gulp.task('scriptsApp', function () {
+	return gulp.src(paths.scriptsApp)
+			.pipe(plumber({
+				errorHandler: function (error) {
+					console.log(error.message);
+					this.emit('end');
+				}
+			}))
+			.pipe(concat('app.js'))
+			.pipe(gulp.dest('src/main/webapp/public/js/'))
 			.pipe(rename({suffix: '.min'}))
 			.pipe(uglify())
-			.pipe(gulp.dest('src/main/webapp/public/'))
+			.pipe(gulp.dest('src/main/webapp/public/js/'));
+});
+gulp.task('scriptsLibCommon', function () {
+	return gulp.src(paths.scriptsLibCommon)
+			.pipe(plumber({
+				errorHandler: function (error) {
+					console.log(error.message);
+					this.emit('end');
+				}
+			}))
+			.pipe(gulp.dest('src/main/webapp/public/js/common/'))
+			.pipe(concat('lib.common.js'))
+			.pipe(gulp.dest('src/main/webapp/public/js/'))
+			.pipe(rename({suffix: '.min'}))
+			.pipe(uglify())
+			.pipe(gulp.dest('src/main/webapp/public/js/'));
+});
+gulp.task('scriptsLibIE', function () {
+	return gulp.src(paths.scriptsLibIE)
+			.pipe(plumber({
+				errorHandler: function (error) {
+					console.log(error.message);
+					this.emit('end');
+				}
+			}))
+			.pipe(gulp.dest('src/main/webapp/public/js/ie/'))
+			.pipe(concat('lib.ie.js'))
+			.pipe(gulp.dest('src/main/webapp/public/js/'))
+			.pipe(rename({suffix: '.min'}))
+			.pipe(uglify())
+			.pipe(gulp.dest('src/main/webapp/public/js/'));
 });
 
 gulp.task('default', function () {
-	gulp.watch(paths.styles, ['styles']);
-	gulp.watch(paths.scripts, ['scripts']);
+	gulp.watch(paths.stylesApp, ['stylesApp']);
+	gulp.watch(paths.scriptsApp, ['scriptsApp']);
 });
 
 var bowerTask = function (fn, cb) {

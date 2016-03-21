@@ -160,7 +160,7 @@ task webPrepare {
 }
 gulp_bowerInstall.mustRunAfter(npmInstall, installGulp)
 task webBuild {
-	dependsOn gulp_images, gulp_styles, gulp_scripts
+	dependsOn gulp_images, gulp_stylesLibCommon, gulp_stylesLibIE, gulp_stylesApp, gulp_scriptsLibCommon, gulp_scriptsLibIE, gulp_scriptsApp
 	mustRunAfter webPrepare
 }
 task webWatch {
