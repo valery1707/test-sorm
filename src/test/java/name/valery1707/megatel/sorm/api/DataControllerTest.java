@@ -505,6 +505,31 @@ public class DataControllerTest {
 				.andExpect(jsonPath("$.content", hasSize(20)))
 				.andExpect(jsonPath("$.content[4].dateTime").value("2014-10-31T21:59:10.621979"))
 		;
+		mvc.perform(post("/data")
+				.contentType(CONTENT_TYPE)
+				.content("{'srcPort':'=>30000'}".replace('\'', '"'))
+		)
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(CONTENT_TYPE))
+				.andExpect(content().encoding(ENCODING))
+				.andExpect(jsonPath("$").isMap())
+				.andExpect(jsonPath("$.first").isBoolean())
+				.andExpect(jsonPath("$.first").value(true))
+				.andExpect(jsonPath("$.last").isBoolean())
+				.andExpect(jsonPath("$.last").value(false))
+				.andExpect(jsonPath("$.totalElements").isNumber())
+				.andExpect(jsonPath("$.totalElements").value(3706))
+				.andExpect(jsonPath("$.totalPages").isNumber())
+				.andExpect(jsonPath("$.totalPages").value(186))
+				.andExpect(jsonPath("$.size").isNumber())
+				.andExpect(jsonPath("$.size").value(20))
+				.andExpect(jsonPath("$.numberOfElements").isNumber())
+				.andExpect(jsonPath("$.numberOfElements").value(20))
+				.andExpect(jsonPath("$.content").exists())
+				.andExpect(jsonPath("$.content").isArray())
+				.andExpect(jsonPath("$.content", hasSize(20)))
+				.andExpect(jsonPath("$.content[4].dateTime").value("2014-10-31T21:59:10.621979"))
+		;
 	}
 
 	@Test
@@ -533,6 +558,34 @@ public class DataControllerTest {
 				.andExpect(jsonPath("$.content").isArray())
 				.andExpect(jsonPath("$.content", hasSize(20)))
 				.andExpect(jsonPath("$.content[4].dateTime").value("2014-10-31T21:59:10.649263"))
+		;
+	}
+
+	@Test
+	public void testFilter_port_equal_implicit_short() throws Exception {
+		mvc.perform(post("/data")
+				.contentType(CONTENT_TYPE)
+				.content("{'srcPort':'4'}".replace('\'', '"'))
+		)
+				.andExpect(status().isOk())
+				.andExpect(content().contentTypeCompatibleWith(CONTENT_TYPE))
+				.andExpect(content().encoding(ENCODING))
+				.andExpect(jsonPath("$").isMap())
+				.andExpect(jsonPath("$.first").isBoolean())
+				.andExpect(jsonPath("$.first").value(true))
+				.andExpect(jsonPath("$.last").isBoolean())
+				.andExpect(jsonPath("$.last").value(true))
+				.andExpect(jsonPath("$.totalElements").isNumber())
+				.andExpect(jsonPath("$.totalElements").value(0))
+				.andExpect(jsonPath("$.totalPages").isNumber())
+				.andExpect(jsonPath("$.totalPages").value(0))
+				.andExpect(jsonPath("$.size").isNumber())
+				.andExpect(jsonPath("$.size").value(20))
+				.andExpect(jsonPath("$.numberOfElements").isNumber())
+				.andExpect(jsonPath("$.numberOfElements").value(0))
+				.andExpect(jsonPath("$.content").exists())
+				.andExpect(jsonPath("$.content").isArray())
+				.andExpect(jsonPath("$.content", hasSize(0)))
 		;
 	}
 

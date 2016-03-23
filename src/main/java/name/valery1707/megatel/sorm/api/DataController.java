@@ -104,8 +104,7 @@ public class DataController {
 						String s2 = s.substring(i2 + 2);
 						return cb.between(field, Integer.valueOf(s1), Integer.valueOf(s2));
 					} else {
-						String mode = (s.charAt(1) == '=')
-								? s.substring(0, 2)
+						String mode = (s.length() > 1 && s.charAt(1) == '=') ? s.substring(0, 2)
 								: (s.charAt(0) == '>' || s.charAt(0) == '=' || s.charAt(0) == '<' ? s.substring(0, 1) : "");
 						String s1 = s.substring(mode.length());
 						int value = Integer.valueOf(s1);
