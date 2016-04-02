@@ -160,7 +160,11 @@ task webPrepare {
 	dependsOn installGulp, npmInstall, gulp_bowerInstall
 	mustRunAfter webClean
 }
-gulp_bowerInstall.mustRunAfter(npmInstall, installGulp)
+gulp_bowerInstall {
+	mustRunAfter npmInstall, installGulp
+	inputs.file file('package.json')
+	outputs.dir new File(buildDir, 'bower_components')
+}
 task webBuild {
 	dependsOn gulp_images, gulp_stylesLibCommon, gulp_stylesLibIE, gulp_stylesApp, gulp_scriptsLibCommon, gulp_scriptsLibIE, gulp_scriptsApp
 	mustRunAfter webPrepare
