@@ -22,10 +22,10 @@ var cache = require('gulp-cache');
 
 var paths = {
 	images: [
-		'src/main/webapp/images/**/*'
+		'src/main/client/images/**/*'
 	],
 	scriptsApp: [
-		'src/main/webapp/scripts/**/*.js'
+		'src/main/client/js/**/*.js'
 	],
 	scriptsLibCommon: [
 		'node_modules/angular/angular.js'
@@ -57,8 +57,8 @@ var paths = {
 		, 'bower_components/respond/dest/respond.src.js'
 	],
 	stylesApp: [
-		'src/main/webapp/styles/**/*.scss'
-		, 'src/main/webapp/styles/**/*.css'
+		'src/main/client/css/**/*.scss'
+		, 'src/main/client/css/**/*.css'
 	],
 	stylesLibCommon: [
 		'node_modules/bootstrap/dist/css/bootstrap.css'
@@ -81,7 +81,7 @@ var paths = {
 gulp.task('images', function () {
 	gulp.src(paths.images)
 			.pipe(cache(imagemin({optimizationLevel: 3, progressive: true, interlaced: true})))
-			.pipe(gulp.dest('src/main/webapp/public/'));
+			.pipe(gulp.dest('src/main/webapp/images/'));
 });
 
 gulp.task('stylesApp', function () {
@@ -94,10 +94,10 @@ gulp.task('stylesApp', function () {
 			}))
 			.pipe(sass())
 			.pipe(postcss([autoprefixer({browsers: ['last 2 versions']})]))
-			.pipe(gulp.dest('src/main/webapp/public/css/'))
+			.pipe(gulp.dest('src/main/webapp/css/'))
 			.pipe(rename({suffix: '.min'}))
 			.pipe(cleanCss())
-			.pipe(gulp.dest('src/main/webapp/public/css/'));
+			.pipe(gulp.dest('src/main/webapp/css/'));
 });
 gulp.task('stylesLibCommon', function () {
 	gulp.src(paths.stylesLibCommon)
@@ -107,15 +107,15 @@ gulp.task('stylesLibCommon', function () {
 					this.emit('end');
 				}
 			}))
-			.pipe(gulp.dest('src/main/webapp/public/css/common/'))
+			.pipe(gulp.dest('src/main/webapp/css/common/'))
 			.pipe(concat('lib.common.css'))
-			.pipe(gulp.dest('src/main/webapp/public/css/'))
+			.pipe(gulp.dest('src/main/webapp/css/'))
 			.pipe(rename({suffix: '.min'}))
 			.pipe(cleanCss())
-			.pipe(gulp.dest('src/main/webapp/public/css/'));
+			.pipe(gulp.dest('src/main/webapp/css/'));
 	gulp.src(paths.stylesLibCommonAssets)
-			.pipe(gulp.dest('src/main/webapp/public/css/common/'))
-			.pipe(gulp.dest('src/main/webapp/public/css/'));
+			.pipe(gulp.dest('src/main/webapp/css/common/'))
+			.pipe(gulp.dest('src/main/webapp/css/'));
 });
 gulp.task('stylesLibIE', function () {
 	gulp.src(paths.stylesLibIE)
@@ -125,12 +125,12 @@ gulp.task('stylesLibIE', function () {
 					this.emit('end');
 				}
 			}))
-			.pipe(gulp.dest('src/main/webapp/public/css/ie/'))
+			.pipe(gulp.dest('src/main/webapp/css/ie/'))
 			.pipe(concat('lib.ie.css'))
-			.pipe(gulp.dest('src/main/webapp/public/css/'))
+			.pipe(gulp.dest('src/main/webapp/css/'))
 			.pipe(rename({suffix: '.min'}))
 			.pipe(cleanCss())
-			.pipe(gulp.dest('src/main/webapp/public/css/'));
+			.pipe(gulp.dest('src/main/webapp/css/'));
 });
 
 gulp.task('scriptsApp', function () {
@@ -142,10 +142,10 @@ gulp.task('scriptsApp', function () {
 				}
 			}))
 			.pipe(concat('app.js'))
-			.pipe(gulp.dest('src/main/webapp/public/js/'))
+			.pipe(gulp.dest('src/main/webapp/js/'))
 			.pipe(rename({suffix: '.min'}))
 			.pipe(uglify())
-			.pipe(gulp.dest('src/main/webapp/public/js/'));
+			.pipe(gulp.dest('src/main/webapp/js/'));
 });
 gulp.task('scriptsLibCommon', function () {
 	return gulp.src(paths.scriptsLibCommon)
@@ -155,12 +155,12 @@ gulp.task('scriptsLibCommon', function () {
 					this.emit('end');
 				}
 			}))
-			.pipe(gulp.dest('src/main/webapp/public/js/common/'))
+			.pipe(gulp.dest('src/main/webapp/js/common/'))
 			.pipe(concat('lib.common.js'))
-			.pipe(gulp.dest('src/main/webapp/public/js/'))
+			.pipe(gulp.dest('src/main/webapp/js/'))
 			.pipe(rename({suffix: '.min'}))
 			.pipe(uglify())
-			.pipe(gulp.dest('src/main/webapp/public/js/'));
+			.pipe(gulp.dest('src/main/webapp/js/'));
 });
 gulp.task('scriptsLibIE', function () {
 	return gulp.src(paths.scriptsLibIE)
@@ -170,12 +170,12 @@ gulp.task('scriptsLibIE', function () {
 					this.emit('end');
 				}
 			}))
-			.pipe(gulp.dest('src/main/webapp/public/js/ie/'))
+			.pipe(gulp.dest('src/main/webapp/js/ie/'))
 			.pipe(concat('lib.ie.js'))
-			.pipe(gulp.dest('src/main/webapp/public/js/'))
+			.pipe(gulp.dest('src/main/webapp/js/'))
 			.pipe(rename({suffix: '.min'}))
 			.pipe(uglify())
-			.pipe(gulp.dest('src/main/webapp/public/js/'));
+			.pipe(gulp.dest('src/main/webapp/js/'));
 });
 
 gulp.task('default', function () {

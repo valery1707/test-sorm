@@ -152,7 +152,9 @@ apply plugin: 'com.moowork.gulp'
 task webClean << {
 	file('node_modules').deleteDir()
 	file('bower_components').deleteDir()
-	file('src/main/webapp/public').deleteDir()
+	file('src/main/images').deleteDir()
+	file('src/main/css').deleteDir()
+	file('src/main/js').deleteDir()
 }
 task webPrepare {
 	dependsOn installGulp, npmInstall, gulp_bowerInstall

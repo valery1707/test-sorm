@@ -128,4 +128,6 @@ bower_components
 
 
 ### Project specific ###
-/src/main/webapp/public/
+/src/main/webapp/images/
+/src/main/webapp/css/
+/src/main/webapp/js/
