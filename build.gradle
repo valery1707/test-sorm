@@ -169,6 +169,32 @@ task webBuild {
 	dependsOn gulp_images, gulp_stylesLibCommon, gulp_stylesLibIE, gulp_stylesApp, gulp_scriptsLibCommon, gulp_scriptsLibIE, gulp_scriptsApp
 	mustRunAfter webPrepare
 }
+gulp_stylesLibCommon {
+	inputs.file file('gulpfile.js')
+	outputs.dir file('src/main/webapp/css/common')
+}
+gulp_stylesLibIE {
+	inputs.file file('gulpfile.js')
+	outputs.dir file('src/main/webapp/css/ie')
+}
+gulp_stylesApp {
+	inputs.file file('gulpfile.js')
+	inputs.dir file('src/main/client/css/')
+	outputs.file file('src/main/webapp/css/screen.css')
+}
+gulp_scriptsLibCommon {
+	inputs.file file('gulpfile.js')
+	outputs.dir file('src/main/webapp/js/common')
+}
+gulp_scriptsLibIE {
+	inputs.file file('gulpfile.js')
+	outputs.dir file('src/main/webapp/js/ie')
+}
+gulp_scriptsApp {
+	inputs.file file('gulpfile.js')
+	inputs.dir file('src/main/client/js/')
+	outputs.file file('src/main/webapp/js/app.js')
+}
 task webWatch {
 	dependsOn gulp_default
 }
