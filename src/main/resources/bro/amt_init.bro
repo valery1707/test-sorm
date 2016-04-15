@@ -95,14 +95,34 @@ function filter_smtp(rec: SMTP::Info): bool {
 #--------------------------------------------------#
 # Инициализация скриптов
 #--------------------------------------------------#
+function makeFilter(path: string): Log::Filter {
+	return [
+				$name="mysql-" + path,
+				$path=path,
+				$config=table(
+					["host"] = "192.168.93.130",
+					["port"] = "3306",
+					["username"] = "amt",
+					["password"] = "strong_password",
+					["database"] = "amt_karaganda",
+					["tablename"] = path
+				),
+				$writer=Log::WRITER_MYSQL
+           	];
+}
 event bro_init() {
 	print "AMT::start";
-	local filter = Log::get_filter(Conn::LOG, "default");
+	local filter: Log::Filter;
+	# Conn
+	filter = makeFilter("conn");
 	filter$pred = filter_conn;
 	Log::add_filter(Conn::LOG, filter);
+	Log::remove_filter(Conn::LOG, "default");
+	# SMTP
 	filter = Log::get_filter(SMTP::LOG, "default");
 	filter$pred = filter_smtp;
 	Log::add_filter(SMTP::LOG, filter);
+	Log::remove_filter(SMTP::LOG, "default");
 }
 event bro_done() {
 	print "AMT::stop";
