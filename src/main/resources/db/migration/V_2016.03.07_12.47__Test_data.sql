@@ -1,4 +1,4 @@
-# https://github.com/bbarrows/surfstreams/blob/master/file.tcpdump
+-- https://github.com/bbarrows/surfstreams/blob/master/file.tcpdump
 INSERT INTO data (id, date_time, src_ip, src_port, dst_ip, dst_port, protocol) VALUES
 		(1, '2014-10-31 21:59:10.602213', 3435517894, 443, 3232236049, 56983, 'TLSv1'),
 		(2, '2014-10-31 21:59:10.602255', 3232236049, 56983, 3435517894, 443, 'TCP'),
