@@ -75,7 +75,7 @@ service('gridHelper', [function () {
 				});
 			}
 		};
-		$scope.gridOptions = jQuery.merge($scope.gridOptions, gridExt);
+		$scope.gridOptions = jQuery.extend($scope.gridOptions, gridExt);
 		return $scope.gridOptions;
 	}
 }])
