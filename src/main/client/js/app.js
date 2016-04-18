@@ -1,6 +1,6 @@
 'use strict';
 
-var apiBaseUrl = '';
+var apiBaseUrl = '/api';
 
 // Declare app level module which depends on views, and components
 angular.module('app', [
@@ -39,8 +39,8 @@ directive('dateTimePicker', function(){
 	}
 }).
 
-factory('dataService', ['$resource', function ($resource) {
-	return $resource(apiBaseUrl + '/data', {}, {
+factory('connService', ['$resource', function ($resource) {
+	return $resource(apiBaseUrl + '/conn', {}, {
 		query: {
 			method: 'GET',
 			params: {},
@@ -54,13 +54,13 @@ factory('dataService', ['$resource', function ($resource) {
 		}
 	});
 }]).
-controller('dataCtrl', ['$scope', 'dataService', 'uiGridConstants', function ($scope, service, uiGridConstants) {
+controller('connCtrl', ['$scope', 'connService', 'uiGridConstants', function ($scope, service, uiGridConstants) {
 	$scope.filterModel = {};
 
 	var paginationOptions = {
 		pageNumber: 1,
 		pageSize: 25,
-		sort: ["dateTime,ASC"]
+		sort: ["ts,ASC"]
 	};
 
 	$scope.gridOptions = {
@@ -72,7 +72,7 @@ controller('dataCtrl', ['$scope', 'dataService', 'uiGridConstants', function ($s
 		useExternalFiltering: true,
 		columnDefs: [
 			{
-				field: 'dateTime',
+				field: 'ts',
 				sort: {direction: uiGridConstants.ASC, priority: 0},
 				filterHeaderTemplate: '<div' +
 									  ' class="ui-grid-filter-container"' +
@@ -105,11 +105,11 @@ controller('dataCtrl', ['$scope', 'dataService', 'uiGridConstants', function ($s
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},
-			{field: 'protocol'},
-			{field: 'srcIp', filter: {placeholder: 'IP/CIDR'}},
-			{field: 'srcPort', filter: {placeholder: '<, <=, =, >, >=, ...'}},
-			{field: 'dstIp', filter: {placeholder: 'IP/CIDR'}},
-			{field: 'dstPort', filter: {placeholder: '<, <=, =, >, >=, ... '}},
+			{field: 'proto'},
+			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}},
+			{field: 'idOrigPort', filter: {placeholder: '<, <=, =, >, >=, ...'}},
+			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}},
+			{field: 'idRespPort', filter: {placeholder: '<, <=, =, >, >=, ... '}},
 		],
 		onRegisterApi: function(gridApi) {
 			$scope.gridApi = gridApi;
