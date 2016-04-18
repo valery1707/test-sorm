@@ -32,8 +32,8 @@ killall -v -9 tail
 _watch() {
 	file_name=$1
 	table_name=$2
-	table_columns=$3
-	bro_columns=$(echo ${table_columns} | sed 's_`__g' | sed 's_,__g')
+	table_columns=$(echo ${3} | sed 's/\./_/g')
+	bro_columns=$(echo ${3} | sed 's/,//g')
 	file_name_full="${log_dir}/${log_file_prefix}${file_name}"
 	touch ${file_name_full}
 	tail -f -n+0 ${file_name_full} \
@@ -51,6 +51,6 @@ _watch() {
 | mysql --user=${db_username} --password=${db_password} ${db_database} --batch &
 }
 
-_watch conn.log conn 'ts, uid, `id.orig_h`, `id.orig_p`, `id.resp_h`, `id.resp_p`, proto, service, duration, orig_bytes, resp_bytes, conn_state, local_orig, local_resp, missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes, tunnel_parents, amt_tasks_list'
+_watch conn.log conn 'ts, uid, id.orig_h, id.orig_p, id.resp_h, id.resp_p, proto, service, duration, orig_bytes, resp_bytes, conn_state, local_orig, local_resp, missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes, tunnel_parents, amt_tasks_list'
 
 #ps -ef|grep 'tail'
