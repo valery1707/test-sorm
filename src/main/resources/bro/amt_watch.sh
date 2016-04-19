@@ -1,10 +1,16 @@
 #!/bin/bash
 
+_info=1
 _debug=0
 
 _help() {
 	echo "Watch Bro log files and pipe lines into MySQL
 Usage: $0 (mysql_username) (mysql_password) (mysql_database) [log_dir] [log_file_prefix]"
+}
+_info() {
+	if [ ${_info} -ge 1 ]; then
+		echo "INFO: $1"
+	fi
 }
 _debug() {
 	if [ ${_debug} -ge 1 ]; then
@@ -24,6 +30,12 @@ log_file_prefix=$5
 
 _debug "Params: DbUser(${db_username}), DbPass(${db_password}), DbName(${db_database}), LogDir(${log_dir}), LogFilePrefix(${log_file_prefix})"
 
+_info "Warm up MySQL"
+echo "SELECT NOW();" | mysql --user=${db_username} --password=${db_password} ${db_database} --batch
+#todo Stop if failed
+echo "SELECT NOW();" | mysql --user=${db_username} --password=${db_password} ${db_database} --batch
+
+_info "Stop old log watchers"
 killall -v -9 tail
 
 #$1 - file_name
@@ -51,6 +63,7 @@ _watch() {
 | mysql --user=${db_username} --password=${db_password} ${db_database} --batch &
 }
 
+_info "Run new log watchers"
 _watch conn.log conn 'ts, uid, id.orig_h, id.orig_p, id.resp_h, id.resp_p, proto, service, duration, orig_bytes, resp_bytes, conn_state, local_orig, local_resp, missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes, tunnel_parents, amt_tasks_list'
 
 #ps -ef|grep 'tail'
