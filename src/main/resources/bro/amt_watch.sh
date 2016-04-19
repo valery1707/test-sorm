@@ -2,6 +2,7 @@
 
 _info=1
 _debug=0
+db_warm_up_cnt=3
 
 _help() {
 	echo "Watch Bro log files and pipe lines into MySQL
@@ -31,9 +32,17 @@ log_file_prefix=$5
 _debug "Params: DbUser(${db_username}), DbPass(${db_password}), DbName(${db_database}), LogDir(${log_dir}), LogFilePrefix(${log_file_prefix})"
 
 _info "Warm up MySQL"
-echo "SELECT NOW();" | mysql --user=${db_username} --password=${db_password} ${db_database} --batch
-#todo Stop if failed
-echo "SELECT NOW();" | mysql --user=${db_username} --password=${db_password} ${db_database} --batch
+OUT=1
+while [ ${OUT} -ne 0 ] && [ ${db_warm_up_cnt} -gt 0 ]; do
+	let db_warm_up_cnt=db_warm_up_cnt-1
+	RES=$(echo "SELECT NOW();" | mysql --user=${db_username} --password=${db_password} ${db_database} 2>&1)
+	OUT=$?
+	_debug "MySQL warm up: ${RES}"
+done
+if [ ${db_warm_up_cnt} -le 0 ]; then
+	echo "ERROR: MySQL is not accessible: ${RES}"
+	exit 2
+fi
 
 _info "Stop old log watchers"
 killall -v -9 tail
