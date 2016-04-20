@@ -59,7 +59,11 @@ _watch() {
 	table_columns=$(echo ${3} | sed 's/\./_/g')
 	bro_columns=$(echo ${3} | sed 's/,//g')
 	file_name_full="${log_dir}/${log_file_prefix}${file_name}"
-	touch ${file_name_full}
+	while : ; do
+		[[ -f "${file_name_full}" ]] && break
+		_info "Wait for file: ${file_name_full}"
+		sleep 1s
+	done
 	tail -f -n+0 ${file_name_full} \
 | /opt/bro/bin/bro-cut ${bro_columns} \
 | sed -r 's_\t_", "_g' \
