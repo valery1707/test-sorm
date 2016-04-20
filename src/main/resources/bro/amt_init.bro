@@ -97,6 +97,12 @@ function filter_conn(rec: Conn::Info): bool {
 function filter_smtp(rec: SMTP::Info): bool {
 	return is_catched_conn_single(rec$uid);
 }
+function filter_http(rec: HTTP::Info): bool {
+	return is_catched_conn_single(rec$uid);
+}
+function filter_files(rec: Files::Info): bool {
+	return is_catched_conn_set(rec$conn_uids);
+}
 
 
 #--------------------------------------------------#
@@ -104,12 +110,26 @@ function filter_smtp(rec: SMTP::Info): bool {
 #--------------------------------------------------#
 event bro_init() {
 	print "AMT::start";
+
+	# Conn
 	local filter = Log::get_filter(Conn::LOG, "default");
 	filter$pred = filter_conn;
 	Log::add_filter(Conn::LOG, filter);
+
+	# SMTP
 	filter = Log::get_filter(SMTP::LOG, "default");
 	filter$pred = filter_smtp;
 	Log::add_filter(SMTP::LOG, filter);
+
+	# HTTP
+	filter = Log::get_filter(HTTP::LOG, "default");
+	filter$pred = filter_http;
+	Log::add_filter(HTTP::LOG, filter);
+
+	# Files
+	filter = Log::get_filter(Files::LOG, "default");
+	filter$pred = filter_files;
+	Log::add_filter(Files::LOG, filter);
 }
 event bro_done() {
 	print "AMT::stop";
