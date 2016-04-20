@@ -38,6 +38,9 @@ while [ ${OUT} -ne 0 ] && [ ${db_warm_up_cnt} -gt 0 ]; do
 	RES=$(echo "SELECT NOW();" | mysql --user=${db_username} --password=${db_password} ${db_database} 2>&1)
 	OUT=$?
 	_debug "MySQL warm up: ${RES}"
+	if [ ${OUT} -ne 0 ]; then
+		sleep 1s
+	fi
 done
 if [ ${db_warm_up_cnt} -le 0 ]; then
 	echo "ERROR: MySQL is not accessible: ${RES}"
