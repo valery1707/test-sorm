@@ -26,7 +26,7 @@ fi
 db_username=$1
 db_password=$2
 db_database=$3
-log_dir=${4:-/opt/bro/log/current}
+log_dir=${4:-/opt/bro/logs/current}
 log_file_prefix=$5
 
 _debug "Params: DbUser(${db_username}), DbPass(${db_password}), DbName(${db_database}), LogDir(${log_dir}), LogFilePrefix(${log_file_prefix})"
