@@ -34,11 +34,18 @@ export {
 	## c: Коннект
 	## taskId: Номер задания
 	global catch_conn: function(c: connection, taskId: count): bool;
+
 	## Слежение за почтой
 	##
 	## s: eMail
 	## taskId: Номер задания
 	global watch_email: function(s: string, taskId: count);
+
+	## Слежение за трафиком по IP
+	##
+	## target: IPv4/IPv6
+	## taskId: Номер задания
+	global watch_ip_addr: function(target: addr, taskId: count);
 }
 
 #--------------------------------------------------#
@@ -127,7 +134,27 @@ function catch_conn(c: connection, taskId: count): bool {
 	catched_conn_uid[c$uid] = tasks;
 	return T;
 }
-## table[email] => set[taskid]
+function catch_conn_multi(c: connection, taskIds: set[count]): bool {
+	local tasks: set[count];
+	if (c$uid in catched_conn_uid) {
+		tasks = catched_conn_uid[c$uid];
+	} else {
+		tasks = set();
+	}
+	local catchedNow = F;
+	for (task in taskIds) {
+		if (! (task in tasks)) {
+			catchedNow = T;
+			add tasks[task];
+		}
+	}
+	if (catchedNow) {
+		catched_conn_uid[c$uid] = tasks;
+	}
+	return catchedNow;
+}
+
+## table[email] => set[taskId]
 global watch_emails: table[string] of set[count] = {};
 ## table[email] => pattern
 global watch_emails_p: table[string] of pattern = {};
@@ -142,10 +169,33 @@ function watch_email(s: string, taskId: count) {
 	watch_emails_p[s] = p;
 }
 
+## table[addr] => set[taskId]
+global watch_ip_addrs: table[addr] of set[count] = {};
+function watch_ip_addr(target: addr, taskId: count) {
+	local tasks: set[count] = set();
+	if (target in watch_ip_addrs) {
+		tasks = watch_ip_addrs[target];
+	}
+	add tasks[taskId];
+	watch_ip_addrs[target] = tasks;
+}
+
 
 #--------------------------------------------------#
 #---------- Отслеживание полезных событий ---------#
 #--------------------------------------------------#
+
+# Отслеживание коннектов по IP
+event new_connection(c: connection) {
+	if (! is_catched_conn_single(c$uid)) {
+		if (c$id$orig_h in watch_ip_addrs) {
+			catch_conn_multi(c, watch_ip_addrs[c$id$orig_h]);
+		} else if (c$id$resp_h in watch_ip_addrs) {
+			catch_conn_multi(c, watch_ip_addrs[c$id$resp_h]);
+		}
+	}
+}
+
 # Отслеживание eMail
 event mime_one_header(c: connection, h: mime_header_rec) {
 #	print fmt("mime_one_header(c: {uid: '%s'}, h: {name: '%s', value: '%s'})", c$uid, h$name, h$value);
@@ -156,14 +206,13 @@ event mime_one_header(c: connection, h: mime_header_rec) {
 #				print fmt("Pattern: %s", p);
 				if (watch_emails_p[p] in h$value) {
 					print fmt("Catch Mime: conn$uid=%s, h$name=%s, h$value=%s", c$uid, h$name, h$value);
-					for (task in watch_emails[p]) {
-						AMT::catch_conn(c, task);
-					}
+					catch_conn_multi(c, watch_emails[p]);
 				}
 			}
 		}
 	}
 }
+
 # Сохранение файлов из отслеживаемых коннектов
 event file_new(f: fa_file) {
 	if (is_catched_conn_table(f$conns)) {
