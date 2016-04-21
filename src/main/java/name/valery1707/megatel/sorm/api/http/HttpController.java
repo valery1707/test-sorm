@@ -1,6 +1,6 @@
-package name.valery1707.megatel.sorm.api.conn;
+package name.valery1707.megatel.sorm.api.http;
 
-import name.valery1707.megatel.sorm.domain.Conn;
+import name.valery1707.megatel.sorm.domain.Http;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 
 @RestController
-@RequestMapping("/api/conn")
-public class ConnController {
+@RequestMapping("/api/http")
+public class HttpController {
 	@Inject
-	private ConnRepo repo;
+	private HttpRepo repo;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public Page<ConnDto> findByFilter(
+	public Page<HttpDto> findByFilter(
 			@PageableDefault(size = 20) @SortDefault("ts") Pageable pageable,
-			@RequestBody(required = false) ConnFilter filter
+			@RequestBody(required = false) HttpFilter filter
 	) {
-		Specification<Conn> spec = null;
+		Specification<Http> spec = null;
 		return repo.findAll(spec, pageable)
-				.map(ConnDto::new);
+				.map(HttpDto::new);
 	}
 }

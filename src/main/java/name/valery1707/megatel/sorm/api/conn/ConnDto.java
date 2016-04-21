@@ -17,8 +17,23 @@ public class ConnDto {
 	private int idOrigPort;
 	private String idRespHost;
 	private int idRespPort;
+
 	private String proto;
 	private String service;
+
+	public ConnDto() {
+	}
+
+	public ConnDto(Conn src) {
+		this();
+		setTs(bigDecimalToZonedDateTime(src.getTs()).format(FORMATTER));
+		setIdOrigHost(src.getIdOrigHost());
+		setIdOrigPort(src.getIdOrigPort());
+		setIdRespHost(src.getIdRespHost());
+		setIdRespPort(src.getIdRespPort());
+		setProto(src.getProto());
+		setService(src.getService());
+	}
 
 	public String getTs() {
 		return ts;
@@ -74,17 +89,5 @@ public class ConnDto {
 
 	public void setService(String service) {
 		this.service = service;
-	}
-
-	public static ConnDto fromEntity(Conn src) {
-		ConnDto dto = new ConnDto();
-		dto.setTs(bigDecimalToZonedDateTime(src.getTs()).format(FORMATTER));
-		dto.setIdOrigHost(src.getIdOrigHost());
-		dto.setIdOrigPort(src.getIdOrigPort());
-		dto.setIdRespHost(src.getIdRespHost());
-		dto.setIdRespPort(src.getIdRespPort());
-		dto.setProto(src.getProto());
-		dto.setService(src.getService());
-		return dto;
 	}
 }
