@@ -34,9 +34,16 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
 
-  <div class="row" ng-controller="connCtrl">
+  <div class="row">
       <div class="col-lg-6 col-lg-offset-3 col-sm-10 col-sm-offset-1">
-          <div ui-grid="gridOptions" ui-grid-pagination ui-grid-resize-columns class="grid"></div>
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  Результат выборки данных: <a href="#/conn">conn</a>
+              </div>
+              <div class="panel-body">
+                  <div ng-view></div>
+              </div>
+          </div>
       </div>
 
       <div class="col-lg-3 col-sm-1">
