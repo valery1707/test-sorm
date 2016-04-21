@@ -66,6 +66,8 @@ _watch() {
 	done
 	tail -f -n+0 ${file_name_full} \
 | /opt/bro/bin/bro-cut ${bro_columns} \
+| sed 's/"/_saved_double_quote_/g' \
+| sed "s/'/_saved_single_quote_/g" \
 | sed -r 's_\t_", "_g' \
 | awk '{print "\"" $0 "\""}' \
 | sed 's_"-"_NULL_g' \
@@ -76,6 +78,8 @@ _watch() {
 | awk '{print "INSERT INTO target_table_name(target_table_columns) \nVALUES (" $0 ");"}' \
 | sed "s/target_table_name/${table_name}/g" \
 | sed "s/target_table_columns/${table_columns}/g" \
+| sed 's/_saved_double_quote/"_/g' \
+| sed "s/_saved_single_quote_/''/g" \
 | mysql --user=${db_username} --password=${db_password} ${db_database} --batch &
 }
 
