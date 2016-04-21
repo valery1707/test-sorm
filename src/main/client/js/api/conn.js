@@ -1,4 +1,10 @@
 angular.module('app').
+config(['$routeProvider', function ($routeProvider) {
+	$routeProvider.when('/conn', {
+		templateUrl: 'view/conn.html',
+		controller: 'connCtrl'
+	});
+}]).
 factory('connService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/conn', {}, serviceCommonConfig);
 }]).
