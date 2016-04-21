@@ -207,7 +207,7 @@ function watch_ip_addr(target: addr, taskId: count) {
 
 # Отслеживание коннектов по IP
 event new_connection(c: connection) {
-	if (! is_catched_conn_single(c$uid)) {
+	if (! is_catched_conn_single(c$uid)) {#todo Не верно, так как один и тот же коннект может относится к разным заданиям по разным фильтрам
 		if (c$id$orig_h in watch_ip_addrs) {
 			catch_conn_multi(c, watch_ip_addrs[c$id$orig_h]);
 		} else if (c$id$resp_h in watch_ip_addrs) {
@@ -219,8 +219,8 @@ event new_connection(c: connection) {
 # Отслеживание eMail
 event mime_one_header(c: connection, h: mime_header_rec) {
 #	print fmt("mime_one_header(c: {uid: '%s'}, h: {name: '%s', value: '%s'})", c$uid, h$name, h$value);
-	if (! is_catched_conn_single(c$uid)) {
-		if (h$name == "FROM" || h$name == "TO") {
+	if (! is_catched_conn_single(c$uid)) {#todo Не верно, так как один и тот же коннект может относится к разным заданиям по разным фильтрам
+		if (h$name == "FROM" || h$name == "TO") {#todo Нужно отслеживать поля "Копия" и "Скрытая копия"
 #			print fmt("Header: %s=%s", h$name, h$value);
 			for (p in watch_emails) {
 #				print fmt("Pattern: %s", p);
