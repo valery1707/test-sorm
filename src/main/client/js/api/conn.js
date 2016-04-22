@@ -30,9 +30,9 @@ controller('connCtrl', ['$scope', 'connService', 'uiGridConstants', 'gridHelper'
 				, enableFiltering: false
 			},
 			{field: 'proto'},
-			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}, enableFiltering: false},
+			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}},
 			{field: 'idOrigPort', filter: {placeholder: '<, <=, =, >, >=, ...'}},
-			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}, enableFiltering: false},
+			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}},
 			{field: 'idRespPort', filter: {placeholder: '<, <=, =, >, >=, ... '}},
 		],
 	});

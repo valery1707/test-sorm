@@ -11,7 +11,7 @@ public final class IpUtils {
 		return numberToIp(BigInteger.valueOf(src));
 	}
 
-	private static InetAddress numberToIp(BigInteger src) {
+	public static InetAddress numberToIp(BigInteger src) {
 		byte[] address = new byte[4];
 		int pos = address.length - 1;
 

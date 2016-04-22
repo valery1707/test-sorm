@@ -8,13 +8,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.SingularAttribute;
+import java.math.BigInteger;
 import java.util.function.Function;
 
 import static name.valery1707.megatel.sorm.IpUtils.buildSubnet;
 import static name.valery1707.megatel.sorm.IpUtils.ipToNumber;
 
-public class IpFilter<D, F> extends BaseFilter<D, F, Long, String> {
-	public IpFilter(SingularAttribute<D, Long> field, Function<F, String> getter) {
+public class IpFilter<D, F> extends BaseFilter<D, F, BigInteger, String> {
+	public IpFilter(SingularAttribute<D, BigInteger> field, Function<F, String> getter) {
 		super(field, getter);
 	}
 
@@ -24,8 +25,8 @@ public class IpFilter<D, F> extends BaseFilter<D, F, Long, String> {
 		if (subnet != null) {
 			return cb.between(
 					root.get(field()),
-					ipToNumber(subnet.getInfo().getLowAddress()).longValue(),
-					ipToNumber(subnet.getInfo().getHighAddress()).longValue()
+					ipToNumber(subnet.getInfo().getLowAddress()),
+					ipToNumber(subnet.getInfo().getHighAddress())
 			);
 		}
 		return null;

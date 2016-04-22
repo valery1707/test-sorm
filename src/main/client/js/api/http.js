@@ -29,9 +29,9 @@ controller('httpCtrl', ['$scope', 'httpService', 'uiGridConstants', 'gridHelper'
 				}
 				, enableFiltering: false
 			},
-			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}, enableFiltering: false},
+			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}},
 			{field: 'idOrigPort', filter: {placeholder: '<, <=, =, >, >=, ...'}},
-			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}, enableFiltering: false},
+			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}},
 			{field: 'idRespPort', filter: {placeholder: '<, <=, =, >, >=, ... '}},
 			{field: 'method'},
 			{field: 'host'},

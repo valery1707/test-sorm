@@ -1,15 +1,16 @@
 package name.valery1707.megatel.sorm.domain;
 
 import javax.persistence.Entity;
+import java.math.BigInteger;
 import java.time.ZonedDateTime;
 
 @Entity
 @SuppressWarnings("unused")
 public class Data extends ABaseEntity {
 	private ZonedDateTime dateTime;
-	private long srcIp;
+	private BigInteger srcIp;
 	private int srcPort;
-	private long dstIp;
+	private BigInteger dstIp;
 	private int dstPort;
 	private String protocol;
 
@@ -21,11 +22,11 @@ public class Data extends ABaseEntity {
 		this.dateTime = dateTime;
 	}
 
-	public long getSrcIp() {
+	public BigInteger getSrcIp() {
 		return srcIp;
 	}
 
-	public void setSrcIp(long srcIp) {
+	public void setSrcIp(BigInteger srcIp) {
 		this.srcIp = srcIp;
 	}
 
@@ -37,11 +38,11 @@ public class Data extends ABaseEntity {
 		this.srcPort = srcPort;
 	}
 
-	public long getDstIp() {
+	public BigInteger getDstIp() {
 		return dstIp;
 	}
 
-	public void setDstIp(long dstIp) {
+	public void setDstIp(BigInteger dstIp) {
 		this.dstIp = dstIp;
 	}
 

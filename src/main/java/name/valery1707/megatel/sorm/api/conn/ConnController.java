@@ -29,8 +29,8 @@ public class ConnController {
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Conn, ConnFilter>(SpecificationMode.AND)
 //				.withDateTime(Conn_.ts, ConnFilter::getTs)
-//				.withIp(Conn_.idOrigHost, ConnFilter::getIdOrigHost)
-//				.withIp(Conn_.idRespHost, ConnFilter::getIdRespHost)
+				.withIp(Conn_.idOrigIp, ConnFilter::getIdOrigHost)
+				.withIp(Conn_.idRespIp, ConnFilter::getIdRespHost)
 				.withNumber(Conn_.idOrigPort, ConnFilter::getIdOrigPort)
 				.withNumber(Conn_.idRespPort, ConnFilter::getIdRespPort)
 				.withString(Conn_.proto, ConnFilter::getProto)

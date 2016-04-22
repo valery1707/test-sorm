@@ -29,8 +29,8 @@ public class HttpController {
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Http, HttpFilter>(SpecificationMode.AND)
 //				.withDateTime(Http_.ts, HttpFilter::getTs)
-//				.withIp(Http_.idOrigHost, HttpFilter::getIdOrigHost)
-//				.withIp(Http_.idRespHost, HttpFilter::getIdRespHost)
+				.withIp(Http_.idOrigIp, HttpFilter::getIdOrigHost)
+				.withIp(Http_.idRespIp, HttpFilter::getIdRespHost)
 				.withNumber(Http_.idOrigPort, HttpFilter::getIdOrigPort)
 				.withNumber(Http_.idRespPort, HttpFilter::getIdRespPort)
 				.withString(Http_.method, HttpFilter::getMethod)

@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Entity
 @SuppressWarnings("unused")
@@ -21,6 +22,10 @@ public class Http {
 	@NotNull
 	private String idOrigHost;
 
+	@Column(name = "id_orig_h_ip")
+	@NotNull
+	private BigInteger idOrigIp;
+
 	@Column(name = "id_orig_p")
 	@NotNull
 	private int idOrigPort;
@@ -28,6 +33,10 @@ public class Http {
 	@Column(name = "id_resp_h")
 	@NotNull
 	private String idRespHost;
+
+	@Column(name = "id_resp_h_ip")
+	@NotNull
+	private BigInteger idRespIp;
 
 	@Column(name = "id_resp_p")
 	@NotNull
@@ -105,6 +114,14 @@ public class Http {
 		this.idOrigHost = idOrigHost;
 	}
 
+	public BigInteger getIdOrigIp() {
+		return idOrigIp;
+	}
+
+	public void setIdOrigIp(BigInteger idOrigIp) {
+		this.idOrigIp = idOrigIp;
+	}
+
 	public int getIdOrigPort() {
 		return idOrigPort;
 	}
@@ -119,6 +136,14 @@ public class Http {
 
 	public void setIdRespHost(String idRespHost) {
 		this.idRespHost = idRespHost;
+	}
+
+	public BigInteger getIdRespIp() {
+		return idRespIp;
+	}
+
+	public void setIdRespIp(BigInteger idRespIp) {
+		this.idRespIp = idRespIp;
 	}
 
 	public int getIdRespPort() {

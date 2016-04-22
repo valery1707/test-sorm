@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
+import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class SpecificationBuilder<D, F> {
 		return this;
 	}
 
-	public SpecificationBuilder<D, F> withIp(SingularAttribute<D, Long> field, Function<F, String> value) {
+	public SpecificationBuilder<D, F> withIp(SingularAttribute<D, BigInteger> field, Function<F, String> value) {
 		filters.add(new IpFilter<>(field, value));
 		return this;
 	}
