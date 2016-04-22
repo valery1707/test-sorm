@@ -27,11 +27,12 @@ controller('connCtrl', ['$scope', 'connService', 'uiGridConstants', 'gridHelper'
 				filterTermMapper: function(value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
+				, enableFiltering: false
 			},
 			{field: 'proto'},
-			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}},
+			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}, enableFiltering: false},
 			{field: 'idOrigPort', filter: {placeholder: '<, <=, =, >, >=, ...'}},
-			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}},
+			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}, enableFiltering: false},
 			{field: 'idRespPort', filter: {placeholder: '<, <=, =, >, >=, ... '}},
 		],
 	});
