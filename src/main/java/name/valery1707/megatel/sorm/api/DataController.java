@@ -3,6 +3,7 @@ package name.valery1707.megatel.sorm.api;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.Data;
+import name.valery1707.megatel.sorm.domain.Data_;
 import name.valery1707.megatel.sorm.dto.DataDto;
 import name.valery1707.megatel.sorm.dto.DataFilter;
 import org.springframework.data.domain.Page;
@@ -29,12 +30,12 @@ public class DataController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Data, DataFilter>(SpecificationMode.AND)
-				.withString("protocol", DataFilter::getProtocol)
-				.withIp("srcIp", DataFilter::getSrcIp)
-				.withIp("dstIp", DataFilter::getDstIp)
-				.withNumber("srcPort", DataFilter::getSrcPort)
-				.withNumber("dstPort", DataFilter::getDstPort)
-				.withDateTime("dateTime", DataFilter::getDateTime)
+				.withString(Data_.protocol, DataFilter::getProtocol)
+				.withIp(Data_.srcIp, DataFilter::getSrcIp)
+				.withIp(Data_.dstIp, DataFilter::getDstIp)
+				.withNumber(Data_.srcPort, DataFilter::getSrcPort)
+				.withNumber(Data_.dstPort, DataFilter::getDstPort)
+				.withDateTime(Data_.dateTime, DataFilter::getDateTime)
 		;
 	}
 

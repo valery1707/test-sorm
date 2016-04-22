@@ -4,6 +4,7 @@ import name.valery1707.megatel.sorm.db.filter.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
+import javax.persistence.metamodel.SingularAttribute;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,26 +21,22 @@ public class SpecificationBuilder<D, F> {
 		this.mode = mode;
 	}
 
-	public SpecificationBuilder<D, F> withString(String field, Function<F, String> value) {
-		//todo Передавать не строку, а SingularAttribute<D, String>
+	public SpecificationBuilder<D, F> withString(SingularAttribute<D, String> field, Function<F, String> value) {
 		filters.add(new StringFilter<>(field, value));
 		return this;
 	}
 
-	public SpecificationBuilder<D, F> withIp(String field, Function<F, String> value) {
-		//todo Передавать не строку, а SingularAttribute<D, BigInteger>
+	public SpecificationBuilder<D, F> withIp(SingularAttribute<D, Long> field, Function<F, String> value) {
 		filters.add(new IpFilter<>(field, value));
 		return this;
 	}
 
-	public SpecificationBuilder<D, F> withNumber(String field, Function<F, String> value) {
-		//todo Передавать не строку, а SingularAttribute<D, Integer>
+	public SpecificationBuilder<D, F> withNumber(SingularAttribute<D, Integer> field, Function<F, String> value) {
 		filters.add(new NumberFilter<>(field, value));
 		return this;
 	}
 
-	public SpecificationBuilder<D, F> withDateTime(String field, Function<F, List<ZonedDateTime>> value) {
-		//todo Передавать не строку, а SingularAttribute<D, ZonedDateTime>
+	public SpecificationBuilder<D, F> withDateTime(SingularAttribute<D, ZonedDateTime> field, Function<F, List<ZonedDateTime>> value) {
 		filters.add(new DateTimeFilter<>(field, value));
 		return this;
 	}

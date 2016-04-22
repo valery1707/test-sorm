@@ -6,10 +6,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.function.Function;
 
-public class StringFilter<D, F> extends BaseFilter<D, F, String> {
-	public StringFilter(String field, Function<F, String> getter) {
+public class StringFilter<D, F> extends BaseFilter<D, F, String, String> {
+	public StringFilter(SingularAttribute<D, String> field, Function<F, String> getter) {
 		super(field, getter);
 	}
 

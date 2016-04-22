@@ -2,13 +2,14 @@ package name.valery1707.megatel.sorm.db.filter;
 
 import javax.annotation.Nonnull;
 import javax.persistence.criteria.*;
+import javax.persistence.metamodel.SingularAttribute;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public class DateTimeFilter<D, F> extends BaseFilter<D, F, List<ZonedDateTime>> {
-	public DateTimeFilter(String field, Function<F, List<ZonedDateTime>> getter) {
+public class DateTimeFilter<D, F> extends BaseFilter<D, F, ZonedDateTime, List<ZonedDateTime>> {
+	public DateTimeFilter(SingularAttribute<D, ZonedDateTime> field, Function<F, List<ZonedDateTime>> getter) {
 		super(field, getter);
 	}
 

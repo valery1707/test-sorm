@@ -2,6 +2,7 @@ package name.valery1707.megatel.sorm.db.filter;
 
 import javax.annotation.Nonnull;
 import javax.persistence.criteria.*;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -10,10 +11,10 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
-public class NumberFilter<D, F> extends BaseFilter<D, F, String> {
+public class NumberFilter<D, F> extends BaseFilter<D, F, Integer, String> {
 	private static final Pattern PORT_FILTER_PATTERN = Pattern.compile("^([>=<]?[=]?\\d+)|(\\d+\\.\\.\\d+)$");
 
-	public NumberFilter(String field, Function<F, String> getter) {
+	public NumberFilter(SingularAttribute<D, Integer> field, Function<F, String> getter) {
 		super(field, getter);
 	}
 

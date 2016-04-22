@@ -1,10 +1,9 @@
 package name.valery1707.megatel.sorm.api.http;
 
-import name.valery1707.megatel.sorm.api.conn.ConnFilter;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
-import name.valery1707.megatel.sorm.domain.Conn;
 import name.valery1707.megatel.sorm.domain.Http;
+import name.valery1707.megatel.sorm.domain.Http_;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,19 +28,19 @@ public class HttpController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Http, HttpFilter>(SpecificationMode.AND)
-//				.withDateTime("ts", HttpFilter::getTs)
-//				.withIp("idOrigHost", HttpFilter::getIdOrigHost)
-//				.withIp("idRespHost", HttpFilter::getIdRespHost)
-				.withNumber("idOrigPort", HttpFilter::getIdOrigPort)
-				.withNumber("idRespPort", HttpFilter::getIdRespPort)
-				.withString("method", HttpFilter::getMethod)
-				.withString("host", HttpFilter::getHost)
-				.withString("uri", HttpFilter::getUri)
-				.withString("referrer", HttpFilter::getReferrer)
-				.withString("userAgent", HttpFilter::getUserAgent)
-				.withNumber("requestBodyLen", HttpFilter::getRequestBodyLen)
-				.withNumber("responseBodyLen", HttpFilter::getResponseBodyLen)
-				.withNumber("statusCode", HttpFilter::getStatusCode)
+//				.withDateTime(Http_.ts, HttpFilter::getTs)
+//				.withIp(Http_.idOrigHost, HttpFilter::getIdOrigHost)
+//				.withIp(Http_.idRespHost, HttpFilter::getIdRespHost)
+				.withNumber(Http_.idOrigPort, HttpFilter::getIdOrigPort)
+				.withNumber(Http_.idRespPort, HttpFilter::getIdRespPort)
+				.withString(Http_.method, HttpFilter::getMethod)
+				.withString(Http_.host, HttpFilter::getHost)
+				.withString(Http_.uri, HttpFilter::getUri)
+				.withString(Http_.referrer, HttpFilter::getReferrer)
+				.withString(Http_.userAgent, HttpFilter::getUserAgent)
+				.withNumber(Http_.requestBodyLen, HttpFilter::getRequestBodyLen)
+				.withNumber(Http_.responseBodyLen, HttpFilter::getResponseBodyLen)
+				.withNumber(Http_.statusCode, HttpFilter::getStatusCode)
 		;
 	}
 
