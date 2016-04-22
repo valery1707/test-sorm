@@ -27,10 +27,11 @@ controller('httpCtrl', ['$scope', 'httpService', 'uiGridConstants', 'gridHelper'
 				filterTermMapper: function(value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
+				, enableFiltering: false
 			},
-			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}},
+			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}, enableFiltering: false},
 			{field: 'idOrigPort', filter: {placeholder: '<, <=, =, >, >=, ...'}},
-			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}},
+			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}, enableFiltering: false},
 			{field: 'idRespPort', filter: {placeholder: '<, <=, =, >, >=, ... '}},
 			{field: 'method'},
 			{field: 'host'},
@@ -40,7 +41,7 @@ controller('httpCtrl', ['$scope', 'httpService', 'uiGridConstants', 'gridHelper'
 			{field: 'requestBodyLen'},
 			{field: 'responseBodyLen'},
 			{field: 'statusCode'},
-			{field: 'hasFiles'},
+			{field: 'hasFiles', enableFiltering: false},
 		],
 	});
 

@@ -27,12 +27,12 @@ public class ConnController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Conn, ConnFilter>(SpecificationMode.AND)
-				.withString("proto", ConnFilter::getProto)
+//				.withDateTime("ts", ConnFilter::getTs)
 //				.withIp("idOrigHost", ConnFilter::getIdOrigHost)
 //				.withIp("idRespHost", ConnFilter::getIdRespHost)
 				.withNumber("idOrigPort", ConnFilter::getIdOrigPort)
 				.withNumber("idRespPort", ConnFilter::getIdRespPort)
-//				.withDateTime("ts", ConnFilter::getTs)
+				.withString("proto", ConnFilter::getProto)
 		;
 	}
 
