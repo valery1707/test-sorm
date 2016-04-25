@@ -24,7 +24,7 @@ public class DatabaseNamingStrategy extends PhysicalNamingStrategyStandardImpl {
 		return super.toPhysicalTableName(camelCaseToUnderscores(name), context);
 	}
 
-	private static Identifier camelCaseToUnderscores(Identifier src) {
+	static Identifier camelCaseToUnderscores(Identifier src) {
 		if (isAllUpperCase(src.getText())) {
 			return src;
 		}
@@ -33,6 +33,7 @@ public class DatabaseNamingStrategy extends PhysicalNamingStrategyStandardImpl {
 				.filter(s -> !"_".equals(s))
 				.map(StringUtils::uncapitalize)
 				.collect(joining("_"));
+		nameWithUnderscore = nameWithUnderscore.replaceAll("_(\\d)", "$1");
 		return toIdentifier(nameWithUnderscore, src.isQuoted());
 	}
 }
