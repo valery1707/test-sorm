@@ -1,21 +1,38 @@
 package name.valery1707.megatel.sorm.api.files;
 
+import com.github.amr.mimetypes.MimeType;
+import com.github.amr.mimetypes.MimeTypes;
+import name.valery1707.megatel.sorm.api.http.HttpRepo;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.Files;
 import name.valery1707.megatel.sorm.domain.Files_;
+import name.valery1707.megatel.sorm.domain.Http;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @RestController
 @RequestMapping("/api/files")
@@ -44,5 +61,74 @@ public class FilesController {
 		Specification<Files> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(FilesDto::new);
+	}
+
+	@Value("${files.extract_dir}")
+	private File extractDir;
+
+	@Inject
+	private HttpRepo httpRepo;
+
+	@RequestMapping(path = "download", method = RequestMethod.POST)
+	public HttpEntity<InputStreamResource> download(@RequestBody String extracted) {
+		Files files = repo.getByExtracted(extracted);
+		if (files == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
+
+		File file = new File(extractDir, files.getExtracted());
+		if (!file.exists() || !file.canRead()) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+		}
+
+		if (files.getFilename() == null) {
+			if (files.getSource().equalsIgnoreCase("HTTP")) {
+				String[] connUids = files.getConnUids().split(",");
+				for (int c = 0; c < connUids.length && files.getFilename() == null; c++) {
+					String connUid = connUids[c];
+					List<Http> https = httpRepo.findByUid(connUid);
+					for (int h = 0; h < https.size() && files.getFilename() == null; h++) {
+						Http http = https.get(h);
+						if (http.getUri() != null) {
+							URI uri = URI.create(http.getUri());
+							files.setFilename(trimToNull(FilenameUtils.getName(uri.getPath())));
+						}
+					}
+				}
+			}
+		}
+		if (files.getFilename() == null) {
+			files.setFilename(files.getConnUids());
+		}
+
+		if (files.getMimeType() == null) {
+			files.setMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+		}
+		if (!files.getFilename().contains(".")) {
+			files.setFilename(files.getFilename() + "." + mimeToExt(files.getMimeType()));
+		}
+
+		InputStreamResource isr;
+		try {
+			isr = new InputStreamResource(new FileInputStream(file));
+		} catch (IOException e) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.valueOf(files.getMimeType()));
+		headers.setContentLength(file.length());
+		headers.setContentDispositionFormData("attachment", files.getFilename());
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.headers(headers)
+				.header("X-Filename", files.getFilename())
+				.body(isr);
+	}
+
+	@Nonnull
+	private String mimeToExt(@Nullable String mimeType) {
+		MimeType type = MimeTypes.getInstance().getByType(mimeType);
+		return type != null ? type.getExtension() : "dat";
 	}
 }

@@ -6,7 +6,25 @@ config(['$routeProvider', function ($routeProvider) {
 	});
 }]).
 factory('filesService', ['$resource', function ($resource) {
-	return $resource(apiBaseUrl + '/files', {}, serviceCommonConfig);
+	const url = apiBaseUrl + '/files';
+	return $resource(url, {}, jQuery.extend({}, serviceCommonConfig, {
+		download: {
+			url: url + '/download',
+			method: 'POST',
+			isArray: false,
+			cache: false,
+			responseType: 'blob',
+			transformResponse: function (data, headers) {
+				//console.log('Headers: ', headers);
+				return {
+					value: data,
+					contentTypeFull: headers('Content-Type'),
+					contentType: headers('Content-Type').split(';')[0],
+					filename: headers('X-Filename')
+				};
+			}
+		}
+	}));
 }]).
 controller('filesCtrl', ['$scope', 'filesService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
 	$scope.filterModel = {};
@@ -33,8 +51,20 @@ controller('filesCtrl', ['$scope', 'filesService', 'uiGridConstants', 'gridHelpe
 			{field: 'filename'},
 			{field: 'size', cellFilter: 'formatBytes:1024:2'},
 			{field: 'extracted'},
+			{
+				field: '_download',
+				enableFiltering: false,
+				enableSorting: false,
+				cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><button class="btn primary" ng-click="grid.appScope.download(row.entity[\'extracted\'])">Download</button></div>'},
 		],
 	});
+	$scope.download = function(arg1) {
+		//console.log('Download request:', arg1);
+		service.download(arg1, function(data) {
+			//console.log('Download response:', data);
+			saveAs(data.value, data.filename, true);
+		});
+	};
 
 	$scope.loadPage();
 }])

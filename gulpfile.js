@@ -51,6 +51,9 @@ var paths = {
 		, 'bower_components/moment/moment.js'
 
 		, 'bower_components/jquery-datetimepicker/jquery.datetimepicker.js'
+
+		, 'bower_components/FileSaver.js/index.js'
+		, 'bower_components/Blob.js/index.js'
 	],
 	scriptsLibIE: [
 		'bower_components/html5shiv/dist/html5shiv.js'

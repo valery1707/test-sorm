@@ -63,6 +63,7 @@ dependencies {
 	//Apache commons
 	compile 'org.apache.commons:commons-lang3:3.4'
 	compile 'commons-net:commons-net:3.4'
+	compile 'commons-io:commons-io:2.5'
 
 	//Spring
 	compile "org.springframework:spring-context:4.2.5.RELEASE"
@@ -96,6 +97,7 @@ dependencies {
 	compile 'javax.servlet:javax.servlet-api:3.1.0'
 	providedRuntime 'org.eclipse.jetty:jetty-webapp:9.2.15.v20160210'
 	providedRuntime 'org.eclipse.jetty:jetty-servlets:9.2.15.v20160210'//todo remove in Jetty 9.3.x
+	compile 'com.github.amr:mimetypes:0.0.2'
 
 	//JDBC driver (and implicit in-memory database server)
 	runtime 'com.h2database:h2:1.4.191'

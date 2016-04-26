@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.math.BigDecimal;
 
 public interface FilesRepo extends JpaRepository<Files, BigDecimal>, JpaSpecificationExecutor<Files> {
+	Files getByExtracted(String extracted);
 }
