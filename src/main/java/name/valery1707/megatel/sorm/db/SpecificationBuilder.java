@@ -32,7 +32,7 @@ public class SpecificationBuilder<D, F> {
 		return this;
 	}
 
-	public SpecificationBuilder<D, F> withNumber(SingularAttribute<D, Integer> field, Function<F, String> value) {
+	public <M extends Number & Comparable<M>> SpecificationBuilder<D, F> withNumber(SingularAttribute<D, M> field, Function<F, String> value) {
 		filters.add(new NumberFilter<>(field, value));
 		return this;
 	}
