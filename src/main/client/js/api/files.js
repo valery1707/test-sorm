@@ -15,11 +15,13 @@ factory('filesService', ['$resource', function ($resource) {
 			cache: false,
 			responseType: 'blob',
 			transformResponse: function (data, headers) {
+				//console.log('Response:', data);
 				//console.log('Headers: ', headers);
+				const contentType = headers('Content-Type');
 				return {
 					value: data,
-					contentTypeFull: headers('Content-Type'),
-					contentType: headers('Content-Type').split(';')[0],
+					contentTypeFull: contentType,
+					contentType: contentType ? contentType.split(';')[0] : null,
 					filename: headers('X-Filename')
 				};
 			}
@@ -62,7 +64,11 @@ controller('filesCtrl', ['$scope', 'filesService', 'uiGridConstants', 'gridHelpe
 		//console.log('Download request:', arg1);
 		service.download(arg1, function(data) {
 			//console.log('Download response:', data);
-			saveAs(data.value, data.filename, true);
+			if (data.value.size > 0) {
+				saveAs(data.value, data.filename, true);
+			} else {
+				alert('File not found on server');
+			}
 		});
 	};
 
