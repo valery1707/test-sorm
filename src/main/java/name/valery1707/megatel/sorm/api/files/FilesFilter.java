@@ -8,6 +8,8 @@ public class FilesFilter {
 	private String mimeType;
 	private String filename;
 	private String seenBytes;
+	private String totalBytes;
+	private String missingBytes;
 	private String extracted;
 
 	public List<ZonedDateTime> getTs() {
@@ -40,6 +42,22 @@ public class FilesFilter {
 
 	public void setSeenBytes(String seenBytes) {
 		this.seenBytes = seenBytes;
+	}
+
+	public String getTotalBytes() {
+		return totalBytes;
+	}
+
+	public void setTotalBytes(String totalBytes) {
+		this.totalBytes = totalBytes;
+	}
+
+	public String getMissingBytes() {
+		return missingBytes;
+	}
+
+	public void setMissingBytes(String missingBytes) {
+		this.missingBytes = missingBytes;
 	}
 
 	public String getExtracted() {
