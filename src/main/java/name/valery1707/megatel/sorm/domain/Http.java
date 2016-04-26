@@ -56,8 +56,8 @@ public class Http {
 	@Lob
 	private String userAgent;
 
-	private Integer requestBodyLen;
-	private Integer responseBodyLen;
+	private Long requestBodyLen;
+	private Long responseBodyLen;
 
 	private Integer statusCode;
 	@Lob
@@ -202,19 +202,19 @@ public class Http {
 		this.userAgent = userAgent;
 	}
 
-	public Integer getRequestBodyLen() {
+	public Long getRequestBodyLen() {
 		return requestBodyLen;
 	}
 
-	public void setRequestBodyLen(Integer requestBodyLen) {
+	public void setRequestBodyLen(Long requestBodyLen) {
 		this.requestBodyLen = requestBodyLen;
 	}
 
-	public Integer getResponseBodyLen() {
+	public Long getResponseBodyLen() {
 		return responseBodyLen;
 	}
 
-	public void setResponseBodyLen(Integer responseBodyLen) {
+	public void setResponseBodyLen(Long responseBodyLen) {
 		this.responseBodyLen = responseBodyLen;
 	}
 

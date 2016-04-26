@@ -48,22 +48,22 @@ public class Conn {
 
 	private BigDecimal duration;
 
-	private Integer origBytes;
-	private Integer respBytes;
+	private Long origBytes;
+	private Long respBytes;
 
 	private String connState;
 
 	private Boolean localOrig;
 	private Boolean localResp;
 
-	private Integer missedBytes;
+	private Long missedBytes;
 
 	private String history;
 
 	private Integer origPkts;
-	private Integer origIpBytes;
+	private Long origIpBytes;
 	private Integer respPkts;
-	private Integer respIpBytes;
+	private Long respIpBytes;
 
 	private String tunnelParents;
 
@@ -157,19 +157,19 @@ public class Conn {
 		this.duration = duration;
 	}
 
-	public Integer getOrigBytes() {
+	public Long getOrigBytes() {
 		return origBytes;
 	}
 
-	public void setOrigBytes(Integer origBytes) {
+	public void setOrigBytes(Long origBytes) {
 		this.origBytes = origBytes;
 	}
 
-	public Integer getRespBytes() {
+	public Long getRespBytes() {
 		return respBytes;
 	}
 
-	public void setRespBytes(Integer respBytes) {
+	public void setRespBytes(Long respBytes) {
 		this.respBytes = respBytes;
 	}
 
@@ -197,11 +197,11 @@ public class Conn {
 		this.localResp = localResp;
 	}
 
-	public Integer getMissedBytes() {
+	public Long getMissedBytes() {
 		return missedBytes;
 	}
 
-	public void setMissedBytes(Integer missedBytes) {
+	public void setMissedBytes(Long missedBytes) {
 		this.missedBytes = missedBytes;
 	}
 
@@ -221,11 +221,11 @@ public class Conn {
 		this.origPkts = origPkts;
 	}
 
-	public Integer getOrigIpBytes() {
+	public Long getOrigIpBytes() {
 		return origIpBytes;
 	}
 
-	public void setOrigIpBytes(Integer origIpBytes) {
+	public void setOrigIpBytes(Long origIpBytes) {
 		this.origIpBytes = origIpBytes;
 	}
 
@@ -237,11 +237,11 @@ public class Conn {
 		this.respPkts = respPkts;
 	}
 
-	public Integer getRespIpBytes() {
+	public Long getRespIpBytes() {
 		return respIpBytes;
 	}
 
-	public void setRespIpBytes(Integer respIpBytes) {
+	public void setRespIpBytes(Long respIpBytes) {
 		this.respIpBytes = respIpBytes;
 	}
 

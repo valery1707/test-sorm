@@ -38,10 +38,10 @@ public class Files {
 	private Boolean localOrig;
 	private Boolean isOrig;
 
-	private Integer seenBytes;
-	private Integer totalBytes;
-	private Integer missingBytes;
-	private Integer overflowBytes;
+	private Long seenBytes;
+	private Long totalBytes;
+	private Long missingBytes;
+	private Long overflowBytes;
 
 	private Boolean timedout;
 
@@ -160,35 +160,35 @@ public class Files {
 		isOrig = orig;
 	}
 
-	public Integer getSeenBytes() {
+	public Long getSeenBytes() {
 		return seenBytes;
 	}
 
-	public void setSeenBytes(Integer seenBytes) {
+	public void setSeenBytes(Long seenBytes) {
 		this.seenBytes = seenBytes;
 	}
 
-	public Integer getTotalBytes() {
+	public Long getTotalBytes() {
 		return totalBytes;
 	}
 
-	public void setTotalBytes(Integer totalBytes) {
+	public void setTotalBytes(Long totalBytes) {
 		this.totalBytes = totalBytes;
 	}
 
-	public Integer getMissingBytes() {
+	public Long getMissingBytes() {
 		return missingBytes;
 	}
 
-	public void setMissingBytes(Integer missingBytes) {
+	public void setMissingBytes(Long missingBytes) {
 		this.missingBytes = missingBytes;
 	}
 
-	public Integer getOverflowBytes() {
+	public Long getOverflowBytes() {
 		return overflowBytes;
 	}
 
-	public void setOverflowBytes(Integer overflowBytes) {
+	public void setOverflowBytes(Long overflowBytes) {
 		this.overflowBytes = overflowBytes;
 	}
 

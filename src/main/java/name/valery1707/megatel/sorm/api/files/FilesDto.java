@@ -15,7 +15,7 @@ public class FilesDto {
 
 	private String mimeType;
 	private String filename;
-	private int seenBytes;
+	private long seenBytes;
 	private String extracted;
 
 	public FilesDto() {
@@ -30,7 +30,7 @@ public class FilesDto {
 		setSeenBytes(
 				Stream.of(src.getSeenBytes(), src.getTotalBytes())
 						.filter(Objects::nonNull)
-						.mapToInt(i -> i)
+						.mapToLong(i -> i)
 						.max().orElse(0)
 		);
 	}
@@ -59,11 +59,11 @@ public class FilesDto {
 		this.filename = filename;
 	}
 
-	public int getSeenBytes() {
+	public long getSeenBytes() {
 		return seenBytes;
 	}
 
-	public void setSeenBytes(int seenBytes) {
+	public void setSeenBytes(long seenBytes) {
 		this.seenBytes = seenBytes;
 	}
 
