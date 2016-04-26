@@ -1,8 +1,7 @@
 package name.valery1707.megatel.sorm.api.files;
 
-import com.github.amr.mimetypes.MimeType;
-import com.github.amr.mimetypes.MimeTypes;
 import name.valery1707.megatel.sorm.api.http.HttpRepo;
+import name.valery1707.megatel.sorm.configuration.MimeRepository;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.Files;
@@ -128,9 +127,11 @@ public class FilesController {
 				.body(isr);
 	}
 
+	@Inject
+	private MimeRepository mime;
+
 	@Nonnull
 	private String mimeToExt(@Nullable String mimeType) {
-		MimeType type = MimeTypes.getInstance().getByType(mimeType);
-		return type != null ? type.getExtension() : "dat";
+		return mime.mimeToExt(mimeType, "bin");
 	}
 }
