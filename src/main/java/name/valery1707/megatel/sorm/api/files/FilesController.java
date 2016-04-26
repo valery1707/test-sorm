@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
@@ -91,8 +92,11 @@ public class FilesController {
 					for (int h = 0; h < https.size() && files.getFilename() == null; h++) {
 						Http http = https.get(h);
 						if (http.getUri() != null) {
-							URI uri = URI.create(http.getUri());
-							files.setFilename(trimToNull(FilenameUtils.getName(uri.getPath())));
+							try {
+								URI uri = new URI(http.getUri().replace(" ", "%20").replace("|", "%7C"));
+								files.setFilename(trimToNull(FilenameUtils.getName(uri.getPath())));
+							} catch (URISyntaxException ignored) {
+							}
 						}
 					}
 				}
