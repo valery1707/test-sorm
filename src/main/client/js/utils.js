@@ -39,6 +39,9 @@ function formatBytes_1000(bytes, decimals) {
 angular.module('app').
 filter('formatBytes', function () {
 	return function (bytes, k, decimals) {
+		if (bytes == null) {
+			return '';
+		}
 		if (k == 1024) {
 			return formatBytes_1024(bytes, decimals);
 		} else {
