@@ -86,7 +86,7 @@ public class FilesController {
 				String[] connUids = files.getConnUids().split(",");
 				for (int c = 0; c < connUids.length && files.getFilename() == null; c++) {
 					String connUid = connUids[c];
-					List<Http> https = httpRepo.findByUid(connUid);
+					List<Http> https = httpRepo.findByUidAndFuid(connUid, files.getFuid());
 					for (int h = 0; h < https.size() && files.getFilename() == null; h++) {
 						Http http = https.get(h);
 						if (http.getUri() != null) {
