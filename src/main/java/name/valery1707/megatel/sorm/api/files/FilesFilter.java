@@ -7,7 +7,7 @@ public class FilesFilter {
 	private List<ZonedDateTime> ts;
 	private String mimeType;
 	private String filename;
-	private String size;
+	private String seenBytes;
 	private String extracted;
 
 	public List<ZonedDateTime> getTs() {
@@ -34,12 +34,12 @@ public class FilesFilter {
 		this.filename = filename;
 	}
 
-	public String getSize() {
-		return size;
+	public String getSeenBytes() {
+		return seenBytes;
 	}
 
-	public void setSize(String size) {
-		this.size = size;
+	public void setSeenBytes(String seenBytes) {
+		this.seenBytes = seenBytes;
 	}
 
 	public String getExtracted() {

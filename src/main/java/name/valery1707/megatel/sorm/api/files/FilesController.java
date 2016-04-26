@@ -46,7 +46,7 @@ public class FilesController {
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Files, FilesFilter>(SpecificationMode.AND)
 //				.withDateTime(Files_.ts, FilesFilter::getTs)
-				.withNumber(Files_.seenBytes, FilesFilter::getSize)
+				.withNumber(Files_.seenBytes, FilesFilter::getSeenBytes)
 				.withString(Files_.mimeType, FilesFilter::getMimeType)
 				.withString(Files_.filename, FilesFilter::getFilename)
 				.withString(Files_.extracted, FilesFilter::getExtracted)

@@ -49,7 +49,7 @@ controller('filesCtrl', ['$scope', 'filesService', 'uiGridConstants', 'gridHelpe
 			},
 			{field: 'mimeType'},
 			{field: 'filename'},
-			{field: 'size', cellFilter: 'formatBytes:1024:2'},
+			{field: 'seenBytes', cellFilter: 'formatBytes:1024:2'},
 			{field: 'extracted'},
 			{
 				field: '_download',

@@ -15,7 +15,7 @@ public class FilesDto {
 
 	private String mimeType;
 	private String filename;
-	private int size;
+	private int seenBytes;
 	private String extracted;
 
 	public FilesDto() {
@@ -27,7 +27,7 @@ public class FilesDto {
 		setMimeType(src.getMimeType());
 		setFilename(src.getFilename());
 		setExtracted(src.getExtracted());
-		setSize(
+		setSeenBytes(
 				Stream.of(src.getSeenBytes(), src.getTotalBytes())
 						.filter(Objects::nonNull)
 						.mapToInt(i -> i)
@@ -59,12 +59,12 @@ public class FilesDto {
 		this.filename = filename;
 	}
 
-	public int getSize() {
-		return size;
+	public int getSeenBytes() {
+		return seenBytes;
 	}
 
-	public void setSize(int size) {
-		this.size = size;
+	public void setSeenBytes(int seenBytes) {
+		this.seenBytes = seenBytes;
 	}
 
 	public String getExtracted() {
