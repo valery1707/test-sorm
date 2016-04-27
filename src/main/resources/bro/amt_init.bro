@@ -17,6 +17,9 @@
 #https://www.bro.org/sphinx/frameworks/logging-input-sqlite.html#id6
 #@load frameworks/files/hash-all-files
 
+#https://www.bro.org/sphinx/scripts/base/protocols/smtp/main.bro.html#type-SMTP::Info
+@load policy/protocols/smtp/software.bro
+
 module AMT;
 
 # Добавление ссылки на тикет в conn и остальные используемые типы логов где это нужно
