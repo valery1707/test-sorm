@@ -28,7 +28,7 @@ public class SmtpController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Smtp, SmtpFilter>(SpecificationMode.AND)
-//				.withDateTime(Smtp_.ts, SmtpFilter::getTs)
+				.withDateTimeDecimal(Smtp_.ts, SmtpFilter::getTs)
 				.withIp(Smtp_.idOrigIp, SmtpFilter::getIdOrigHost)
 				.withIp(Smtp_.idRespIp, SmtpFilter::getIdRespHost)
 				.withNumber(Smtp_.idOrigPort, SmtpFilter::getIdOrigPort)

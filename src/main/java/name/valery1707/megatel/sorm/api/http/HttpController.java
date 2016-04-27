@@ -28,7 +28,7 @@ public class HttpController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Http, HttpFilter>(SpecificationMode.AND)
-//				.withDateTime(Http_.ts, HttpFilter::getTs)
+				.withDateTimeDecimal(Http_.ts, HttpFilter::getTs)
 				.withIp(Http_.idOrigIp, HttpFilter::getIdOrigHost)
 				.withIp(Http_.idRespIp, HttpFilter::getIdRespHost)
 				.withNumber(Http_.idOrigPort, HttpFilter::getIdOrigPort)

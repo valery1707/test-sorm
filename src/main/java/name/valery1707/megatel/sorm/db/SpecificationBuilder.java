@@ -5,6 +5,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -39,6 +40,11 @@ public class SpecificationBuilder<D, F> {
 
 	public SpecificationBuilder<D, F> withDateTime(SingularAttribute<D, ZonedDateTime> field, Function<F, List<ZonedDateTime>> value) {
 		filters.add(new DateTimeFilter<>(field, value));
+		return this;
+	}
+
+	public SpecificationBuilder<D, F> withDateTimeDecimal(SingularAttribute<D, BigDecimal> field, Function<F, List<ZonedDateTime>> value) {
+		filters.add(new DateTimeFilterDecimal<>(field, value));
 		return this;
 	}
 

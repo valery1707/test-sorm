@@ -45,7 +45,7 @@ public class FilesController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Files, FilesFilter>(SpecificationMode.AND)
-//				.withDateTime(Files_.ts, FilesFilter::getTs)
+				.withDateTimeDecimal(Files_.ts, FilesFilter::getTs)
 				.withNumber(Files_.seenBytes, FilesFilter::getSeenBytes)
 				.withNumber(Files_.totalBytes, FilesFilter::getTotalBytes)
 				.withNumber(Files_.missingBytes, FilesFilter::getMissingBytes)

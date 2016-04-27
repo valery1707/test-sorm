@@ -28,7 +28,7 @@ public class ConnController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Conn, ConnFilter>(SpecificationMode.AND)
-//				.withDateTime(Conn_.ts, ConnFilter::getTs)
+				.withDateTimeDecimal(Conn_.ts, ConnFilter::getTs)
 				.withIp(Conn_.idOrigIp, ConnFilter::getIdOrigHost)
 				.withIp(Conn_.idRespIp, ConnFilter::getIdRespHost)
 				.withNumber(Conn_.idOrigPort, ConnFilter::getIdOrigPort)

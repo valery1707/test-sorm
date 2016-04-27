@@ -27,7 +27,6 @@ controller('connCtrl', ['$scope', 'connService', 'uiGridConstants', 'gridHelper'
 				filterTermMapper: function(value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
-				, enableFiltering: false
 			},
 			{field: 'proto'},
 			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}},

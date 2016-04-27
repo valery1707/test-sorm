@@ -47,7 +47,6 @@ controller('filesCtrl', ['$scope', 'filesService', 'uiGridConstants', 'gridHelpe
 				filterTermMapper: function(value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
-				, enableFiltering: false
 			},
 			{field: 'mimeType'},
 			{field: 'filename'},

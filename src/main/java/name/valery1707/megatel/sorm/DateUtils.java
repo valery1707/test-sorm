@@ -18,4 +18,12 @@ public class DateUtils {
 		);
 		return ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
 	}
+
+	public static BigDecimal zonedDateTime2BigDecimal(ZonedDateTime src) {
+		BigDecimal nanos = new BigDecimal(src.getNano())
+				.movePointLeft(6);
+		BigDecimal seconds = new BigDecimal(src.toEpochSecond())
+				.add(nanos);
+		return seconds;
+	}
 }
