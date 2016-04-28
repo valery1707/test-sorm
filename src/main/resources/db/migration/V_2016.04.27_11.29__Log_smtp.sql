@@ -37,4 +37,4 @@ CREATE TABLE smtp (
 		fuids               LONGTEXT COMMENT 'Список UID файлов из письма',
 		is_webmail          BOOLEAN COMMENT 'Письмо было отправлено через веб-почту'
 )
-		COMMENT 'SMTP-трафик';
+		COMMENT = 'SMTP-трафик';
