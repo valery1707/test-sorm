@@ -49,8 +49,6 @@ fi
 
 _info "Stop old log watchers"
 killall -v -9 tail
-_info "Stop watcher in waiting for file mode"
-#ps -ef | grep -E '^root .* ([0-9]{2}:[0-9]{2}:[0-9]{2}) /bin/bash .*amt_watch.sh.*' | sed -r 's_root\s+([[:digit:]]+)\s+([[:digit:]]+).*_\1_g' | xargs --max-args=1 kill -9
 
 #$1 - file_name
 #$2 - table_name
@@ -61,12 +59,7 @@ _watch() {
 	table_columns=$(echo ${3} | sed 's/\./_/g')
 	bro_columns=$(echo ${3} | sed 's/,//g' | sed 's/`//')
 	file_name_full="${log_dir}/${log_file_prefix}${file_name}"
-	while : ; do
-		[[ -f "${file_name_full}" ]] && break
-		_info "Wait for file: ${file_name_full}"
-		sleep 1s
-	done
-	tail -f -n+0 ${file_name_full} \
+	tail --retry --lines=+0 --follow ${file_name_full} \
 | /opt/bro/bin/bro-cut ${bro_columns} \
 | sed 's/"/_saved_double_quote_/g' \
 | sed "s/'/_saved_single_quote_/g" \
