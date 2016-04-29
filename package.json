@@ -37,7 +37,8 @@
     "moment": "2.12.0",
     "jquery-datetimepicker": "https://github.com/xdan/datetimepicker.git#2.3.4",
     "FileSaver.js": "https://github.com/eligrey/FileSaver.js/raw/master/FileSaver.js",
-    "Blob.js": "https://github.com/eligrey/Blob.js/raw/master/Blob.js"
+    "Blob.js": "https://github.com/eligrey/Blob.js/raw/master/Blob.js",
+    "angular-loading-spinner": "0.0.3"
   },
   "devDependencies": {
     "bower": "1.7.7",

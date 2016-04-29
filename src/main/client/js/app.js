@@ -8,6 +8,8 @@ angular.module('app', [
 	, 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns'
 	, 'ghiscoding.validation'
 	, 'pascalprecht.translate'
+	, 'ngLoadingSpinner'
+	, 'angularSpinner'
 ]).
 config(['$routeProvider', function ($routeProvider) {
 	//$routeProvider.otherwise({redirectTo: '/main'});//todo dashboard?

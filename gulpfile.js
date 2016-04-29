@@ -54,6 +54,11 @@ var paths = {
 
 		, 'bower_components/FileSaver.js/index.js'
 		, 'bower_components/Blob.js/index.js'
+
+		, 'bower_components/spin.js/spin.js'
+		, 'bower_components/spin.js/jquery.spin.js'
+		, 'bower_components/angular-spinner/angular-spinner.js'
+		, 'bower_components/angular-loading-spinner/angular-loading-spinner.js'
 	],
 	scriptsLibIE: [
 		'bower_components/html5shiv/dist/html5shiv.js'
