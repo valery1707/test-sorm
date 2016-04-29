@@ -79,9 +79,9 @@ _watch() {
 }
 
 _info "Run new log watchers"
-_watch conn.log conn 'ts, uid, id.orig_h, id.orig_p, id.resp_h, id.resp_p, proto, service, duration, orig_bytes, resp_bytes, conn_state, local_orig, local_resp, missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes, tunnel_parents, amt_tasks_list'
-_watch http.log http 'ts, uid, id.orig_h, id.orig_p, id.resp_h, id.resp_p, trans_depth, method, host, uri, referrer, user_agent, request_body_len, response_body_len, status_code, status_msg, info_code, info_msg, filename, tags, username, password, proxied, orig_fuids, orig_mime_types, resp_fuids, resp_mime_types'
-_watch files.log files 'ts, fuid, tx_hosts, rx_hosts, conn_uids, source, depth, analyzers, mime_type, filename, duration, local_orig, is_orig, seen_bytes, total_bytes, missing_bytes, overflow_bytes, timedout, parent_fuid, md5, sha1, sha256, extracted'
-_watch smtp.log smtp 'ts, uid, id.orig_h, id.orig_p, id.resp_h, id.resp_p, trans_depth, helo, mailfrom, rcptto, date, `from`, `to`, reply_to, msg_id, in_reply_to, subject, x_originating_ip, first_received, second_received, last_reply, path, user_agent, tls, fuids, is_webmail'
+_watch conn.log bro_conn 'ts, uid, id.orig_h, id.orig_p, id.resp_h, id.resp_p, proto, service, duration, orig_bytes, resp_bytes, conn_state, local_orig, local_resp, missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes, tunnel_parents, amt_tasks_list'
+_watch http.log bro_http 'ts, uid, id.orig_h, id.orig_p, id.resp_h, id.resp_p, trans_depth, method, host, uri, referrer, user_agent, request_body_len, response_body_len, status_code, status_msg, info_code, info_msg, filename, tags, username, password, proxied, orig_fuids, orig_mime_types, resp_fuids, resp_mime_types'
+_watch files.log bro_files 'ts, fuid, tx_hosts, rx_hosts, conn_uids, source, depth, analyzers, mime_type, filename, duration, local_orig, is_orig, seen_bytes, total_bytes, missing_bytes, overflow_bytes, timedout, parent_fuid, md5, sha1, sha256, extracted'
+_watch smtp.log bro_smtp 'ts, uid, id.orig_h, id.orig_p, id.resp_h, id.resp_p, trans_depth, helo, mailfrom, rcptto, date, `from`, `to`, reply_to, msg_id, in_reply_to, subject, x_originating_ip, first_received, second_received, last_reply, path, user_agent, tls, fuids, is_webmail'
 
 #ps -ef|grep 'tail'

@@ -1,12 +1,12 @@
-package name.valery1707.megatel.sorm.api.files;
+package name.valery1707.megatel.sorm.api.bro.files;
 
-import name.valery1707.megatel.sorm.api.http.HttpRepo;
+import name.valery1707.megatel.sorm.api.bro.http.BroHttpRepo;
 import name.valery1707.megatel.sorm.configuration.MimeRepository;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
-import name.valery1707.megatel.sorm.domain.Files;
-import name.valery1707.megatel.sorm.domain.Files_;
-import name.valery1707.megatel.sorm.domain.Http;
+import name.valery1707.megatel.sorm.domain.BroFiles;
+import name.valery1707.megatel.sorm.domain.BroFiles_;
+import name.valery1707.megatel.sorm.domain.BroHttp;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -35,45 +35,45 @@ import java.util.List;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @RestController
-@RequestMapping("/api/files")
-public class FilesController {
+@RequestMapping("/api/bro/files")
+public class BroFilesController {
 	@Inject
-	private FilesRepo repo;
+	private BroFilesRepo repo;
 
-	private SpecificationBuilder<Files, FilesFilter> specificationBuilder;
+	private SpecificationBuilder<BroFiles, BroFilesFilter> specificationBuilder;
 
 	@PostConstruct
 	public void init() {
-		specificationBuilder = new SpecificationBuilder<Files, FilesFilter>(SpecificationMode.AND)
-				.withDateTimeDecimal(Files_.ts, FilesFilter::getTs)
-				.withNumber(Files_.seenBytes, FilesFilter::getSeenBytes)
-				.withNumber(Files_.totalBytes, FilesFilter::getTotalBytes)
-				.withNumber(Files_.missingBytes, FilesFilter::getMissingBytes)
-				.withString(Files_.mimeType, FilesFilter::getMimeType)
-				.withString(Files_.filename, FilesFilter::getFilename)
-				.withString(Files_.extracted, FilesFilter::getExtracted)
+		specificationBuilder = new SpecificationBuilder<BroFiles, BroFilesFilter>(SpecificationMode.AND)
+				.withDateTimeDecimal(BroFiles_.ts, BroFilesFilter::getTs)
+				.withNumber(BroFiles_.seenBytes, BroFilesFilter::getSeenBytes)
+				.withNumber(BroFiles_.totalBytes, BroFilesFilter::getTotalBytes)
+				.withNumber(BroFiles_.missingBytes, BroFilesFilter::getMissingBytes)
+				.withString(BroFiles_.mimeType, BroFilesFilter::getMimeType)
+				.withString(BroFiles_.filename, BroFilesFilter::getFilename)
+				.withString(BroFiles_.extracted, BroFilesFilter::getExtracted)
 		;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public Page<FilesDto> findByFilter(
+	public Page<BroFilesDto> findByFilter(
 			@PageableDefault(size = 20) @SortDefault("ts") Pageable pageable,
-			@RequestBody(required = false) FilesFilter filter
+			@RequestBody(required = false) BroFilesFilter filter
 	) {
-		Specification<Files> spec = specificationBuilder.build(filter);
+		Specification<BroFiles> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
-				.map(FilesDto::new);
+				.map(BroFilesDto::new);
 	}
 
 	@Value("${files.extract_dir}")
 	private File extractDir;
 
 	@Inject
-	private HttpRepo httpRepo;
+	private BroHttpRepo httpRepo;
 
 	@RequestMapping(path = "download", method = RequestMethod.POST)
 	public HttpEntity<InputStreamResource> download(@RequestBody String extracted) {
-		Files files = repo.getByExtracted(extracted);
+		BroFiles files = repo.getByExtracted(extracted);
 		if (files == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 		}
@@ -88,9 +88,9 @@ public class FilesController {
 				String[] connUids = files.getConnUids().split(",");
 				for (int c = 0; c < connUids.length && files.getFilename() == null; c++) {
 					String connUid = connUids[c];
-					List<Http> https = httpRepo.findByUidAndFuid(connUid, files.getFuid());
+					List<BroHttp> https = httpRepo.findByUidAndFuid(connUid, files.getFuid());
 					for (int h = 0; h < https.size() && files.getFilename() == null; h++) {
-						Http http = https.get(h);
+						BroHttp http = https.get(h);
 						if (http.getUri() != null) {
 							try {
 								URI uri = new URI(http.getUri().replace(" ", "%20").replace("|", "%7C"));

@@ -1,14 +1,14 @@
 angular.module('app').
 config(['$routeProvider', function ($routeProvider) {
-	$routeProvider.when('/conn', {
-		templateUrl: 'view/conn.html',
-		controller: 'connCtrl'
+	$routeProvider.when('/bro/smtp', {
+		templateUrl: 'view/bro/smtp.html',
+		controller: 'broSmtpCtrl'
 	});
 }]).
-factory('connService', ['$resource', function ($resource) {
-	return $resource(apiBaseUrl + '/conn', {}, serviceCommonConfig);
+factory('broSmtpService', ['$resource', function ($resource) {
+	return $resource(apiBaseUrl + '/bro/smtp', {}, serviceCommonConfig);
 }]).
-controller('connCtrl', ['$scope', 'connService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
+controller('broSmtpCtrl', ['$scope', 'broSmtpService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
 	$scope.filterModel = {};
 
 	var paginationOptions = {
@@ -28,11 +28,17 @@ controller('connCtrl', ['$scope', 'connService', 'uiGridConstants', 'gridHelper'
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},
-			{field: 'proto'},
 			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}},
 			{field: 'idOrigPort', filter: {placeholder: '<, <=, =, >, >=, ...'}},
 			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}},
 			{field: 'idRespPort', filter: {placeholder: '<, <=, =, >, >=, ... '}},
+			{field: 'from'},
+			{field: 'to'},
+			{field: 'subject'},
+			{field: 'userAgent'},
+			{field: 'tls', enableFiltering: false},
+			{field: 'fuids'},
+			{field: 'isWebmail', enableFiltering: false},
 		],
 	});
 

@@ -1,14 +1,14 @@
 angular.module('app').
 config(['$routeProvider', function ($routeProvider) {
-	$routeProvider.when('/http', {
-		templateUrl: 'view/http.html',
-		controller: 'httpCtrl'
+	$routeProvider.when('/bro/conn', {
+		templateUrl: 'view/bro/conn.html',
+		controller: 'broConnCtrl'
 	});
 }]).
-factory('httpService', ['$resource', function ($resource) {
-	return $resource(apiBaseUrl + '/http', {}, serviceCommonConfig);
+factory('broConnService', ['$resource', function ($resource) {
+	return $resource(apiBaseUrl + '/bro/conn', {}, serviceCommonConfig);
 }]).
-controller('httpCtrl', ['$scope', 'httpService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
+controller('broConnCtrl', ['$scope', 'broConnService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
 	$scope.filterModel = {};
 
 	var paginationOptions = {
@@ -28,19 +28,11 @@ controller('httpCtrl', ['$scope', 'httpService', 'uiGridConstants', 'gridHelper'
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},
+			{field: 'proto'},
 			{field: 'idOrigHost', filter: {placeholder: 'IP/CIDR'}},
 			{field: 'idOrigPort', filter: {placeholder: '<, <=, =, >, >=, ...'}},
 			{field: 'idRespHost', filter: {placeholder: 'IP/CIDR'}},
 			{field: 'idRespPort', filter: {placeholder: '<, <=, =, >, >=, ... '}},
-			{field: 'method'},
-			{field: 'host'},
-			{field: 'uri'},
-			{field: 'referrer'},
-			{field: 'userAgent'},
-			{field: 'requestBodyLen', cellFilter: 'formatBytes:1024:2'},
-			{field: 'responseBodyLen', cellFilter: 'formatBytes:1024:2'},
-			{field: 'statusCode'},
-			{field: 'hasFiles', enableFiltering: false},
 		],
 	});
 

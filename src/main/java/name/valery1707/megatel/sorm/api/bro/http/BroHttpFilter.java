@@ -1,9 +1,9 @@
-package name.valery1707.megatel.sorm.api.http;
+package name.valery1707.megatel.sorm.api.bro.http;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class HttpFilter {
+public class BroHttpFilter {
 	private List<ZonedDateTime> ts;
 	private String idOrigHost;
 	private String idOrigPort;

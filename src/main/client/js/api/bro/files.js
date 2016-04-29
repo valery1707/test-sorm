@@ -1,12 +1,12 @@
 angular.module('app').
 config(['$routeProvider', function ($routeProvider) {
-	$routeProvider.when('/files', {
-		templateUrl: 'view/files.html',
-		controller: 'filesCtrl'
+	$routeProvider.when('/bro/files', {
+		templateUrl: 'view/bro/files.html',
+		controller: 'broFilesCtrl'
 	});
 }]).
-factory('filesService', ['$resource', function ($resource) {
-	const url = apiBaseUrl + '/files';
+factory('broFilesService', ['$resource', function ($resource) {
+	const url = apiBaseUrl + '/bro/files';
 	return $resource(url, {}, jQuery.extend({}, serviceCommonConfig, {
 		download: {
 			url: url + '/download',
@@ -28,7 +28,7 @@ factory('filesService', ['$resource', function ($resource) {
 		}
 	}));
 }]).
-controller('filesCtrl', ['$scope', 'filesService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
+controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
 	$scope.filterModel = {};
 
 	var paginationOptions = {

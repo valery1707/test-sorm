@@ -1,9 +1,9 @@
-package name.valery1707.megatel.sorm.api.files;
+package name.valery1707.megatel.sorm.api.bro.files;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
-public class FilesFilter {
+public class BroFilesFilter {
 	private List<ZonedDateTime> ts;
 	private String mimeType;
 	private String filename;

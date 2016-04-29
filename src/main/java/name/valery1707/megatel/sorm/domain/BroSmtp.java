@@ -10,7 +10,7 @@ import java.math.BigInteger;
 
 @Entity
 @SuppressWarnings("unused")
-public class Smtp {
+public class BroSmtp {
 	@Id
 	@NotNull
 	private BigDecimal ts;

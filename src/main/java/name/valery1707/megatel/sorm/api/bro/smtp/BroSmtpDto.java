@@ -1,7 +1,7 @@
-package name.valery1707.megatel.sorm.api.conn;
+package name.valery1707.megatel.sorm.api.bro.smtp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import name.valery1707.megatel.sorm.domain.Conn;
+import name.valery1707.megatel.sorm.domain.BroSmtp;
 
 import java.time.format.DateTimeFormatter;
 
@@ -9,7 +9,7 @@ import static name.valery1707.megatel.sorm.DateUtils.bigDecimalToZonedDateTime;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ConnDto {
+public class BroSmtpDto {
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	private String ts;
@@ -18,21 +18,31 @@ public class ConnDto {
 	private String idRespHost;
 	private int idRespPort;
 
-	private String proto;
-	private String service;
+	private String from;
+	private String to;
+	private String subject;
+	private String userAgent;
+	private Boolean tls;
+	private String fuids;
+	private Boolean isWebmail;
 
-	public ConnDto() {
+	public BroSmtpDto() {
 	}
 
-	public ConnDto(Conn src) {
+	public BroSmtpDto(BroSmtp src) {
 		this();
 		setTs(bigDecimalToZonedDateTime(src.getTs()).format(FORMATTER));
 		setIdOrigHost(src.getIdOrigHost());
 		setIdOrigPort(src.getIdOrigPort());
 		setIdRespHost(src.getIdRespHost());
 		setIdRespPort(src.getIdRespPort());
-		setProto(src.getProto());
-		setService(src.getService());
+		setFrom(src.getFrom());
+		setTo(src.getTo());
+		setSubject(src.getSubject());
+		setUserAgent(src.getUserAgent());
+		setTls(src.getTls());
+		setFuids(src.getFuids());
+		setWebmail(src.getWebmail());
 	}
 
 	public String getTs() {
@@ -75,19 +85,59 @@ public class ConnDto {
 		this.idRespPort = idRespPort;
 	}
 
-	public String getProto() {
-		return proto;
+	public String getFrom() {
+		return from;
 	}
 
-	public void setProto(String proto) {
-		this.proto = proto;
+	public void setFrom(String from) {
+		this.from = from;
 	}
 
-	public String getService() {
-		return service;
+	public String getTo() {
+		return to;
 	}
 
-	public void setService(String service) {
-		this.service = service;
+	public void setTo(String to) {
+		this.to = to;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public String getUserAgent() {
+		return userAgent;
+	}
+
+	public void setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
+	}
+
+	public Boolean getTls() {
+		return tls;
+	}
+
+	public void setTls(Boolean tls) {
+		this.tls = tls;
+	}
+
+	public String getFuids() {
+		return fuids;
+	}
+
+	public void setFuids(String fuids) {
+		this.fuids = fuids;
+	}
+
+	public Boolean getWebmail() {
+		return isWebmail;
+	}
+
+	public void setWebmail(Boolean webmail) {
+		isWebmail = webmail;
 	}
 }

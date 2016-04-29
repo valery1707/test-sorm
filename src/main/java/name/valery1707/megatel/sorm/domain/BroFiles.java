@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 @Entity
 @SuppressWarnings("unused")
-public class Files {
+public class BroFiles {
 	@Id
 	@NotNull
 	private BigDecimal ts;

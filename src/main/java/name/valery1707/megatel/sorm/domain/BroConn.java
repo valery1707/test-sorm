@@ -9,7 +9,7 @@ import java.math.BigInteger;
 
 @Entity
 @SuppressWarnings("unused")
-public class Conn {
+public class BroConn {
 	@Id
 	@NotNull
 	private BigDecimal ts;

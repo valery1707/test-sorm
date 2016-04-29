@@ -1,7 +1,7 @@
-package name.valery1707.megatel.sorm.api.http;
+package name.valery1707.megatel.sorm.api.bro.http;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import name.valery1707.megatel.sorm.domain.Http;
+import name.valery1707.megatel.sorm.domain.BroHttp;
 
 import java.time.format.DateTimeFormatter;
 
@@ -9,7 +9,7 @@ import static name.valery1707.megatel.sorm.DateUtils.bigDecimalToZonedDateTime;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class HttpDto {
+public class BroHttpDto {
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	private String ts;
@@ -36,10 +36,10 @@ public class HttpDto {
 
 	private boolean hasFiles;
 
-	public HttpDto() {
+	public BroHttpDto() {
 	}
 
-	public HttpDto(Http src) {
+	public BroHttpDto(BroHttp src) {
 		this();
 		setTs(bigDecimalToZonedDateTime(src.getTs()).format(FORMATTER));
 		setIdOrigHost(src.getIdOrigHost());

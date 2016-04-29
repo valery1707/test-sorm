@@ -10,7 +10,7 @@ import java.math.BigInteger;
 
 @Entity
 @SuppressWarnings("unused")
-public class Http {
+public class BroHttp {
 	@Id
 	@NotNull
 	private BigDecimal ts;
