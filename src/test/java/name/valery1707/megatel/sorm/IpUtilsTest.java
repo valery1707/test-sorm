@@ -3,6 +3,7 @@ package name.valery1707.megatel.sorm;
 import org.apache.commons.net.util.SubnetUtils;
 import org.junit.Test;
 
+import java.math.BigInteger;
 import java.net.UnknownHostException;
 
 import static org.junit.Assert.assertEquals;
@@ -13,6 +14,8 @@ public class IpUtilsTest {
 	public void testIpToNumber() throws UnknownHostException {
 		assertEquals("204.197.215.198", Long.toString(0xccc5d7c6L), IpUtils.ipToNumber("204.197.215.198").toString());
 		assertEquals("50.18.215.115", Long.toString(0x3212d773L), IpUtils.ipToNumber("50.18.215.115").toString());
+		assertEquals("178.89.247.180", Long.toString(0xB259F7B4L), IpUtils.ipToNumber("178.89.247.180").toString());
+		assertEquals("fe80::20c:29ff:feaa:296f", new BigInteger("338288524927261089654166435908610042223", 10).toString(), IpUtils.ipToNumber("fe80::20c:29ff:feaa:296f").toString());
 	}
 
 	@Test
