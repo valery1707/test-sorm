@@ -56,12 +56,13 @@
                 <li class="dropdown" ng-class="{active: $state.includes('bro')}">
                     <a href="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Bro <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li ng-class="{active: $state.includes('bro.conn')}"><a ui-sref="bro.conn">Conn</a></li>
-                        <li ng-class="{active: $state.includes('bro.http')}"><a ui-sref="bro.http">Http</a></li>
-                        <li ng-class="{active: $state.includes('bro.files')}"><a ui-sref="bro.files">Files</a></li>
-                        <li ng-class="{active: $state.includes('bro.smtp')}"><a ui-sref="bro.smtp">SMTP</a></li>
+                        <li ui-sref-active="active"><a ui-sref="bro.conn">Conn</a></li>
+                        <li ui-sref-active="active"><a ui-sref="bro.http">Http</a></li>
+                        <li ui-sref-active="active"><a ui-sref="bro.files">Files</a></li>
+                        <li ui-sref-active="active"><a ui-sref="bro.smtp">SMTP</a></li>
                     </ul>
                 </li>
+                <li ui-sref-active="active"><a ui-sref="todo">Todo</a></li>
                 <li ui-sref-active="active"><a ui-sref="about">About</a></li>
             </ul>
 
