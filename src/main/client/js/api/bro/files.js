@@ -1,9 +1,11 @@
 angular.module('app').
-config(['$routeProvider', function ($routeProvider) {
-	$routeProvider.when('/bro/files', {
-		templateUrl: 'view/bro/files.html',
-		controller: 'broFilesCtrl'
-	});
+config(['$stateProvider', function ($stateProvider) {
+	$stateProvider
+			.state('bro.files', {
+				url: "/files",
+				templateUrl: 'view/bro/files.html',
+				controller: 'broFilesCtrl'
+			});
 }]).
 factory('broFilesService', ['$resource', function ($resource) {
 	const url = apiBaseUrl + '/bro/files';

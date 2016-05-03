@@ -33,6 +33,7 @@ var paths = {
 		, 'node_modules/angular-resource/angular-resource.js'
 		, 'node_modules/angular-mocks/angular-mocks.js'
 		, 'node_modules/angular-touch/angular-touch.js'
+		, 'node_modules/angular-ui-router/release/angular-ui-router.js'
 
 		, 'bower_components/jquery/dist/jquery.js'
 
@@ -189,6 +190,7 @@ gulp.task('scriptsLibIE', function () {
 gulp.task('default', function () {
 	gulp.watch(paths.stylesApp, ['stylesApp']);
 	gulp.watch(paths.scriptsApp, ['scriptsApp']);
+	gulp.watch(paths.images, ['images']);
 });
 
 var bowerTask = function (fn, cb) {

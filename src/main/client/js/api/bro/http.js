@@ -1,9 +1,11 @@
 angular.module('app').
-config(['$routeProvider', function ($routeProvider) {
-	$routeProvider.when('/bro/http', {
-		templateUrl: 'view/bro/http.html',
-		controller: 'broHttpCtrl'
-	});
+config(['$stateProvider', function ($stateProvider) {
+	$stateProvider
+			.state('bro.http', {
+				url: "/http",
+				templateUrl: 'view/bro/http.html',
+				controller: 'broHttpCtrl'
+			});
 }]).
 factory('broHttpService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/bro/http', {}, serviceCommonConfig);

@@ -1,9 +1,11 @@
 angular.module('app').
-config(['$routeProvider', function ($routeProvider) {
-	$routeProvider.when('/bro/conn', {
-		templateUrl: 'view/bro/conn.html',
-		controller: 'broConnCtrl'
-	});
+config(['$stateProvider', function ($stateProvider) {
+	$stateProvider
+			.state('bro.conn', {
+				url: "/conn",
+				templateUrl: 'view/bro/conn.html',
+				controller: 'broConnCtrl'
+			});
 }]).
 factory('broConnService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/bro/conn', {}, serviceCommonConfig);

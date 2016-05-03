@@ -1,9 +1,11 @@
 angular.module('app').
-config(['$routeProvider', function ($routeProvider) {
-	$routeProvider.when('/bro/smtp', {
-		templateUrl: 'view/bro/smtp.html',
-		controller: 'broSmtpCtrl'
-	});
+config(['$stateProvider', function ($stateProvider) {
+	$stateProvider
+			.state('bro.smtp', {
+				url: "/smtp",
+				templateUrl: 'view/bro/smtp.html',
+				controller: 'broSmtpCtrl'
+			});
 }]).
 factory('broSmtpService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/bro/smtp', {}, serviceCommonConfig);
