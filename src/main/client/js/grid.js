@@ -18,6 +18,7 @@ service('gridHelper', [function () {
 			});
 		};
 		$scope.gridOptions = {
+			//minRowsToShow: 10,
 			paginationPageSizes: [25, 50, 75],
 			paginationPageSize: paginationOptions.pageSize,
 			useExternalPagination: true,
