@@ -78,6 +78,7 @@ _watch() {
 | sed "s/target_table_columns/${table_columns}/g" \
 | sed 's/_saved_double_quote/"_/g' \
 | sed "s/_saved_single_quote_/''/g" \
+| tee ${table_name}.sql.log \
 | mysql --batch --force --reconnect --wait --unbuffered --user=${db_username} ${db_database} \
 &
 }
