@@ -26,7 +26,7 @@ public class MimeRepository {
 	public void init() {
 		mimeTypes = MimeTypes.blank();
 		load(mimeTypes.getClass().getClassLoader(), "mime.types");
-		mimeTypes.loadOne("text/json json");
+		load(this.getClass().getClassLoader(), "mime_types.txt");
 	}
 
 	private void load(ClassLoader classLoader, String path) {

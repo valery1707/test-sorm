@@ -1,0 +1,3 @@
+text/json json
+text/x-php php
+text/atom xml
