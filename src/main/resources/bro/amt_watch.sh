@@ -60,7 +60,7 @@ _watch() {
 	file_name=$1
 	table_name=$2
 	table_columns=$(echo ${3} | sed 's/\./_/g')
-	bro_columns=$(echo ${3} | sed 's/,//g' | sed 's/`//')
+	bro_columns=$(echo ${3} | sed 's/,//g' | sed 's/`//g')
 	file_name_full="${log_dir}/${log_file_prefix}${file_name}"
 	tail --retry --lines=+0 --follow ${file_name_full} \
 | /opt/bro/bin/bro-cut ${bro_columns} \
