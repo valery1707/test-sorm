@@ -16,34 +16,34 @@ import java.util.stream.Collectors;
 
 public class SpecificationBuilder<D, F> {
 
-	private List<Filter<D, F>> filters = new ArrayList<>();
+	private List<Filter<? super D, F>> filters = new ArrayList<>();
 	private final SpecificationMode mode;
 
 	public SpecificationBuilder(SpecificationMode mode) {
 		this.mode = mode;
 	}
 
-	public SpecificationBuilder<D, F> withString(SingularAttribute<D, String> field, Function<F, String> value) {
+	public SpecificationBuilder<D, F> withString(SingularAttribute<? super D, String> field, Function<F, String> value) {
 		filters.add(new StringFilter<>(field, value));
 		return this;
 	}
 
-	public SpecificationBuilder<D, F> withIp(SingularAttribute<D, BigInteger> field, Function<F, String> value) {
+	public SpecificationBuilder<D, F> withIp(SingularAttribute<? super D, BigInteger> field, Function<F, String> value) {
 		filters.add(new IpFilter<>(field, value));
 		return this;
 	}
 
-	public <M extends Number & Comparable<M>> SpecificationBuilder<D, F> withNumber(SingularAttribute<D, M> field, Function<F, String> value) {
+	public <M extends Number & Comparable<M>> SpecificationBuilder<D, F> withNumber(SingularAttribute<? super D, M> field, Function<F, String> value) {
 		filters.add(new NumberFilter<>(field, value));
 		return this;
 	}
 
-	public SpecificationBuilder<D, F> withDateTime(SingularAttribute<D, ZonedDateTime> field, Function<F, List<ZonedDateTime>> value) {
+	public SpecificationBuilder<D, F> withDateTime(SingularAttribute<? super D, ZonedDateTime> field, Function<F, List<ZonedDateTime>> value) {
 		filters.add(new DateTimeFilter<>(field, value));
 		return this;
 	}
 
-	public SpecificationBuilder<D, F> withDateTimeDecimal(SingularAttribute<D, BigDecimal> field, Function<F, List<ZonedDateTime>> value) {
+	public SpecificationBuilder<D, F> withDateTimeDecimal(SingularAttribute<? super D, BigDecimal> field, Function<F, List<ZonedDateTime>> value) {
 		filters.add(new DateTimeFilterDecimal<>(field, value));
 		return this;
 	}
@@ -54,6 +54,7 @@ public class SpecificationBuilder<D, F> {
 		}
 		return (root, query, cb) -> {
 			List<Predicate> predicates = filters.stream()
+					.map(f -> (Filter<D, F>) f)
 					.map(f -> f.toPredicate(root, query, cb, filter))
 					.filter(Objects::nonNull)
 					.collect(Collectors.toList());
