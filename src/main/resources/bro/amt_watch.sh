@@ -81,6 +81,18 @@ _watch() {
 | tee ${table_name}.sql.log \
 | mysql --batch --force --reconnect --wait --unbuffered --user=${db_username} ${db_database} \
 &
+#| parallel --bg sql mysql://${db_username}:${db_password}@localhost/${db_database} \
+
+#| tr '\n' '\0' \
+#| xargs --null -I % bash -c "echo '%' | mysql --user=${db_username} --password=${db_password} ${db_database} --batch" \
+
+#| sed 's/"/""/g' \
+#| awk '{print "\"" $0 "\""}' \
+
+#| xargs --max-args 1 echo \
+
+
+#| tee ${table_name}.sql.log \
 }
 
 _info "Run new log watchers"
