@@ -3,7 +3,7 @@
 
 module AMT_TASK_00;
 
-const taskId: count = 0;
+const taskId: count = 1;
 
 event bro_init() &priority=-10 {
 	#todo Фильтровать нужно не весь трафик, а трафик только определённого пользователя системы
