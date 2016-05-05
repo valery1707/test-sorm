@@ -84,6 +84,13 @@ var paths = {
 	stylesLibCommonAssets: [
 		'node_modules/angular-ui-grid/ui-grid.woff',
 		'node_modules/angular-ui-grid/ui-grid.ttf'
+	],
+	stylesLibCommonFonts: [
+		'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.eot',
+		'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.svg',
+		'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf',
+		'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff',
+		'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2'
 	]
 };
 
@@ -125,6 +132,9 @@ gulp.task('stylesLibCommon', function () {
 	gulp.src(paths.stylesLibCommonAssets)
 			.pipe(gulp.dest('src/main/webapp/css/common/'))
 			.pipe(gulp.dest('src/main/webapp/css/'));
+	gulp.src(paths.stylesLibCommonFonts)
+			.pipe(gulp.dest('src/main/webapp/css/common/' + '../fonts'))
+			.pipe(gulp.dest('src/main/webapp/css/' + '../fonts'));
 });
 gulp.task('stylesLibIE', function () {
 	gulp.src(paths.stylesLibIE)
