@@ -10,12 +10,37 @@ config(['$stateProvider', function ($stateProvider) {
 				url: "/",
 				templateUrl: 'view/task/list.html',
 				controller: 'taskCtrl'
+			})
+			.state('task.view', {
+				url: '/:id/view',
+				templateUrl: 'view/task/view.html',
+				controller: 'taskViewCtrl'
+			})
+			.state('task.view.conn', {
+				url: '/conn',
+				templateUrl: 'view/common/grid/grid.html',
+				controller: 'broConnCtrl'
+			})
+			.state('task.view.http', {
+				url: '/http',
+				templateUrl: 'view/common/grid/grid.html',
+				controller: 'broHttpCtrl'
+			})
+			.state('task.view.files', {
+				url: '/files',
+				templateUrl: 'view/common/grid/grid.html',
+				controller: 'broFilesCtrl'
+			})
+			.state('task.view.smtp', {
+				url: '/smtp',
+				templateUrl: 'view/common/grid/grid.html',
+				controller: 'broSmtpCtrl'
 			});
 }]).
 factory('taskService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/task', {}, serviceCommonConfig);
 }]).
-controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
+controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$state', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $state) {
 	$scope.filterModel = {};
 
 	var paginationOptions = {
@@ -26,6 +51,15 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 
 	gridHelper($scope, service, paginationOptions, {
 		columnDefs: [
+			{
+				field: '_view',
+				name: '',
+				enableFiltering: false,
+				enableSorting: false,
+				enableColumnMenu: false,
+				cellTemplate: 'view/task/grid-button-view.html',
+				width: 34, maxWidth: 34, minWidth: 34
+			},
 			{
 				field: 'id',
 				sort: {direction: uiGridConstants.ASC, priority: 0}
@@ -52,6 +86,31 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 		],
 	});
 
+	$scope.rowView = function (grid, row) {
+		$state.go('task.view.conn', {id: row.entity.id});
+	};
+
 	$scope.loadPage();
+}]).controller('taskViewCtrl', ['$scope', '$state', function ($scope, $state) {
+	$scope.tabs = [
+		{active: false, route: 'task.view.conn', name: 'Conn'},
+		{active: false, route: 'task.view.http', name: 'Http'},
+		{active: false, route: 'task.view.files', name: 'Files'},
+		{active: false, route: 'task.view.smtp', name: 'SMTP'},
+	];
+
+	$scope.go = function (route) {
+		$state.go(route);
+	};
+
+	$scope.isActive = function (route) {
+		return $state.is(route);
+	};
+
+	$scope.$on("$stateChangeSuccess", function () {
+		$scope.tabs.forEach(function (tab) {
+			tab.active = $scope.isActive(tab.route);
+		});
+	});
 }])
 ;
