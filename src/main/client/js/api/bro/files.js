@@ -30,8 +30,10 @@ factory('broFilesService', ['$resource', function ($resource) {
 		}
 	}));
 }]).
-controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
-	$scope.filterModel = {};
+controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$stateParams', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $stateParams) {
+	$scope.filterModel = {
+		taskId: $stateParams.id
+	};
 
 	var paginationOptions = {
 		pageNumber: 1,

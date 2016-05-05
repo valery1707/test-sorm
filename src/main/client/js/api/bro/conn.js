@@ -10,8 +10,10 @@ config(['$stateProvider', function ($stateProvider) {
 factory('broConnService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/bro/conn', {}, serviceCommonConfig);
 }]).
-controller('broConnCtrl', ['$scope', 'broConnService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
-	$scope.filterModel = {};
+controller('broConnCtrl', ['$scope', 'broConnService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$stateParams', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $stateParams) {
+	$scope.filterModel = {
+		taskId: $stateParams.id
+	};
 
 	var paginationOptions = {
 		pageNumber: 1,

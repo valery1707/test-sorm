@@ -10,8 +10,10 @@ config(['$stateProvider', function ($stateProvider) {
 factory('broSmtpService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/bro/smtp', {}, serviceCommonConfig);
 }]).
-controller('broSmtpCtrl', ['$scope', 'broSmtpService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', function ($scope, service, uiGridConstants, gridHelper, filterTemplate) {
-	$scope.filterModel = {};
+controller('broSmtpCtrl', ['$scope', 'broSmtpService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$stateParams', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $stateParams) {
+	$scope.filterModel = {
+		taskId: $stateParams.id
+	};
 
 	var paginationOptions = {
 		pageNumber: 1,
