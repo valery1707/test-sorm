@@ -81,17 +81,19 @@ var paths = {
 	stylesLibIE: [
 		'bower_components/github-fork-ribbon-css/gh-fork-ribbon.ie.css'
 	],
-	stylesLibCommonAssets: [
-		'node_modules/angular-ui-grid/ui-grid.woff',
-		'node_modules/angular-ui-grid/ui-grid.ttf'
-	],
-	stylesLibCommonFonts: [
-		'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.eot',
-		'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.svg',
-		'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf',
-		'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff',
-		'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2'
-	]
+	stylesLibCommonAssets: {
+		'.': [
+			'node_modules/angular-ui-grid/ui-grid.woff',
+			'node_modules/angular-ui-grid/ui-grid.ttf'
+		],
+		'../fonts': [
+			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.eot',
+			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.svg',
+			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf',
+			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff',
+			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2'
+		]
+	}
 };
 
 gulp.task('images', function () {
@@ -129,12 +131,12 @@ gulp.task('stylesLibCommon', function () {
 			.pipe(rename({suffix: '.min'}))
 			.pipe(cleanCss())
 			.pipe(gulp.dest('src/main/webapp/css/'));
-	gulp.src(paths.stylesLibCommonAssets)
-			.pipe(gulp.dest('src/main/webapp/css/common/'))
-			.pipe(gulp.dest('src/main/webapp/css/'));
-	gulp.src(paths.stylesLibCommonFonts)
-			.pipe(gulp.dest('src/main/webapp/css/common/' + '../fonts'))
-			.pipe(gulp.dest('src/main/webapp/css/' + '../fonts'));
+	for (var dir in paths.stylesLibCommonAssets) {
+		//noinspection JSUnfilteredForInLoop
+		gulp.src(paths.stylesLibCommonAssets[dir])
+				.pipe(gulp.dest('src/main/webapp/css/common/' + dir))
+				.pipe(gulp.dest('src/main/webapp/css/' + dir))
+	}
 });
 gulp.task('stylesLibIE', function () {
 	gulp.src(paths.stylesLibIE)
