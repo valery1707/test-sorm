@@ -109,8 +109,12 @@ factory('principal', ['$q', '$resource', function ($q, $resource) {
 			var self = this;
 			$resource(apiBaseUrl + '/auth').get({},
 					function (data) {
-						self.authenticate(data);
-						deferred.resolve(_identity);
+						if (data && data.permission) {
+							self.authenticate(data);
+							deferred.resolve(_identity);
+						} else {
+							deferred.reject(_identity);
+						}
 					},
 					function () {
 						self.authenticate(null);
@@ -128,10 +132,24 @@ factory('principal', ['$q', '$resource', function ($q, $resource) {
 				password: password
 			};
 			var self = this;
-			$resource(apiBaseUrl + '/auth').save({}, account,
+			var headers = {
+				'X-Requested-With': 'XMLHttpRequest',
+				'Authorization': "Basic " + btoa(username + ":" + password)
+			};
+			$resource(apiBaseUrl + '/auth', {}, {
+				auth: {
+					method: 'GET',
+					isArray: false,
+					headers: headers
+				}
+			}).auth(account,
 					function (data) {
-						self.authenticate(data);
-						deferred.resolve(data);
+						if (data && data.permission) {
+							self.authenticate(data);
+							deferred.resolve(_identity);
+						} else {
+							deferred.reject(_identity);
+						}
 					},
 					function (error) {
 						self.authenticate(null);
