@@ -3,6 +3,11 @@ config(['$stateProvider', function ($stateProvider) {
 	$stateProvider
 			.state('task', {
 				abstract: true,
+				data: {
+					permissions: {
+						only: ['OPERATOR']
+					}
+				},
 				url: '/task',
 				templateUrl: 'view/common/parent.html'
 			})

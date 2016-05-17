@@ -1,0 +1,222 @@
+angular.module('app').
+config(['$urlRouterProvider', function ($urlRouterProvider) {
+	$urlRouterProvider.otherwise(function ($injector) {
+		var $state = $injector.get("$state");
+		$state.go('home');//todo URL?
+	});
+}]).
+run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, PermissionStore, RoleStore, principal) {
+	var checkPermission = function (permissionName) {
+		return principal.identity().then(function () {
+			const hasPermission = principal.hasPermission(permissionName);
+			if (hasPermission) {
+				return true;
+			} else {
+				return $q.reject(permissionName);
+			}
+		});
+	};
+	PermissionStore.definePermission('seeDashboard', function () {
+		//todo remove?
+		return true;
+	});
+	PermissionStore.definePermission('isAuthenticated', function () {
+		return principal.identity().then(function () {
+			const authenticated = principal.isAuthenticated();
+			if (authenticated) {
+				return true;
+			} else {
+				return $q.reject('isAuthenticated');
+			}
+		});
+	});
+	var common = ['isAuthenticated'];
+	var roles = {
+		//Суперадминистратор
+		SUPER: [],
+		//Администратор
+		ADMIN: [
+			'admin.task.list',
+		],
+		//Оператор/Обработчик
+		OPERATOR: [
+			'operator.task.list',
+		],
+		//Надзор
+		SUPERVISOR: []
+	};
+	for (var role in roles) {
+		var permissions = roles[role];
+		if (permissions.length > 0) {
+			PermissionStore.defineManyPermissions(permissions, checkPermission);
+			RoleStore.defineRole(role, common.concat(permissions));
+		}
+	}
+}]).
+factory('principal', ['$q', '$resource', function ($q, $resource) {
+	var _identity = undefined;
+	var _authenticated = false;
+	return {
+		isIdentityResolved: function () {
+			return angular.isDefined(_identity);
+		},
+		isAuthenticated: function () {
+			return _authenticated;
+		},
+		account: function () {
+			return _identity;
+		},
+		hasPermission: function (permission) {
+			if (!_authenticated || !_identity.permission) {
+				return false;
+			}
+
+			return _identity.permission.indexOf(permission) != -1;
+		},
+		hasAnyPermission: function (permissions) {
+			if (!_authenticated || !_identity.permission) {
+				return false;
+			}
+
+			for (var i = 0; i < permissions.length; i++) {
+				if (this.hasPermission(roles[i])) {
+					return true;
+				}
+			}
+
+			return false;
+		},
+		//Сохранение данных об авторизации
+		authenticate: function (identity) {
+			_identity = identity;
+			_authenticated = identity != null;
+		},
+		//Получение данных о пользователе с сервера
+		identity: function (force) {
+			var deferred = $q.defer();
+
+			if (force === true) {
+				_identity = undefined;
+			}
+
+			// check and see if we have retrieved the identity data from the server. if we have, reuse it by immediately resolving
+			if (this.isIdentityResolved()) {
+				deferred.resolve(_identity);
+
+				return deferred.promise;
+			}
+
+			var self = this;
+			$resource(apiBaseUrl + '/auth').get({},
+					function (data) {
+						self.authenticate(data);
+						deferred.resolve(_identity);
+					},
+					function () {
+						self.authenticate(null);
+						deferred.reject(_identity);
+					}
+			);
+
+			return deferred.promise;
+		},
+		login: function (username, password) {
+			var deferred = $q.defer();
+
+			var account = {
+				username: username,
+				password: password
+			};
+			var self = this;
+			$resource(apiBaseUrl + '/auth').save({}, account,
+					function (data) {
+						self.authenticate(data);
+						deferred.resolve(data);
+					},
+					function (error) {
+						self.authenticate(null);
+						deferred.reject(error);
+					}
+			);
+
+			return deferred.promise;
+		},
+		logout: function () {
+			var deferred = $q.defer();
+
+			var self = this;
+			$resource(apiBaseUrl + '/auth/logout').save({},
+					function (data) {
+						self.authenticate(null);
+						deferred.resolve(data);
+					},
+					function (error) {
+						self.authenticate(null);
+						deferred.resolve(error);
+					}
+			);
+
+			return deferred.promise;
+		}
+	};
+}]).
+controller('authController', ['$scope', '$state', 'principal', function ($scope, $state, principal) {
+	$scope.principal = principal;
+	principal.identity();//Запрос данных с сервера
+	$scope.logout = function () {
+		principal.logout()
+				.then(function () {
+					$state.go('login');
+				});
+	};
+	$scope.model = {};
+	$scope.login = function () {
+		principal.login($scope.model.username, $scope.model.password)
+				.then(function () {
+					$state.go('home');
+				});
+	};
+}]).
+config(['$stateProvider', function ($stateProvider) {
+	var redirectTo = function (rejectedPermission, transitionProperties) {
+		if (!rejectedPermission || rejectedPermission == 'isAuthenticated') {
+			return 'login';//todo Const?
+		} else {
+			return 'accessDenied';//todo Const?
+		}
+	};
+	$stateProvider
+			.decorator('data', function (state, parent) {
+				var result = parent(state);
+				//Копирование данных из родителя
+				if (state.parent && state.parent.data) {
+					result = jQuery.extend({}, result, state.self.data, state.parent.data);
+				}
+				//Добавление функции для редиректа
+				if (result && result.permissions && !result.permissions.redirectTo) {
+					result.permissions.redirectTo = redirectTo;
+				}
+				state.data = result;
+				state.self.data = result;
+				return result;
+			})
+			.state('home', {
+				url: '/',
+				templateUrl: 'view/home.html',
+				data: {
+					permissions: {
+						only: ['isAuthenticated']
+					}
+				}
+			})
+			.state('accessDenied', {
+				url: '/accessDenied',
+				templateUrl: 'view/common/accessDenied.html'
+			})
+			.state('login', {
+				url: '/login',
+				templateUrl: 'view/common/login.html'
+			})
+	;
+}])
+;

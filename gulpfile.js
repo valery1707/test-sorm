@@ -60,6 +60,9 @@ var paths = {
 		, 'bower_components/spin.js/jquery.spin.js'
 		, 'bower_components/angular-spinner/angular-spinner.js'
 		, 'bower_components/angular-loading-spinner/angular-loading-spinner.js'
+
+		, 'bower_components/angular-permission/dist/angular-permission.js'
+		, 'bower_components/angular-permission/dist/angular-permission-ui.js'
 	],
 	scriptsLibIE: [
 		'bower_components/html5shiv/dist/html5shiv.js'

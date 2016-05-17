@@ -11,13 +11,14 @@ angular.module('app', [
 	, 'ngLoadingSpinner'
 	, 'angularSpinner'
 	, 'ui.router'
+	, 'permission', 'permission.ui'
 ]).
 config(['$routeProvider', function ($routeProvider) {
 	//$routeProvider.otherwise({redirectTo: '/main'});//todo dashboard?
 }]).
 config(['$stateProvider', function ($stateProvider) {
 	$stateProvider
-			.state('bro', {
+			.state('bro', {//todo Move to './api/bro' or remove
 				abstract: true,
 				url: '/bro',
 				templateUrl: 'view/common/parent.html'
