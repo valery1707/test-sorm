@@ -55,8 +55,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.and()
 				.formLogin()
 					.loginPage("/#/login")
-					.loginProcessingUrl("/login")
 					.permitAll()
+				.and()
+				.logout()
+					.logoutUrl("/api/auth/logout")
 				.and()
 				.httpBasic()
 //				.and()//todo Implement RememberMe
