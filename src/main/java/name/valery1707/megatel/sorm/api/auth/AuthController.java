@@ -12,7 +12,10 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -32,6 +35,16 @@ public class AuthController {
 		return toAccount(user);
 	}
 
+	//todo Вместо дублирования списка прав на стороне клиента их можно получать отсюда, но запрос выполняется позднее чем проверка прав
+	@RequestMapping("/roles")
+	public Map<String, Collection<String>> roles() {
+		return Stream.of(Account.Role.values())
+				.collect(toMap(
+						Enum::name,
+						Account.Role::getRights
+				));
+	}
+
 	/**
 	 * @see AppUserDetailsService#loadUserByUsername(java.lang.String)
 	 */
@@ -45,7 +58,7 @@ public class AuthController {
 				.map(Account.Role::valueOf)
 				.flatMap(Account.Role::getRightsStream)
 				.distinct()
-				.collect(Collectors.toList());
+				.collect(toList());
 
 		Map<String, Object> account = new HashMap<>();
 		account.put("login", user.getName());

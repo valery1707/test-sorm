@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 public class Account extends ABaseEntity {
 	public enum Role {
 		SUPER(Arrays.asList("operator.task.list")),
-		ADMIN(Arrays.asList("operator.task.list")),
+		ADMIN(Arrays.asList("admin.task.list")),
 		OPERATOR(Arrays.asList("operator.task.list")),
 		SUPERVISOR(Arrays.asList("operator.task.list"));
 
