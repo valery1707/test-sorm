@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,6 +13,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -61,7 +65,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		;
 		if (!securityProperties.isEnableCsrf()) {
 			http.csrf().disable();
+		} else {
+			http
+				.csrf().csrfTokenRepository(csrfTokenRepository())
+				.and()
+				.addFilterAfter(new CsrfCookieFilter(csrfNameToClient), CsrfFilter.class);
 		}
 		// @formatter:on
+	}
+
+	@Value("${security.csrf.name.fromClient}")
+	private String csrfNameFromClient;
+
+	@Value("${security.csrf.name.toClient}")
+	private String csrfNameToClient;
+
+	private CsrfTokenRepository csrfTokenRepository() {
+		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+		repository.setHeaderName(csrfNameFromClient);
+		return repository;
 	}
 }
