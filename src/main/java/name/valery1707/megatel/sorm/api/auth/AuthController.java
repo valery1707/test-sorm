@@ -1,13 +1,18 @@
 package name.valery1707.megatel.sorm.api.auth;
 
+import name.valery1707.megatel.sorm.domain.Account;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
+import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,14 +32,25 @@ public class AuthController {
 		return toAccount(user);
 	}
 
-	private Map<String, Object> toAccount(Authentication user) {
+	/**
+	 * @see AppUserDetailsService#loadUserByUsername(java.lang.String)
+	 */
+	private Map<String, Object> toAccount(@Nullable Authentication user) {
 		if (user == null) {
 			return null;
 		}
+		UserDetails principal = (UserDetails) user.getPrincipal();
+		Collection<String> rights = principal.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.map(Account.Role::valueOf)
+				.flatMap(Account.Role::getRightsStream)
+				.distinct()
+				.collect(Collectors.toList());
+
 		Map<String, Object> account = new HashMap<>();
-		account.put("login", "super");
-		account.put("name", "Super admin");
-		account.put("permission", Arrays.asList("operator.task.list"));
+		account.put("login", user.getName());
+		account.put("name", principal.getUsername());
+		account.put("permission", rights);
 		return account;
 	}
 }

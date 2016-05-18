@@ -5,11 +5,33 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Stream;
 
 @Entity
 @SuppressWarnings("unused")
 public class Account extends ABaseEntity {
-	public enum Role {SUPER, ADMIN, OPERATOR, SUPERVISOR}
+	public enum Role {
+		SUPER(Arrays.asList("operator.task.list")),
+		ADMIN(Arrays.asList("operator.task.list")),
+		OPERATOR(Arrays.asList("operator.task.list")),
+		SUPERVISOR(Arrays.asList("operator.task.list"));
+
+		private final Collection<String> rights;
+
+		Role(Collection<String> rights) {
+			this.rights = rights;
+		}
+
+		public Collection<String> getRights() {
+			return rights;
+		}
+
+		public Stream<String> getRightsStream() {
+			return getRights().stream();
+		}
+	}
 
 	@NotNull
 	private String username;
