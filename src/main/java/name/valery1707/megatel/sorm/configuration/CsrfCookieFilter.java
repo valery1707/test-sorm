@@ -27,10 +27,19 @@ public class CsrfCookieFilter extends OncePerRequestFilter {
 			String token = csrf.getToken();
 			if (cookie == null || token != null && !token.equals(cookie.getValue())) {
 				cookie = new Cookie(csrfCookie, token);
-				cookie.setPath("/");//todo Fix Path
+				cookie.setPath(detectCookiePath(request));
 				response.addCookie(cookie);
 			}
 		}
 		filterChain.doFilter(request, response);
+	}
+
+	private String detectCookiePath(HttpServletRequest request) {
+		Cookie cookie = WebUtils.getCookie(request, "JSESSIONID");
+		if (cookie != null && cookie.getPath() != null) {
+			return cookie.getPath();
+		}
+		String contextPath = request.getContextPath();
+		return contextPath.length() > 0 ? contextPath : "/";
 	}
 }
