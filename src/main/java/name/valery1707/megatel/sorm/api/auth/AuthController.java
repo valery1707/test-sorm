@@ -1,4 +1,4 @@
-package name.valery1707.megatel.sorm.api;
+package name.valery1707.megatel.sorm.api.auth;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
