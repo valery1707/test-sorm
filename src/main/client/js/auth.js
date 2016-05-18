@@ -124,25 +124,26 @@ factory('principal', ['$q', '$resource', function ($q, $resource) {
 
 			return deferred.promise;
 		},
-		login: function (username, password) {
+		login: function (username, password, rememberMe) {
 			var deferred = $q.defer();
 
-			var account = {
+			const account = {
 				username: username,
 				password: password
 			};
 			var self = this;
-			var headers = {
+			const headers = {
 				'X-Requested-With': 'XMLHttpRequest',
 				'Authorization': "Basic " + btoa(username + ":" + password)
 			};
+			const params = {rememberMe: rememberMe};
 			$resource(apiBaseUrl + '/auth', {}, {
 				auth: {
-					method: 'GET',
+					method: 'POST',
 					isArray: false,
 					headers: headers
 				}
-			}).auth(account,
+			}).auth(params, account,
 					function (data) {
 						if (data && data.permission) {
 							self.authenticate(data);
@@ -189,7 +190,7 @@ controller('authController', ['$scope', '$state', 'principal', function ($scope,
 	};
 	$scope.model = {};
 	$scope.login = function () {
-		principal.login($scope.model.username, $scope.model.password)
+		principal.login($scope.model.username, $scope.model.password, $scope.model.rememberMe)
 				.then(function () {
 					$state.go('home');
 				});
