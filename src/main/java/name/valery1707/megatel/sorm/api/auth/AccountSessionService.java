@@ -44,7 +44,7 @@ public class AccountSessionService {
 	@Transactional
 	public void login(AccountSession.Login mode, Authentication authentication) {
 		WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
-		Account account = accountRepo.getByUsernameAndIsActiveTrue(AccountService.toUserDetails(authentication).getUsername());//todo В этот момент пользователь уже может быть отключён
+		Account account = accountRepo.getByUsernameAndIsActiveTrue(AccountUtils.toUserDetails(authentication).getUsername());//todo В этот момент пользователь уже может быть отключён
 		AccountSession session = new AccountSession(account, mode, details.getSessionId(), toJSON(details));
 		AccountSession save = sessionRepo.save(session);
 		LOG.debug("login(mode: {}, user: {}, sessionId: {}) => {}", mode, authentication.getName(), details.getSessionId(), save.getId());
