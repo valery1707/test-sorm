@@ -16,6 +16,9 @@
 -->
 	<!-- Логирование игнорируемых ошибок: -Dorg.eclipse.jetty.util.log.IGNORED=true -->
 
+	<!-- Логирование авторизации -->
+	<!--<logger name="org.springframework.security.web.authentication" level="DEBUG"/>-->
+
 	<root level="info">
 		<appender-ref ref="STDOUT"/>
 	</root>
