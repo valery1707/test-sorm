@@ -1,5 +1,7 @@
 package name.valery1707.megatel.sorm.api.auth;
 
+import name.valery1707.megatel.sorm.domain.Account;
+import name.valery1707.megatel.sorm.domain.AccountSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -12,9 +14,12 @@ import org.springframework.security.web.authentication.rememberme.RememberMeAuth
 import org.springframework.security.web.authentication.session.SessionFixationProtectionEvent;
 import org.springframework.security.web.session.HttpSessionDestroyedEvent;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpSession;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Service
@@ -22,12 +27,18 @@ import java.util.Objects;
 public class AccountSessionListener {
 	private static final Logger LOG = LoggerFactory.getLogger(AccountSessionListener.class);
 
+	@Inject
+	private AccountRepo accountRepo;
+
+	@Inject
+	private AccountSessionRepo sessionRepo;
+
 	/**
 	 * Начало сессии работы с полной авторизацией
 	 */
 	@EventListener
 	public void authenticationSuccessEvent(AuthenticationSuccessEvent event) {
-		login("REAL", event.getAuthentication());
+		login(AccountSession.Login.MANUAL, event.getAuthentication());
 	}
 
 	/**
@@ -35,8 +46,8 @@ public class AccountSessionListener {
 	 */
 	@EventListener
 	public void interactiveAuthenticationSuccessEvent(InteractiveAuthenticationSuccessEvent event) {
-		String mode = RememberMeAuthenticationFilter.class.isAssignableFrom(event.getGeneratedBy()) ? "REMEMBER_ME"
-				: "INTERACTIVE";
+		AccountSession.Login mode = RememberMeAuthenticationFilter.class.isAssignableFrom(event.getGeneratedBy()) ? AccountSession.Login.REMEMBER_ME
+				: AccountSession.Login.INTERACTIVE;
 		login(mode, event.getAuthentication());
 	}
 
@@ -45,7 +56,7 @@ public class AccountSessionListener {
 	 */
 	@EventListener
 	public void sessionFixationProtectionEvent(SessionFixationProtectionEvent event) {
-		LOG.info("changeSessionId({}, {})", event.getOldSessionId(), event.getNewSessionId());
+		changeSessionId(event.getOldSessionId(), event.getNewSessionId());
 	}
 
 	/**
@@ -61,18 +72,28 @@ public class AccountSessionListener {
 		logout(authentication, event.getSession());
 	}
 
-	private void login(String mode, Authentication authentication) {
+	@Transactional
+	private void login(AccountSession.Login mode, Authentication authentication) {
 		WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
-		LOG.info("login(mode: {}, user: {}, sessionId: {})", mode, authentication.getName(), details.getSessionId());
-		//todo Сохранение в БД новой сесии
+		Account account = accountRepo.getByUsernameAndIsActiveTrue(AccountService.toUserDetails(authentication).getUsername());//todo В этот момент пользователь уже может быть отключён
+		AccountSession session = new AccountSession(account, mode, details.getSessionId());
+		AccountSession save = sessionRepo.save(session);
+		LOG.info("login(mode: {}, user: {}, sessionId: {}) => {}", mode, authentication.getName(), details.getSessionId(), save.getId());
 	}
 
+	@Transactional
+	private void changeSessionId(String oldSessionId, String newSessionId) {
+		int count = sessionRepo.changeSessionId(oldSessionId, newSessionId);
+		LOG.info("changeSessionId({}, {}) => [{}]", oldSessionId, newSessionId, count);
+	}
+
+	@Transactional
 	private void logout(Authentication authentication, HttpSession session) {
 		long current = System.currentTimeMillis();
 		long accessedTime = session.getLastAccessedTime();
 		boolean isTimeOut = (current - accessedTime) > (session.getMaxInactiveInterval() * 1000L);
-		String mode = isTimeOut ? "TIMEOUT" : "MANUAL";
-		LOG.info("logout(mode: {}, user: {}, sessionId: {})", mode, authentication != null ? authentication.getName() : null, session.getId());
-		//todo Закрыть в БД активную сессию
+		AccountSession.Logout mode = isTimeOut ? AccountSession.Logout.TIMEOUT : AccountSession.Logout.MANUAL;
+		int count = sessionRepo.logout(session.getId(), ZonedDateTime.now(), mode);
+		LOG.info("logout(mode: {}, user: {}, sessionId: {}) => [{}]", mode, authentication != null ? authentication.getName() : null, session.getId(), count);
 	}
 }
