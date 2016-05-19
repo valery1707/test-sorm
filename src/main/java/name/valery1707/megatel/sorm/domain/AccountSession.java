@@ -14,7 +14,7 @@ import java.time.ZonedDateTime;
 public class AccountSession extends ABaseEntity {
 	public enum Login {MANUAL, INTERACTIVE, REMEMBER_ME}
 
-	public enum Logout {MANUAL, TIMEOUT}
+	public enum Logout {MANUAL, TIMEOUT, SERVER_RESTART}
 
 	@NotNull
 	@ManyToOne

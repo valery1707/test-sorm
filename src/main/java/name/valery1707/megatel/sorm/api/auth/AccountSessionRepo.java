@@ -17,4 +17,8 @@ public interface AccountSessionRepo extends JpaRepository<AccountSession, Long>,
 	@Modifying
 	@Query("UPDATE AccountSession s SET s.logoutAt = :logoutAt, s.logoutAs = :logoutAs WHERE s.sessionId = :sessionId")
 	int logout(@Param("sessionId") String sessionId, @Param("logoutAt") ZonedDateTime logoutAt, @Param("logoutAs") AccountSession.Logout logoutAs);
+
+	@Modifying
+	@Query("UPDATE AccountSession s SET s.logoutAt = :logoutAt, s.logoutAs = :logoutAs WHERE s.logoutAt IS NULL")
+	int logoutAll(@Param("logoutAt") ZonedDateTime logoutAt, @Param("logoutAs") AccountSession.Logout logoutAs);
 }

@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.session.SessionFixationPr
 import org.springframework.security.web.session.HttpSessionDestroyedEvent;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Objects;
@@ -21,6 +22,11 @@ public class AccountSessionListener {
 
 	@Inject
 	private AccountSessionService sessionService;
+
+	@PostConstruct
+	public void init() {
+		sessionService.serverRestart();
+	}
 
 	/**
 	 * Начало сессии работы с полной авторизацией

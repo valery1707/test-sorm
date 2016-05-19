@@ -26,6 +26,12 @@ public class AccountSessionService {
 	private AccountSessionRepo sessionRepo;
 
 	@Transactional
+	public void serverRestart() {
+		int count = sessionRepo.logoutAll(ZonedDateTime.now(), AccountSession.Logout.SERVER_RESTART);
+		LOG.debug("serverRestart() => [{}]", count);
+	}
+
+	@Transactional
 	public void login(AccountSession.Login mode, Authentication authentication) {
 		WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
 		Account account = accountRepo.getByUsernameAndIsActiveTrue(AccountService.toUserDetails(authentication).getUsername());//todo В этот момент пользователь уже может быть отключён
