@@ -1,7 +1,9 @@
 package name.valery1707.megatel.sorm.api.task;
 
+import name.valery1707.megatel.sorm.api.auth.AccountService;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
+import name.valery1707.megatel.sorm.domain.Account;
 import name.valery1707.megatel.sorm.domain.Task;
 import name.valery1707.megatel.sorm.domain.Task_;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,9 @@ public class TaskController {
 	@Inject
 	private TaskRepo repo;
 
+	@Inject
+	private AccountService accountService;
+
 	private SpecificationBuilder<Task, TaskFilter> specificationBuilder;
 
 	@PostConstruct
@@ -42,6 +47,7 @@ public class TaskController {
 			@PageableDefault(size = 20) @SortDefault("id") Pageable pageable,
 			@RequestBody(required = false) TaskFilter filter
 	) {
+		accountService.hasAnyRole(Account.Role.ADMIN, Account.Role.OPERATOR);
 		Specification<Task> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(TaskDto::new);
