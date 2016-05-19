@@ -28,10 +28,10 @@ public class AppUserDetailsService implements UserDetailsService {
 		if (account == null) {
 			throw new UsernameNotFoundException(String.format("Username '%s' not found", username));
 		}
-		return new User(account.getUsername(), account.getPassword(), true, isActual(account.getActiveUntil()), true, true, toAuthrority(account.getRole()));
+		return new User(account.getUsername(), account.getPassword(), true, isActual(account.getActiveUntil()), true, true, toAuthority(account.getRole()));
 	}
 
-	private Collection<? extends GrantedAuthority> toAuthrority(Account.Role role) {
+	private Collection<? extends GrantedAuthority> toAuthority(Account.Role role) {
 		return Collections.singleton(new SimpleGrantedAuthority(role.toString()));
 	}
 
