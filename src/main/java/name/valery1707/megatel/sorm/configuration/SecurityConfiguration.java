@@ -2,6 +2,8 @@ package name.valery1707.megatel.sorm.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.context.embedded.ServletListenerRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,6 +16,7 @@ import org.springframework.security.web.authentication.rememberme.AbstractRememb
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import javax.inject.Inject;
 
@@ -48,8 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 					.antMatchers(securityProperties.getBasic().getPath()).authenticated()
 			.and()
 				.formLogin()
-					.loginPage("/#/login")
-					.permitAll()
+					.loginPage("/#/login").permitAll()
 			.and()
 				.logout()
 					.logoutUrl("/api/auth/logout")
@@ -85,5 +87,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
 		repository.setHeaderName(csrfNameFromClient);
 		return repository;
+	}
+
+	@Bean
+	public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
+		//Можно и напрямую возвращать класс как бин, но так вроде корректнее
+		return new ServletListenerRegistrationBean<>(new HttpSessionEventPublisher());
 	}
 }
