@@ -1,6 +1,7 @@
 <div class="ui-grid-cell-contents">
     <button type="button"
             class="btn btn-xs btn-default"
+            ng-if="grid.appScope.canView()"
             ng-click="grid.appScope.rowView(grid, row)">
         <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
     </button>

@@ -5,7 +5,7 @@ config(['$stateProvider', function ($stateProvider) {
 				abstract: true,
 				data: {
 					permissions: {
-						only: ['OPERATOR']
+						only: ['ADMIN', 'OPERATOR']
 					}
 				},
 				url: '/task',
@@ -17,6 +17,11 @@ config(['$stateProvider', function ($stateProvider) {
 				controller: 'taskCtrl'
 			})
 			.state('task.view', {
+				data: {
+					permissions: {
+						only: ['task.view']
+					}
+				},
 				url: '/:id/view',
 				templateUrl: 'view/task/view.html',
 				controller: 'taskViewCtrl'
@@ -45,7 +50,11 @@ config(['$stateProvider', function ($stateProvider) {
 factory('taskService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/task', {}, serviceCommonConfig);
 }]).
-controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$state', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $state) {
+controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $state, principal) {
+	$scope.canView = function (){
+		return principal.hasPermission('task.view');
+	};
+
 	$scope.filterModel = {};
 
 	var paginationOptions = {
@@ -57,12 +66,12 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 	gridHelper($scope, service, paginationOptions, {
 		columnDefs: [
 			{
-				field: '_view',
+				field: '_actions',
 				name: '',
 				enableFiltering: false,
 				enableSorting: false,
 				enableColumnMenu: false,
-				cellTemplate: 'view/task/grid-button-view.html',
+				cellTemplate: 'view/task/grid-actions.html',
 				width: 34, maxWidth: 34, minWidth: 34
 			},
 			{

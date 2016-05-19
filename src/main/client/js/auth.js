@@ -33,17 +33,21 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 	var common = ['isAuthenticated'];
 	var roles = {
 		//Суперадминистратор
-		SUPER: [],
+		SUPER: [
+			'task.list',//todo Remove
+		],
 		//Администратор
 		ADMIN: [
-			'admin.task.list',
+			'task.list',
 		],
 		//Оператор/Обработчик
 		OPERATOR: [
-			'operator.task.list',
+			'task.list',
+			'task.view',
 		],
 		//Надзор
-		SUPERVISOR: []
+		SUPERVISOR: [
+		]
 	};
 	for (var role in roles) {
 		var permissions = roles[role];
@@ -209,7 +213,7 @@ config(['$stateProvider', function ($stateProvider) {
 				var result = parent(state);
 				//Копирование данных из родителя
 				if (state.parent && state.parent.data) {
-					result = jQuery.extend({}, result, state.self.data, state.parent.data);
+					result = jQuery.extend({}, result, state.parent.data, state.self.data);
 				}
 				//Добавление функции для редиректа
 				if (result && result.permissions && !result.permissions.redirectTo) {
