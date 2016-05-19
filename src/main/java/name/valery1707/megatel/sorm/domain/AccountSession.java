@@ -2,10 +2,7 @@ package name.valery1707.megatel.sorm.domain;
 
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
@@ -31,6 +28,10 @@ public class AccountSession extends ABaseEntity {
 	@NotNull
 	private String sessionId;
 
+	@NotNull
+	@Lob
+	private String details;
+
 	private ZonedDateTime logoutAt;
 
 	@Enumerated(EnumType.STRING)
@@ -39,12 +40,13 @@ public class AccountSession extends ABaseEntity {
 	public AccountSession() {
 	}
 
-	public AccountSession(Account account, Login loginAs, String sessionId) {
+	public AccountSession(Account account, Login loginAs, String sessionId, String details) {
 		this();
 		this.account = account;
 		this.loginAt = ZonedDateTime.now();
 		this.loginAs = loginAs;
 		this.sessionId = sessionId;
+		this.details = details;
 	}
 
 	public Account getAccount() {
@@ -77,6 +79,14 @@ public class AccountSession extends ABaseEntity {
 
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	public ZonedDateTime getLogoutAt() {

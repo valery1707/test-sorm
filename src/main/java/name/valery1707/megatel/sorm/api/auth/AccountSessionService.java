@@ -1,5 +1,7 @@
 package name.valery1707.megatel.sorm.api.auth;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import name.valery1707.megatel.sorm.domain.Account;
 import name.valery1707.megatel.sorm.domain.AccountSession;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpSession;
@@ -25,6 +28,13 @@ public class AccountSessionService {
 	@Inject
 	private AccountSessionRepo sessionRepo;
 
+	private ObjectMapper mapper;
+
+	@PostConstruct
+	public void init() {
+		mapper = new ObjectMapper();
+	}
+
 	@Transactional
 	public void serverRestart() {
 		int count = sessionRepo.logoutAll(ZonedDateTime.now(), AccountSession.Logout.SERVER_RESTART);
@@ -35,9 +45,18 @@ public class AccountSessionService {
 	public void login(AccountSession.Login mode, Authentication authentication) {
 		WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
 		Account account = accountRepo.getByUsernameAndIsActiveTrue(AccountService.toUserDetails(authentication).getUsername());//todo В этот момент пользователь уже может быть отключён
-		AccountSession session = new AccountSession(account, mode, details.getSessionId());
+		AccountSession session = new AccountSession(account, mode, details.getSessionId(), toJSON(details));
 		AccountSession save = sessionRepo.save(session);
 		LOG.debug("login(mode: {}, user: {}, sessionId: {}) => {}", mode, authentication.getName(), details.getSessionId(), save.getId());
+	}
+
+	private String toJSON(Object object) {
+		try {
+			return mapper.writeValueAsString(object);
+		} catch (JsonProcessingException e) {
+			LOG.warn("", e);
+			return "{}";
+		}
 	}
 
 	@Transactional
