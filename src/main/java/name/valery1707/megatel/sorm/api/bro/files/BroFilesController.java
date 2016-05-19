@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.api.bro.files;
 
+import name.valery1707.megatel.sorm.api.auth.AccountService;
 import name.valery1707.megatel.sorm.api.bro.http.BroHttpRepo;
 import name.valery1707.megatel.sorm.configuration.MimeRepository;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
@@ -40,6 +41,9 @@ public class BroFilesController {
 	@Inject
 	private BroFilesRepo repo;
 
+	@Inject
+	private AccountService accountService;
+
 	private SpecificationBuilder<BroFiles, BroFilesFilter> specificationBuilder;
 
 	@PostConstruct
@@ -60,6 +64,7 @@ public class BroFilesController {
 			@PageableDefault(size = 20) @SortDefault("ts") Pageable pageable,
 			@RequestBody(required = false) BroFilesFilter filter
 	) {
+		accountService.requireAnyRight("task.view");
 		Specification<BroFiles> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(BroFilesDto::new);

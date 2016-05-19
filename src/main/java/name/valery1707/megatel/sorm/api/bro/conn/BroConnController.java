@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.api.bro.conn;
 
+import name.valery1707.megatel.sorm.api.auth.AccountService;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.BroConn;
@@ -23,6 +24,9 @@ public class BroConnController {
 	@Inject
 	private BroConnRepo repo;
 
+	@Inject
+	private AccountService accountService;
+
 	private SpecificationBuilder<BroConn, BroConnFilter> specificationBuilder;
 
 	@PostConstruct
@@ -42,6 +46,7 @@ public class BroConnController {
 			@PageableDefault(size = 20) @SortDefault("ts") Pageable pageable,
 			@RequestBody(required = false) BroConnFilter filter
 	) {
+		accountService.requireAnyRight("task.view");
 		Specification<BroConn> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(BroConnDto::new);

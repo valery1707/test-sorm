@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.api.bro.http;
 
+import name.valery1707.megatel.sorm.api.auth.AccountService;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.BroHttp;
@@ -22,6 +23,9 @@ import javax.inject.Inject;
 public class BroHttpController {
 	@Inject
 	private BroHttpRepo repo;
+
+	@Inject
+	private AccountService accountService;
 
 	private SpecificationBuilder<BroHttp, BroHttpFilter> specificationBuilder;
 
@@ -49,6 +53,7 @@ public class BroHttpController {
 			@PageableDefault(size = 20) @SortDefault("ts") Pageable pageable,
 			@RequestBody(required = false) BroHttpFilter filter
 	) {
+		accountService.requireAnyRight("task.view");
 		Specification<BroHttp> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(BroHttpDto::new);

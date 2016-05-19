@@ -10,9 +10,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.joining;
 import static name.valery1707.megatel.sorm.api.auth.AccountUtils.currentUserDetails;
@@ -26,11 +24,16 @@ public class AccountService {
 
 	private Optional<UserDetails> userDetails;
 	private Optional<Account> account;
+	private Collection<String> rights;
 
 	@PostConstruct
 	public void init() {
 		userDetails = currentUserDetails();
 		account = userDetails.map(UserDetails::getUsername).map(accountRepo::getByUsernameAndIsActiveTrue);
+		rights = account
+				.map(Account::getRole)
+				.map(Account.Role::getRights)
+				.orElse(Collections.emptyList());
 	}
 
 	public Optional<UserDetails> getUserDetails() {
@@ -41,15 +44,19 @@ public class AccountService {
 		return account;
 	}
 
-	public void hasAnyRole(Account.Role... roles) {
-		hasAnyRole(Arrays.asList(roles));
-	}
-
-	public void hasAnyRole(List<Account.Role> roles) {
-		//todo Нужно ли логировать заблокированные обращения к API?
+	public void requireAuthorized() {
 		if (!account.isPresent()) {
 			throw new AccessDeniedException("User is not logged in");
 		}
+	}
+
+	public void requireAnyRole(Account.Role... roles) {
+		requireAnyRole(Arrays.asList(roles));
+	}
+
+	public void requireAnyRole(List<Account.Role> roles) {
+		requireAuthorized();
+		//todo Нужно ли логировать заблокированные обращения к API?
 		if (!roles.contains(account.get().getRole())) {
 			throw new AccessDeniedException(String.format(
 					"User '%s' does not have roles %s"
@@ -62,11 +69,23 @@ public class AccountService {
 		}
 	}
 
-	public void hasAnyRight(String... rights) {
-		hasAnyRight(Arrays.asList(rights));
+	public void requireAnyRight(String... rights) {
+		requireAnyRight(Arrays.asList(rights));
 	}
 
-	public void hasAnyRight(List<String> rights) {
-		//todo Implement
+	public void requireAnyRight(List<String> rights) {
+		requireAuthorized();
+		for (String right : rights) {
+			if (this.rights.contains(right)) {
+				return;
+			}
+		}
+		throw new AccessDeniedException(String.format(
+				"User '%s' does not have roles %s"
+				, account.get().getUsername()
+				, rights.stream()
+						.map(s -> "'" + s + "'")
+						.collect(joining(", "))
+		));
 	}
 }

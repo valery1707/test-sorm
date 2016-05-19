@@ -47,7 +47,7 @@ public class TaskController {
 			@PageableDefault(size = 20) @SortDefault("id") Pageable pageable,
 			@RequestBody(required = false) TaskFilter filter
 	) {
-		accountService.hasAnyRole(Account.Role.ADMIN, Account.Role.OPERATOR);
+		accountService.requireAnyRole(Account.Role.ADMIN, Account.Role.OPERATOR);
 		Specification<Task> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(TaskDto::new);

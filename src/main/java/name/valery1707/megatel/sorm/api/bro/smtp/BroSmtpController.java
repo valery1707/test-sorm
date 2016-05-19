@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.api.bro.smtp;
 
+import name.valery1707.megatel.sorm.api.auth.AccountService;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.BroSmtp;
@@ -22,6 +23,9 @@ import javax.inject.Inject;
 public class BroSmtpController {
 	@Inject
 	private BroSmtpRepo repo;
+
+	@Inject
+	private AccountService accountService;
 
 	private SpecificationBuilder<BroSmtp, BroSmtpFilter> specificationBuilder;
 
@@ -46,6 +50,7 @@ public class BroSmtpController {
 			@PageableDefault(size = 20) @SortDefault("ts") Pageable pageable,
 			@RequestBody(required = false) BroSmtpFilter filter
 	) {
+		accountService.requireAnyRight("task.view");
 		Specification<BroSmtp> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(BroSmtpDto::new);
