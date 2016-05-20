@@ -198,7 +198,6 @@ controller('authController', ['$scope', '$state', 'principal', 'toastr', functio
 				.then(function () {
 					$state.go('home');
 				}, function (error) {
-					console.log('error', error);
 					if (error && error.status && error.status == 401) {
 						toastr.error('Invalid username or password', 'Authorization error');
 					} else if (error && error.status) {
