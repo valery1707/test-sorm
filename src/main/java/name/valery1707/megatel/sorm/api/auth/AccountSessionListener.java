@@ -23,6 +23,9 @@ public class AccountSessionListener {
 	@Inject
 	private AccountSessionService sessionService;
 
+	@Inject
+	private LoginAttemptService loginAttemptService;
+
 	@PostConstruct
 	public void init() {
 		sessionService.serverRestart();
@@ -34,6 +37,7 @@ public class AccountSessionListener {
 	@EventListener
 	public void authenticationSuccessEvent(AuthenticationSuccessEvent event) {
 		sessionService.login(AccountSession.Login.MANUAL, event.getAuthentication());
+		loginAttemptService.success(event.getAuthentication());
 	}
 
 	/**
@@ -44,6 +48,7 @@ public class AccountSessionListener {
 		AccountSession.Login mode = RememberMeAuthenticationFilter.class.isAssignableFrom(event.getGeneratedBy()) ? AccountSession.Login.REMEMBER_ME
 				: AccountSession.Login.INTERACTIVE;
 		sessionService.login(mode, event.getAuthentication());
+		loginAttemptService.success(event.getAuthentication());
 	}
 
 	/**
