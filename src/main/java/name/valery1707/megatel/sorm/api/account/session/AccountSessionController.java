@@ -39,7 +39,9 @@ public class AccountSessionController {
 				.withNumber(AccountSessionFilter::getId, AccountSession_.id)
 				.withString(AccountSessionFilter::getAccountUsername, AccountSession_.account, Account_.username)
 				.withDateTime(AccountSessionFilter::getLoginAt, AccountSession_.loginAt)
+				.withEquals(AccountSessionFilter::getLoginAs, AccountSession_.loginAs)
 				.withDateTime(AccountSessionFilter::getLogoutAt, AccountSession_.logoutAt)
+				.withEquals(AccountSessionFilter::getLogoutAs, AccountSession_.logoutAs)
 				.withString(AccountSessionFilter::getSessionId, AccountSession_.sessionId)
 				.withString(AccountSessionFilter::getDetails, AccountSession_.details)
 		;

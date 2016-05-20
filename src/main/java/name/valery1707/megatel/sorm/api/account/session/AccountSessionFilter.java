@@ -1,5 +1,7 @@
 package name.valery1707.megatel.sorm.api.account.session;
 
+import name.valery1707.megatel.sorm.domain.AccountSession;
+
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -7,11 +9,11 @@ public class AccountSessionFilter {
 	private String id;
 	private String accountUsername;
 	private List<ZonedDateTime> loginAt;
-	private String loginAs;
+	private AccountSession.Login loginAs;
 	private String sessionId;
 	private String details;
 	private List<ZonedDateTime> logoutAt;
-	private String logoutAs;
+	private AccountSession.Logout logoutAs;
 
 	public String getId() {
 		return id;
@@ -37,11 +39,11 @@ public class AccountSessionFilter {
 		this.loginAt = loginAt;
 	}
 
-	public String getLoginAs() {
+	public AccountSession.Login getLoginAs() {
 		return loginAs;
 	}
 
-	public void setLoginAs(String loginAs) {
+	public void setLoginAs(AccountSession.Login loginAs) {
 		this.loginAs = loginAs;
 	}
 
@@ -69,11 +71,11 @@ public class AccountSessionFilter {
 		this.logoutAt = logoutAt;
 	}
 
-	public String getLogoutAs() {
+	public AccountSession.Logout getLogoutAs() {
 		return logoutAs;
 	}
 
-	public void setLogoutAs(String logoutAs) {
+	public void setLogoutAs(AccountSession.Logout logoutAs) {
 		this.logoutAs = logoutAs;
 	}
 }

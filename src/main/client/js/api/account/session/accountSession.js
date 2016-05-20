@@ -40,22 +40,42 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 				sort: {direction: uiGridConstants.DESC, priority: 0},
 				filterHeaderTemplate: filterTemplate(),
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
-				filterTermMapper: function(value) {
+				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},
-			{field: 'loginAs', enableFiltering: false},
+			{
+				field: 'loginAs',
+				filter: {
+					type: uiGridConstants.filter.SELECT,
+					selectOptions: [
+						{value: 'MANUAL', label: 'MANUAL'},
+						{value: 'INTERACTIVE', label: 'INTERACTIVE'},
+						{value: 'REMEMBER_ME', label: 'REMEMBER_ME'}
+					]
+				}
+			},
 			{field: 'sessionId'},
 			{field: 'details', visible: false},
 			{
 				field: 'logoutAt',
 				filterHeaderTemplate: filterTemplate(),
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
-				filterTermMapper: function(value) {
+				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},
-			{field: 'logoutAs', enableFiltering: false},
+			{
+				field: 'logoutAs',
+				filter: {
+					type: uiGridConstants.filter.SELECT,
+					selectOptions: [
+						{value: 'MANUAL', label: 'MANUAL'},
+						{value: 'TIMEOUT', label: 'TIMEOUT'},
+						{value: 'SERVER_RESTART', label: 'SERVER_RESTART'}
+					]
+				}
+			},
 			{
 				field: 'duration',
 				enableFiltering: false,
