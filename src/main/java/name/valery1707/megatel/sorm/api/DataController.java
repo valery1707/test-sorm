@@ -30,12 +30,12 @@ public class DataController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Data, DataFilter>(SpecificationMode.AND)
-				.withString(Data_.protocol, DataFilter::getProtocol)
-				.withIp(Data_.srcIp, DataFilter::getSrcIp)
-				.withIp(Data_.dstIp, DataFilter::getDstIp)
-				.withNumber(Data_.srcPort, DataFilter::getSrcPort)
-				.withNumber(Data_.dstPort, DataFilter::getDstPort)
-				.withDateTime(Data_.dateTime, DataFilter::getDateTime)
+				.withString(DataFilter::getProtocol, Data_.protocol)
+				.withIp(DataFilter::getSrcIp, Data_.srcIp)
+				.withIp(DataFilter::getDstIp, Data_.dstIp)
+				.withNumber(DataFilter::getSrcPort, Data_.srcPort)
+				.withNumber(DataFilter::getDstPort, Data_.dstPort)
+				.withDateTime(DataFilter::getDateTime, Data_.dateTime)
 		;
 	}
 

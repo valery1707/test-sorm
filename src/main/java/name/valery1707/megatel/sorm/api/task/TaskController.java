@@ -33,12 +33,12 @@ public class TaskController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Task, TaskFilter>(SpecificationMode.AND)
-				.withNumber(Task_.id, TaskFilter::getId)
-				.withDateTime(Task_.periodStart, TaskFilter::getPeriodStart)
-				.withDateTime(Task_.periodFinish, TaskFilter::getPeriodFinish)
-				.withString(Task_.agency, TaskFilter::getAgency)
-				.withString(Task_.clientAlias, TaskFilter::getClientAlias)
-				.withString(Task_.note, TaskFilter::getNote)
+				.withNumber(TaskFilter::getId, Task_.id)
+				.withDateTime(TaskFilter::getPeriodStart, Task_.periodStart)
+				.withDateTime(TaskFilter::getPeriodFinish, Task_.periodFinish)
+				.withString(TaskFilter::getAgency, Task_.agency)
+				.withString(TaskFilter::getClientAlias, Task_.clientAlias)
+				.withString(TaskFilter::getNote, Task_.note)
 		;
 	}
 

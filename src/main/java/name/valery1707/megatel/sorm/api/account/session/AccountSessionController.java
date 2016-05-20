@@ -35,12 +35,12 @@ public class AccountSessionController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<AccountSession, AccountSessionFilter>(SpecificationMode.AND)
-				.withNumber(AccountSession_.id, AccountSessionFilter::getId)
+				.withNumber(AccountSessionFilter::getId, AccountSession_.id)
 				.withString(AccountSessionFilter::getAccountUsername, AccountSession_.account, Account_.username)
-				.withDateTime(AccountSession_.loginAt, AccountSessionFilter::getLoginAt)
-				.withDateTime(AccountSession_.logoutAt, AccountSessionFilter::getLogoutAt)
-				.withString(AccountSession_.sessionId, AccountSessionFilter::getSessionId)
-				.withString(AccountSession_.details, AccountSessionFilter::getDetails)
+				.withDateTime(AccountSessionFilter::getLoginAt, AccountSession_.loginAt)
+				.withDateTime(AccountSessionFilter::getLogoutAt, AccountSession_.logoutAt)
+				.withString(AccountSessionFilter::getSessionId, AccountSession_.sessionId)
+				.withString(AccountSessionFilter::getDetails, AccountSession_.details)
 		;
 	}
 

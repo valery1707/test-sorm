@@ -32,12 +32,12 @@ public class BroConnController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<BroConn, BroConnFilter>(SpecificationMode.AND)
-				.withDateTimeDecimal(BroConn_.ts, BroConnFilter::getTs)
-				.withIp(BroConn_.idOrigIp, BroConnFilter::getIdOrigHost)
-				.withIp(BroConn_.idRespIp, BroConnFilter::getIdRespHost)
-				.withNumber(BroConn_.idOrigPort, BroConnFilter::getIdOrigPort)
-				.withNumber(BroConn_.idRespPort, BroConnFilter::getIdRespPort)
-				.withString(BroConn_.proto, BroConnFilter::getProto)
+				.withDateTimeDecimal(BroConnFilter::getTs, BroConn_.ts)
+				.withIp(BroConnFilter::getIdOrigHost, BroConn_.idOrigIp)
+				.withIp(BroConnFilter::getIdRespHost, BroConn_.idRespIp)
+				.withNumber(BroConnFilter::getIdOrigPort, BroConn_.idOrigPort)
+				.withNumber(BroConnFilter::getIdRespPort, BroConn_.idRespPort)
+				.withString(BroConnFilter::getProto, BroConn_.proto)
 		;
 	}
 

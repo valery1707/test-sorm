@@ -3,6 +3,7 @@ package name.valery1707.megatel.sorm.db;
 import name.valery1707.megatel.sorm.db.filter.*;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.annotation.Nonnull;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 import java.math.BigDecimal;
@@ -25,14 +26,9 @@ public class SpecificationBuilder<D, F> {
 		this.mode = mode;
 	}
 
-	public SpecificationBuilder<D, F> withString(Function<F, String> value, SingularAttributeGetter<? super D, String> field) {
-		filters.add(new StringFilter<>(field, value));
+	public SpecificationBuilder<D, F> withString(Function<F, String> value, SingularAttributeGetter<? super D, String> fieldGetter) {
+		filters.add(new StringFilter<>(fieldGetter, value));
 		return this;
-	}
-
-	@Deprecated
-	public SpecificationBuilder<D, F> withString(SingularAttribute<? super D, String> field, Function<F, String> value) {
-		return withString(value, field(field));
 	}
 
 	public SpecificationBuilder<D, F> withString(Function<F, String> value, SingularAttribute<? super D, String> field) {
@@ -43,24 +39,40 @@ public class SpecificationBuilder<D, F> {
 		return withString(value, field(field1).nest(field2));
 	}
 
-	public SpecificationBuilder<D, F> withIp(SingularAttribute<? super D, BigInteger> field, Function<F, String> value) {
-		filters.add(new IpFilter<>(field(field), value));
+	public SpecificationBuilder<D, F> withIp(Function<F, String> value, SingularAttributeGetter<? super D, BigInteger> fieldGetter) {
+		filters.add(new IpFilter<>(fieldGetter, value));
 		return this;
 	}
 
-	public <M extends Number & Comparable<M>> SpecificationBuilder<D, F> withNumber(SingularAttribute<? super D, M> field, Function<F, String> value) {
-		filters.add(new NumberFilter<>(field(field), value));
+	public SpecificationBuilder<D, F> withIp(Function<F, String> value, SingularAttribute<? super D, BigInteger> field) {
+		return withIp(value, field(field));
+	}
+
+	public <M extends Number & Comparable<M>> SpecificationBuilder<D, F> withNumber(Function<F, String> value, SingularAttributeGetter<? super D, M> fieldGetter) {
+		filters.add(new NumberFilter<>(fieldGetter, value));
 		return this;
 	}
 
-	public SpecificationBuilder<D, F> withDateTime(SingularAttribute<? super D, ZonedDateTime> field, Function<F, List<ZonedDateTime>> value) {
-		filters.add(new DateTimeFilter<>(field(field), value));
+	public <M extends Number & Comparable<M>> SpecificationBuilder<D, F> withNumber(Function<F, String> value, SingularAttribute<? super D, M> field) {
+		return withNumber(value, field(field));
+	}
+
+	public SpecificationBuilder<D, F> withDateTime(Function<F, List<ZonedDateTime>> value, SingularAttributeGetter<? super D, ZonedDateTime> fieldGetter) {
+		filters.add(new DateTimeFilter<>(fieldGetter, value));
 		return this;
 	}
 
-	public SpecificationBuilder<D, F> withDateTimeDecimal(SingularAttribute<? super D, BigDecimal> field, Function<F, List<ZonedDateTime>> value) {
-		filters.add(new DateTimeFilterDecimal<>(field(field), value));
+	public SpecificationBuilder<D, F> withDateTime(Function<F, List<ZonedDateTime>> value, SingularAttribute<? super D, ZonedDateTime> field) {
+		return withDateTime(value, field(field));
+	}
+
+	public SpecificationBuilder<D, F> withDateTimeDecimal(Function<F, List<ZonedDateTime>> value, SingularAttributeGetter<? super D, BigDecimal> fieldGetter) {
+		filters.add(new DateTimeFilterDecimal<>(fieldGetter, value));
 		return this;
+	}
+
+	public SpecificationBuilder<D, F> withDateTimeDecimal(Function<F, List<ZonedDateTime>> value, SingularAttribute<? super D, BigDecimal> field) {
+		return withDateTimeDecimal(value, field(field));
 	}
 
 	public Specification<D> build(F filter) {
@@ -69,7 +81,7 @@ public class SpecificationBuilder<D, F> {
 		}
 		return (root, query, cb) -> {
 			List<Predicate> predicates = filters.stream()
-					.map(f -> (Filter<D, F>) f)
+					.map(SpecificationBuilder::cast)
 					.map(f -> f.toPredicate(root, query, cb, filter))
 					.filter(Objects::nonNull)
 					.collect(Collectors.toList());
@@ -80,5 +92,11 @@ public class SpecificationBuilder<D, F> {
 				return mode.mapper().apply(cb, array);
 			}
 		};
+	}
+
+	@Nonnull
+	@SuppressWarnings("unchecked")
+	private static <X, Y> Filter<X, Y> cast(Filter<? super X, Y> src) {
+		return (Filter<X, Y>) src;
 	}
 }

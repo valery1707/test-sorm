@@ -49,13 +49,13 @@ public class BroFilesController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<BroFiles, BroFilesFilter>(SpecificationMode.AND)
-				.withDateTimeDecimal(BroFiles_.ts, BroFilesFilter::getTs)
-				.withNumber(BroFiles_.seenBytes, BroFilesFilter::getSeenBytes)
-				.withNumber(BroFiles_.totalBytes, BroFilesFilter::getTotalBytes)
-				.withNumber(BroFiles_.missingBytes, BroFilesFilter::getMissingBytes)
-				.withString(BroFiles_.mimeType, BroFilesFilter::getMimeType)
-				.withString(BroFiles_.filename, BroFilesFilter::getFilename)
-				.withString(BroFiles_.extracted, BroFilesFilter::getExtracted)
+				.withDateTimeDecimal(BroFilesFilter::getTs, BroFiles_.ts)
+				.withNumber(BroFilesFilter::getSeenBytes, BroFiles_.seenBytes)
+				.withNumber(BroFilesFilter::getTotalBytes, BroFiles_.totalBytes)
+				.withNumber(BroFilesFilter::getMissingBytes, BroFiles_.missingBytes)
+				.withString(BroFilesFilter::getMimeType, BroFiles_.mimeType)
+				.withString(BroFilesFilter::getFilename, BroFiles_.filename)
+				.withString(BroFilesFilter::getExtracted, BroFiles_.extracted)
 		;
 	}
 

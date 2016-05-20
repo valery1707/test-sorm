@@ -32,16 +32,16 @@ public class BroSmtpController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<BroSmtp, BroSmtpFilter>(SpecificationMode.AND)
-				.withDateTimeDecimal(BroSmtp_.ts, BroSmtpFilter::getTs)
-				.withIp(BroSmtp_.idOrigIp, BroSmtpFilter::getIdOrigHost)
-				.withIp(BroSmtp_.idRespIp, BroSmtpFilter::getIdRespHost)
-				.withNumber(BroSmtp_.idOrigPort, BroSmtpFilter::getIdOrigPort)
-				.withNumber(BroSmtp_.idRespPort, BroSmtpFilter::getIdRespPort)
-				.withString(BroSmtp_.from, BroSmtpFilter::getFrom)
-				.withString(BroSmtp_.to, BroSmtpFilter::getTo)
-				.withString(BroSmtp_.subject, BroSmtpFilter::getSubject)
-				.withString(BroSmtp_.userAgent, BroSmtpFilter::getUserAgent)
-				.withString(BroSmtp_.fuids, BroSmtpFilter::getFuids)
+				.withDateTimeDecimal(BroSmtpFilter::getTs, BroSmtp_.ts)
+				.withIp(BroSmtpFilter::getIdOrigHost, BroSmtp_.idOrigIp)
+				.withIp(BroSmtpFilter::getIdRespHost, BroSmtp_.idRespIp)
+				.withNumber(BroSmtpFilter::getIdOrigPort, BroSmtp_.idOrigPort)
+				.withNumber(BroSmtpFilter::getIdRespPort, BroSmtp_.idRespPort)
+				.withString(BroSmtpFilter::getFrom, BroSmtp_.from)
+				.withString(BroSmtpFilter::getTo, BroSmtp_.to)
+				.withString(BroSmtpFilter::getSubject, BroSmtp_.subject)
+				.withString(BroSmtpFilter::getUserAgent, BroSmtp_.userAgent)
+				.withString(BroSmtpFilter::getFuids, BroSmtp_.fuids)
 		;
 	}
 

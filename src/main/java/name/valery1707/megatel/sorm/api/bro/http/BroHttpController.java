@@ -32,19 +32,19 @@ public class BroHttpController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<BroHttp, BroHttpFilter>(SpecificationMode.AND)
-				.withDateTimeDecimal(BroHttp_.ts, BroHttpFilter::getTs)
-				.withIp(BroHttp_.idOrigIp, BroHttpFilter::getIdOrigHost)
-				.withIp(BroHttp_.idRespIp, BroHttpFilter::getIdRespHost)
-				.withNumber(BroHttp_.idOrigPort, BroHttpFilter::getIdOrigPort)
-				.withNumber(BroHttp_.idRespPort, BroHttpFilter::getIdRespPort)
-				.withString(BroHttp_.method, BroHttpFilter::getMethod)
-				.withString(BroHttp_.host, BroHttpFilter::getHost)
-				.withString(BroHttp_.uri, BroHttpFilter::getUri)
-				.withString(BroHttp_.referrer, BroHttpFilter::getReferrer)
-				.withString(BroHttp_.userAgent, BroHttpFilter::getUserAgent)
-				.withNumber(BroHttp_.requestBodyLen, BroHttpFilter::getRequestBodyLen)
-				.withNumber(BroHttp_.responseBodyLen, BroHttpFilter::getResponseBodyLen)
-				.withNumber(BroHttp_.statusCode, BroHttpFilter::getStatusCode)
+				.withDateTimeDecimal(BroHttpFilter::getTs, BroHttp_.ts)
+				.withIp(BroHttpFilter::getIdOrigHost, BroHttp_.idOrigIp)
+				.withIp(BroHttpFilter::getIdRespHost, BroHttp_.idRespIp)
+				.withNumber(BroHttpFilter::getIdOrigPort, BroHttp_.idOrigPort)
+				.withNumber(BroHttpFilter::getIdRespPort, BroHttp_.idRespPort)
+				.withString(BroHttpFilter::getMethod, BroHttp_.method)
+				.withString(BroHttpFilter::getHost, BroHttp_.host)
+				.withString(BroHttpFilter::getUri, BroHttp_.uri)
+				.withString(BroHttpFilter::getReferrer, BroHttp_.referrer)
+				.withString(BroHttpFilter::getUserAgent, BroHttp_.userAgent)
+				.withNumber(BroHttpFilter::getRequestBodyLen, BroHttp_.requestBodyLen)
+				.withNumber(BroHttpFilter::getResponseBodyLen, BroHttp_.responseBodyLen)
+				.withNumber(BroHttpFilter::getStatusCode, BroHttp_.statusCode)
 		;
 	}
 
