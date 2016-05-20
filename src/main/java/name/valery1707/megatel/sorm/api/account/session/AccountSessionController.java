@@ -10,6 +10,7 @@ import name.valery1707.megatel.sorm.domain.AccountSession_;
 import name.valery1707.megatel.sorm.domain.Account_;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
@@ -46,7 +47,7 @@ public class AccountSessionController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public Page<AccountSessionDto> findByFilter(
-			@PageableDefault(size = 20) @SortDefault("id") Pageable pageable,
+			@PageableDefault(size = 20) @SortDefault(sort = "loginAt", direction = Sort.Direction.DESC) Pageable pageable,
 			@RequestBody(required = false) AccountSessionFilter filter
 	) {
 		accountService.requireAnyRole(Account.Role.SUPER);

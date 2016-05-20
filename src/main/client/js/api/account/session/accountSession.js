@@ -26,18 +26,18 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 	var paginationOptions = {
 		pageNumber: 1,
 		pageSize: 25,
-		sort: ["id,ASC"]
+		sort: ["loginAt,DESC"]
 	};
 
 	gridHelper($scope, service, paginationOptions, {
 		columnDefs: [
 			{
 				field: 'id',
-				sort: {direction: uiGridConstants.ASC, priority: 0}
 			},
 			{field: 'accountUsername', enableFiltering: true},
 			{
 				field: 'loginAt',
+				sort: {direction: uiGridConstants.DESC, priority: 0},
 				filterHeaderTemplate: filterTemplate(),
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function(value) {
