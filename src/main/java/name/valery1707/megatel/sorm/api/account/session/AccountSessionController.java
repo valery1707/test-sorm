@@ -44,6 +44,7 @@ public class AccountSessionController {
 				.withEquals(AccountSessionFilter::getLogoutAs, AccountSession_.logoutAs)
 				.withString(AccountSessionFilter::getSessionId, AccountSession_.sessionId)
 				.withString(AccountSessionFilter::getDetails, AccountSession_.details)
+				.withNumber(AccountSessionFilter::getDuration, AccountSession_.duration)
 		;
 	}
 

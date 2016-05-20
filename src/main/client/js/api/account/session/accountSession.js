@@ -78,7 +78,6 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 			},
 			{
 				field: 'duration',
-				enableFiltering: false,
 				cellFilter: 'secondToPeriod'
 			},
 		],

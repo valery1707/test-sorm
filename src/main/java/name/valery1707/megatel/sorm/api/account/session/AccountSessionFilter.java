@@ -14,6 +14,7 @@ public class AccountSessionFilter {
 	private String details;
 	private List<ZonedDateTime> logoutAt;
 	private AccountSession.Logout logoutAs;
+	private String duration;
 
 	public String getId() {
 		return id;
@@ -77,5 +78,13 @@ public class AccountSessionFilter {
 
 	public void setLogoutAs(AccountSession.Logout logoutAs) {
 		this.logoutAs = logoutAs;
+	}
+
+	public String getDuration() {
+		return duration;
+	}
+
+	public void setDuration(String duration) {
+		this.duration = duration;
 	}
 }

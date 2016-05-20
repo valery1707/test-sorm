@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.domain;
 
+import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -36,6 +37,9 @@ public class AccountSession extends ABaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	private Logout logoutAs;
+
+	@Formula("TIME_TO_SEC(TIMEDIFF(coalesce(logout_at, current_time()), login_at))")
+	private long duration;
 
 	public AccountSession() {
 	}
@@ -103,5 +107,13 @@ public class AccountSession extends ABaseEntity {
 
 	public void setLogoutAs(Logout logoutAs) {
 		this.logoutAs = logoutAs;
+	}
+
+	public long getDuration() {
+		return duration;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
 	}
 }

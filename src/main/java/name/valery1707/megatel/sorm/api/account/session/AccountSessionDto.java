@@ -3,9 +3,7 @@ package name.valery1707.megatel.sorm.api.account.session;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import name.valery1707.megatel.sorm.domain.AccountSession;
 
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -35,7 +33,7 @@ public class AccountSessionDto {
 		this.setDetails(src.getDetails());
 		this.setLogoutAt(src.getLogoutAt() != null ? src.getLogoutAt().format(FORMATTER) : null);
 		this.setLogoutAs(src.getLogoutAs() != null ? src.getLogoutAs().name() : null);
-		this.setDuration(src.getLoginAt().until(src.getLogoutAt() != null ? src.getLogoutAt() : ZonedDateTime.now(), ChronoUnit.SECONDS));
+		this.setDuration(src.getDuration());
 	}
 
 	public long getId() {
