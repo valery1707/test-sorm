@@ -26,7 +26,7 @@ public class SpecificationBuilder<D, F> {
 		this.mode = mode;
 	}
 
-	public <X> SpecificationBuilder<D, F> withEquals(Function<F, X> value, SingularAttributeGetter<D, X> fieldGetter) {
+	public <X> SpecificationBuilder<D, F> withEquals(Function<F, X> value, SingularExpressionGetter<D, X> fieldGetter) {
 		filters.add(new EqualsFilter<>(fieldGetter, value));
 		return this;
 	}
@@ -35,7 +35,7 @@ public class SpecificationBuilder<D, F> {
 		return withEquals(value, field(field));
 	}
 
-	public SpecificationBuilder<D, F> withString(Function<F, String> value, SingularAttributeGetter<? super D, String> fieldGetter) {
+	public SpecificationBuilder<D, F> withString(Function<F, String> value, SingularExpressionGetter<? super D, String> fieldGetter) {
 		filters.add(new StringFilter<>(fieldGetter, value));
 		return this;
 	}
@@ -48,7 +48,7 @@ public class SpecificationBuilder<D, F> {
 		return withString(value, field(field1).nest(field2));
 	}
 
-	public SpecificationBuilder<D, F> withIp(Function<F, String> value, SingularAttributeGetter<? super D, BigInteger> fieldGetter) {
+	public SpecificationBuilder<D, F> withIp(Function<F, String> value, SingularExpressionGetter<? super D, BigInteger> fieldGetter) {
 		filters.add(new IpFilter<>(fieldGetter, value));
 		return this;
 	}
@@ -57,7 +57,7 @@ public class SpecificationBuilder<D, F> {
 		return withIp(value, field(field));
 	}
 
-	public <M extends Number & Comparable<M>> SpecificationBuilder<D, F> withNumber(Function<F, String> value, SingularAttributeGetter<? super D, M> fieldGetter) {
+	public <M extends Number & Comparable<M>> SpecificationBuilder<D, F> withNumber(Function<F, String> value, SingularExpressionGetter<? super D, M> fieldGetter) {
 		filters.add(new NumberFilter<>(fieldGetter, value));
 		return this;
 	}
@@ -66,7 +66,7 @@ public class SpecificationBuilder<D, F> {
 		return withNumber(value, field(field));
 	}
 
-	public SpecificationBuilder<D, F> withDateTime(Function<F, List<ZonedDateTime>> value, SingularAttributeGetter<? super D, ZonedDateTime> fieldGetter) {
+	public SpecificationBuilder<D, F> withDateTime(Function<F, List<ZonedDateTime>> value, SingularExpressionGetter<? super D, ZonedDateTime> fieldGetter) {
 		filters.add(new DateTimeFilter<>(fieldGetter, value));
 		return this;
 	}
@@ -75,7 +75,7 @@ public class SpecificationBuilder<D, F> {
 		return withDateTime(value, field(field));
 	}
 
-	public SpecificationBuilder<D, F> withDateTimeDecimal(Function<F, List<ZonedDateTime>> value, SingularAttributeGetter<? super D, BigDecimal> fieldGetter) {
+	public SpecificationBuilder<D, F> withDateTimeDecimal(Function<F, List<ZonedDateTime>> value, SingularExpressionGetter<? super D, BigDecimal> fieldGetter) {
 		filters.add(new DateTimeFilterDecimal<>(fieldGetter, value));
 		return this;
 	}

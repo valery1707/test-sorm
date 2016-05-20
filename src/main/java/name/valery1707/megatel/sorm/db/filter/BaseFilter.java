@@ -1,6 +1,6 @@
 package name.valery1707.megatel.sorm.db.filter;
 
-import name.valery1707.megatel.sorm.db.SingularAttributeGetter;
+import name.valery1707.megatel.sorm.db.SingularExpressionGetter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -14,16 +14,16 @@ import java.util.function.Function;
  * @param <V> Filter field class
  */
 public abstract class BaseFilter<D, F, M, V> implements Filter<D, F> {
-	private final SingularAttributeGetter<D, M> field;
+	private final SingularExpressionGetter<D, M> field;
 	private final Function<F, V> getter;
 
-	public BaseFilter(SingularAttributeGetter<D, M> field, Function<F, V> getter) {
+	public BaseFilter(SingularExpressionGetter<D, M> field, Function<F, V> getter) {
 		this.field = field;
 		this.getter = getter;
 	}
 
-	protected Path<M> field(Root<D> root) {
-		return field.apply(root);
+	protected Expression<M> field(Root<D> root, CriteriaBuilder cb) {
+		return field.apply(root, cb);
 	}
 
 	protected V value(F filter) {

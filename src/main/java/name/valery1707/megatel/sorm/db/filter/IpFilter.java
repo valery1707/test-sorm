@@ -1,6 +1,6 @@
 package name.valery1707.megatel.sorm.db.filter;
 
-import name.valery1707.megatel.sorm.db.SingularAttributeGetter;
+import name.valery1707.megatel.sorm.db.SingularExpressionGetter;
 import org.apache.commons.net.util.SubnetUtils;
 
 import javax.annotation.Nonnull;
@@ -15,7 +15,7 @@ import static name.valery1707.megatel.sorm.IpUtils.buildSubnet;
 import static name.valery1707.megatel.sorm.IpUtils.ipToNumber;
 
 public class IpFilter<D, F> extends BaseFilter<D, F, BigInteger, String> {
-	public IpFilter(SingularAttributeGetter<D, BigInteger> field, Function<F, String> getter) {
+	public IpFilter(SingularExpressionGetter<D, BigInteger> field, Function<F, String> getter) {
 		super(field, getter);
 	}
 
@@ -24,7 +24,7 @@ public class IpFilter<D, F> extends BaseFilter<D, F, BigInteger, String> {
 		SubnetUtils subnet = buildSubnet(filter);
 		if (subnet != null) {
 			return cb.between(
-					field(root),
+					field(root, cb),
 					ipToNumber(subnet.getInfo().getLowAddress()),
 					ipToNumber(subnet.getInfo().getHighAddress())
 			);

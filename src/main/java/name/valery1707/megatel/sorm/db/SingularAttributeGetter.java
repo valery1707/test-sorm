@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.db;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
 import javax.persistence.metamodel.SingularAttribute;
 
@@ -8,8 +9,8 @@ import javax.persistence.metamodel.SingularAttribute;
  * @param <F> Field class
  */
 @FunctionalInterface
-public interface SingularAttributeGetter<D, F> {
-	Path<F> apply(Path<D> root);
+public interface SingularAttributeGetter<D, F> extends SingularExpressionGetter<D, F> {
+	Path<F> apply(Path<D> root, CriteriaBuilder cb);
 
 	static <X, Y> DirectSingularAttributeGetter<X, Y> direct(SingularAttribute<X, Y> singularAttribute) {
 		return new DirectSingularAttributeGetter<>(singularAttribute);
@@ -23,7 +24,7 @@ public interface SingularAttributeGetter<D, F> {
 		}
 
 		@Override
-		public Path<F> apply(Path<D> root) {
+		public Path<F> apply(Path<D> root, CriteriaBuilder cb) {
 			return root.get(singularAttribute);
 		}
 	}
@@ -40,13 +41,13 @@ public interface SingularAttributeGetter<D, F> {
 		}
 
 		@Override
-		public Path<F> apply(Path<D> root) {
-			return singularAttribute.apply(root);
+		public Path<F> apply(Path<D> root, CriteriaBuilder cb) {
+			return singularAttribute.apply(root, cb);
 		}
 
 		public <X> NestedSingularAttributeGetter<D, X> nest(SingularAttribute<? super F, X> singularAttribute) {
 			NestedSingularAttributeGetter<D, F> self = this;
-			return new NestedSingularAttributeGetter<>((SingularAttributeGetter<D, X>) root -> self.apply(root).get(singularAttribute));
+			return new NestedSingularAttributeGetter<>((SingularAttributeGetter<D, X>) (root, cb) -> self.apply(root, cb).get(singularAttribute));
 		}
 	}
 }
