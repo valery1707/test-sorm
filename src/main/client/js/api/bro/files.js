@@ -30,7 +30,7 @@ factory('broFilesService', ['$resource', function ($resource) {
 		}
 	}));
 }]).
-controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$stateParams', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $stateParams) {
+controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$stateParams', 'toastr', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $stateParams, toastr) {
 	$scope.filterModel = {
 		taskId: $stateParams.id
 	};
@@ -72,7 +72,7 @@ controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gri
 			if (data.value.size > 0) {
 				saveAs(data.value, data.filename, true);
 			} else {
-				alert('File not found on server');
+				toastr.error('File not found on server', 'Error');
 			}
 		});
 	};
