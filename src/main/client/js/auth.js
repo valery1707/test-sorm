@@ -34,19 +34,20 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 	var roles = {
 		//Суперадминистратор
 		SUPER: [
-			'task.list',//todo Remove
+			, "accountSession.list"
 		],
 		//Администратор
 		ADMIN: [
-			'task.list',
+			, "task.list"
 		],
 		//Оператор/Обработчик
 		OPERATOR: [
-			'task.list',
-			'task.view',
+			, "task.list"
+			, "task.view"
 		],
 		//Надзор
 		SUPERVISOR: [
+			, "unknown"
 		]
 	};
 	for (var role in roles) {

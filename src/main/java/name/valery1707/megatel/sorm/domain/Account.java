@@ -17,7 +17,7 @@ import static name.valery1707.megatel.sorm.utils.ImmutableListCollector.toImmuta
 public class Account extends ABaseEntity {
 	public enum Role {
 		SUPER(Arrays.asList(null
-				, "unknown"
+				, "accountSession.list"
 		)),
 		ADMIN(Arrays.asList(null
 				, "task.list"
