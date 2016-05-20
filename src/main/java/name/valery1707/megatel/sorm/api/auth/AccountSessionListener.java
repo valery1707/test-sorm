@@ -52,7 +52,7 @@ public class AccountSessionListener {
 	}
 
 	/**
-	 *
+	 * Изменение ID сессии для защиты от атаки "фиксация сессии"
 	 */
 	@EventListener
 	public void sessionFixationProtectionEvent(SessionFixationProtectionEvent event) {
