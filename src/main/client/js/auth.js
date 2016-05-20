@@ -183,7 +183,7 @@ factory('principal', ['$q', '$resource', function ($q, $resource) {
 		}
 	};
 }]).
-controller('authController', ['$scope', '$state', 'principal', function ($scope, $state, principal) {
+controller('authController', ['$scope', '$state', 'principal', 'toastr', function ($scope, $state, principal, toastr) {
 	$scope.principal = principal;
 	principal.identity();//Запрос данных с сервера
 	$scope.logout = function () {
@@ -197,6 +197,15 @@ controller('authController', ['$scope', '$state', 'principal', function ($scope,
 		principal.login($scope.model.username, $scope.model.password, $scope.model.rememberMe)
 				.then(function () {
 					$state.go('home');
+				}, function (error) {
+					console.log('error', error);
+					if (error && error.status && error.status == 401) {
+						toastr.error('Invalid username or password', 'Authorization error');
+					} else if (error && error.status) {
+						toastr.error('Error ' + error.status + ': ' + error.statusText, 'Unknown error');
+					} else {
+						toastr.error('Error: ' + error, 'Unknown error');
+					}
 				});
 	};
 }]).

@@ -61,6 +61,9 @@ var paths = {
 		, 'bower_components/angular-spinner/angular-spinner.js'
 		, 'bower_components/angular-loading-spinner/angular-loading-spinner.js'
 
+		, 'bower_components/angular-animate/angular-animate.js'
+		, 'bower_components/angular-toastr/dist/angular-toastr.tpls.js'
+
 		, 'bower_components/angular-permission/dist/angular-permission.js'
 		, 'bower_components/angular-permission/dist/angular-permission-ui.js'
 	],
@@ -78,6 +81,8 @@ var paths = {
 		, 'node_modules/angular-ui-grid/ui-grid.css'
 
 		, 'bower_components/github-fork-ribbon-css/gh-fork-ribbon.css'
+
+		, 'bower_components/angular-toastr/dist/angular-toastr.css'
 
 		, 'bower_components/jquery-datetimepicker/jquery.datetimepicker.css'
 	],

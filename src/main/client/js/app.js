@@ -12,6 +12,7 @@ angular.module('app', [
 	, 'angularSpinner'
 	, 'ui.router'
 	, 'permission', 'permission.ui'
+	, 'ngAnimate', 'toastr'
 ]).
 config(['$routeProvider', function ($routeProvider) {
 	//$routeProvider.otherwise({redirectTo: '/main'});//todo dashboard?
