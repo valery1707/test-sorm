@@ -35,7 +35,7 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 				field: 'id',
 				sort: {direction: uiGridConstants.ASC, priority: 0}
 			},
-			{field: 'accountUsername', enableFiltering: false},
+			{field: 'accountUsername', enableFiltering: true},
 			{
 				field: 'loginAt',
 				filterHeaderTemplate: filterTemplate(),

@@ -14,6 +14,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static name.valery1707.megatel.sorm.db.SingularAttributeGetter.field;
+
 public class SpecificationBuilder<D, F> {
 
 	private List<Filter<? super D, F>> filters = new ArrayList<>();
@@ -23,28 +25,41 @@ public class SpecificationBuilder<D, F> {
 		this.mode = mode;
 	}
 
-	public SpecificationBuilder<D, F> withString(SingularAttribute<? super D, String> field, Function<F, String> value) {
+	public SpecificationBuilder<D, F> withString(Function<F, String> value, SingularAttributeGetter<? super D, String> field) {
 		filters.add(new StringFilter<>(field, value));
 		return this;
 	}
 
+	@Deprecated
+	public SpecificationBuilder<D, F> withString(SingularAttribute<? super D, String> field, Function<F, String> value) {
+		return withString(value, field(field));
+	}
+
+	public SpecificationBuilder<D, F> withString(Function<F, String> value, SingularAttribute<? super D, String> field) {
+		return withString(value, field(field));
+	}
+
+	public <F1> SpecificationBuilder<D, F> withString(Function<F, String> value, SingularAttribute<? super D, F1> field1, SingularAttribute<? super F1, String> field2) {
+		return withString(value, field(field1).nest(field2));
+	}
+
 	public SpecificationBuilder<D, F> withIp(SingularAttribute<? super D, BigInteger> field, Function<F, String> value) {
-		filters.add(new IpFilter<>(field, value));
+		filters.add(new IpFilter<>(field(field), value));
 		return this;
 	}
 
 	public <M extends Number & Comparable<M>> SpecificationBuilder<D, F> withNumber(SingularAttribute<? super D, M> field, Function<F, String> value) {
-		filters.add(new NumberFilter<>(field, value));
+		filters.add(new NumberFilter<>(field(field), value));
 		return this;
 	}
 
 	public SpecificationBuilder<D, F> withDateTime(SingularAttribute<? super D, ZonedDateTime> field, Function<F, List<ZonedDateTime>> value) {
-		filters.add(new DateTimeFilter<>(field, value));
+		filters.add(new DateTimeFilter<>(field(field), value));
 		return this;
 	}
 
 	public SpecificationBuilder<D, F> withDateTimeDecimal(SingularAttribute<? super D, BigDecimal> field, Function<F, List<ZonedDateTime>> value) {
-		filters.add(new DateTimeFilterDecimal<>(field, value));
+		filters.add(new DateTimeFilterDecimal<>(field(field), value));
 		return this;
 	}
 

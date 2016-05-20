@@ -1,8 +1,9 @@
 package name.valery1707.megatel.sorm.db.filter;
 
+import name.valery1707.megatel.sorm.db.SingularAttributeGetter;
+
 import javax.annotation.Nonnull;
 import javax.persistence.criteria.*;
-import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -14,7 +15,7 @@ import static java.util.stream.Collectors.toList;
 public class NumberFilter<D, F, M extends Number & Comparable<M>> extends BaseFilter<D, F, M, String> {
 	private static final Pattern PORT_FILTER_PATTERN = Pattern.compile("^([>=<]?[=]?\\d+)|(\\d+\\.\\.\\d+)$");
 
-	public NumberFilter(SingularAttribute<D, M> field, Function<F, String> getter) {
+	public NumberFilter(SingularAttributeGetter<D, M> field, Function<F, String> getter) {
 		super(field, getter);
 	}
 
@@ -25,7 +26,7 @@ public class NumberFilter<D, F, M extends Number & Comparable<M>> extends BaseFi
 
 	@Override
 	protected Predicate toPredicateImpl(Root<D> root, CriteriaQuery<?> query, CriteriaBuilder cb, @Nonnull String filter) {
-		Expression<M> field = root.get(field());
+		Expression<M> field = field(root);
 		List<Predicate> predicates = Stream.of(filter.split(","))
 				.filter(Objects::nonNull)
 				.map(String::trim)

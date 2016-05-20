@@ -7,6 +7,7 @@ import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.Account;
 import name.valery1707.megatel.sorm.domain.AccountSession;
 import name.valery1707.megatel.sorm.domain.AccountSession_;
+import name.valery1707.megatel.sorm.domain.Account_;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -35,6 +36,7 @@ public class AccountSessionController {
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<AccountSession, AccountSessionFilter>(SpecificationMode.AND)
 				.withNumber(AccountSession_.id, AccountSessionFilter::getId)
+				.withString(AccountSessionFilter::getAccountUsername, AccountSession_.account, Account_.username)
 				.withDateTime(AccountSession_.loginAt, AccountSessionFilter::getLoginAt)
 				.withDateTime(AccountSession_.logoutAt, AccountSessionFilter::getLogoutAt)
 				.withString(AccountSession_.sessionId, AccountSessionFilter::getSessionId)

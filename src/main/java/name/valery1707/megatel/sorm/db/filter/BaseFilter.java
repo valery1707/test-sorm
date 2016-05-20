@@ -1,13 +1,10 @@
 package name.valery1707.megatel.sorm.db.filter;
 
+import name.valery1707.megatel.sorm.db.SingularAttributeGetter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.criteria.*;
 import java.util.function.Function;
 
 /**
@@ -17,16 +14,16 @@ import java.util.function.Function;
  * @param <V> Filter field class
  */
 public abstract class BaseFilter<D, F, M, V> implements Filter<D, F> {
-	private final SingularAttribute<D, M> field;
+	private final SingularAttributeGetter<D, M> field;
 	private final Function<F, V> getter;
 
-	public BaseFilter(SingularAttribute<D, M> field, Function<F, V> getter) {
+	public BaseFilter(SingularAttributeGetter<D, M> field, Function<F, V> getter) {
 		this.field = field;
 		this.getter = getter;
 	}
 
-	protected SingularAttribute<D, M> field() {
-		return field;
+	protected Path<M> field(Root<D> root) {
+		return field.apply(root);
 	}
 
 	protected V value(F filter) {
