@@ -46,8 +46,7 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 			},
 			{field: 'loginAs', enableFiltering: false},
 			{field: 'sessionId'},
-			//todo Скрыть по дефолту
-			{field: 'details'},
+			{field: 'details', visible: false},
 			{
 				field: 'logoutAt',
 				filterHeaderTemplate: filterTemplate(),
