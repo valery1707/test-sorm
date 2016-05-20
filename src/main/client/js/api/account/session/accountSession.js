@@ -57,8 +57,11 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 				}
 			},
 			{field: 'logoutAs', enableFiltering: false},
-			//todo Фильтр для преобразования числа секунд в нормальное значение
-			{field: 'duration', enableFiltering: false},
+			{
+				field: 'duration',
+				enableFiltering: false,
+				cellFilter: 'secondToPeriod'
+			},
 		],
 	});
 

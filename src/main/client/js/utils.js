@@ -48,4 +48,11 @@ filter('formatBytes', function () {
 			return formatBytes_1000(bytes, decimals);
 		}
 	}
+}).filter('secondToPeriod', function () {
+	return function (seconds) {
+		if (seconds == null) {
+			return '';
+		}
+		return moment.duration(seconds, 'seconds').humanize();
+	}
 });
