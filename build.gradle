@@ -75,6 +75,7 @@ dependencies {
 	compile "org.springframework.security:spring-security-config:4.0.4.RELEASE"
 	compile "org.springframework.security:spring-security-web:4.0.4.RELEASE"
 	compile 'org.aspectj:aspectjweaver:1.8.9'
+	runtime 'org.springframework:spring-aspects:4.2.5.RELEASE'
 
 	//Database integration
 	compile "org.springframework:spring-jdbc:4.2.5.RELEASE"

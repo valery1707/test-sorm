@@ -3,6 +3,7 @@ package name.valery1707.megatel.sorm.api.auth;
 import name.valery1707.megatel.sorm.domain.Account;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import static name.valery1707.megatel.sorm.api.auth.AccountUtils.currentUserDeta
 
 @Service
 @Scope(scopeName = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class AccountService {
+public class AccountService implements AuditorAware<Account> {
 
 	@Inject
 	private AccountRepo accountRepo;
@@ -42,6 +43,11 @@ public class AccountService {
 
 	public Optional<Account> getAccount() {
 		return account;
+	}
+
+	@Override
+	public Account getCurrentAuditor() {
+		return getAccount().orElse(null);
 	}
 
 	public void requireAuthorized() {

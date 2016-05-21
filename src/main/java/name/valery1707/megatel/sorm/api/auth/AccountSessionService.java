@@ -2,7 +2,6 @@ package name.valery1707.megatel.sorm.api.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import name.valery1707.megatel.sorm.domain.Account;
 import name.valery1707.megatel.sorm.domain.AccountSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +22,6 @@ public class AccountSessionService {
 	private static final Logger LOG = LoggerFactory.getLogger(AccountSessionService.class);
 
 	@Inject
-	private AccountRepo accountRepo;
-
-	@Inject
 	private AccountSessionRepo sessionRepo;
 
 	private ObjectMapper mapper;
@@ -44,8 +40,7 @@ public class AccountSessionService {
 	@Transactional
 	public void login(AccountSession.Login mode, Authentication authentication) {
 		WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
-		Account account = accountRepo.getByUsernameAndIsActiveTrue(AccountUtils.toUserDetails(authentication).getUsername());//todo В этот момент пользователь уже может быть отключён
-		AccountSession session = new AccountSession(account, mode, details.getSessionId(), toJSON(details));
+		AccountSession session = new AccountSession(mode, details.getSessionId(), toJSON(details));
 		AccountSession save = sessionRepo.save(session);
 		LOG.debug("login(mode: {}, user: {}, sessionId: {}) => {}", mode, authentication.getName(), details.getSessionId(), save.getId());
 	}

@@ -1,6 +1,7 @@
 package name.valery1707.megatel.sorm.domain;
 
 import org.hibernate.annotations.Formula;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class AccountSession extends ABaseEntity {
 
 	@NotNull
 	@ManyToOne
+	@CreatedBy
 	private Account account;
 
 	@NotNull
@@ -44,10 +46,8 @@ public class AccountSession extends ABaseEntity {
 	public AccountSession() {
 	}
 
-	public AccountSession(Account account, Login loginAs, String sessionId, String details) {
+	public AccountSession(Login loginAs, String sessionId, String details) {
 		this();
-		this.account = account;
-		this.loginAt = ZonedDateTime.now();
 		this.loginAs = loginAs;
 		this.sessionId = sessionId;
 		this.details = details;
