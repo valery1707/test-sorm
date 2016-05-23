@@ -49,6 +49,8 @@ config(['$translateProvider', function ($translateProvider) {
 		]
 	});
 
+	$translateProvider.useSanitizeValueStrategy('sanitize');
+
 	// define translation maps you want to use on startup
 	$translateProvider.preferredLanguage('en');
 }])
