@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.api.auth;
 
+import name.valery1707.megatel.sorm.app.AppUserDetailsService;
 import name.valery1707.megatel.sorm.domain.Account;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;

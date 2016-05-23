@@ -1,4 +1,4 @@
-package name.valery1707.megatel.sorm.api.auth;
+package name.valery1707.megatel.sorm.app;
 
 import name.valery1707.megatel.sorm.domain.AccountSession;
 import org.springframework.context.event.EventListener;

@@ -1,5 +1,6 @@
-package name.valery1707.megatel.sorm.api.auth;
+package name.valery1707.megatel.sorm.app;
 
+import name.valery1707.megatel.sorm.api.auth.AccountRepo;
 import name.valery1707.megatel.sorm.domain.Account;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -14,7 +15,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static java.util.stream.Collectors.joining;
-import static name.valery1707.megatel.sorm.api.auth.AccountUtils.currentUserDetails;
+import static name.valery1707.megatel.sorm.app.AccountUtils.currentUserDetails;
 
 @Service
 @Scope(scopeName = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)

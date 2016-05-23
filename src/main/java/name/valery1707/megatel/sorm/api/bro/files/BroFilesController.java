@@ -1,7 +1,7 @@
 package name.valery1707.megatel.sorm.api.bro.files;
 
-import name.valery1707.megatel.sorm.api.auth.AccountService;
 import name.valery1707.megatel.sorm.api.bro.http.BroHttpRepo;
+import name.valery1707.megatel.sorm.app.AccountService;
 import name.valery1707.megatel.sorm.configuration.MimeRepository;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;

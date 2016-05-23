@@ -1,5 +1,6 @@
-package name.valery1707.megatel.sorm.api.auth;
+package name.valery1707.megatel.sorm.app;
 
+import name.valery1707.megatel.sorm.api.auth.AccountRepo;
 import name.valery1707.megatel.sorm.domain.Account;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

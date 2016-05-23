@@ -1,7 +1,8 @@
-package name.valery1707.megatel.sorm.api.auth;
+package name.valery1707.megatel.sorm.app;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import name.valery1707.megatel.sorm.api.auth.AccountSessionRepo;
 import name.valery1707.megatel.sorm.domain.AccountSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

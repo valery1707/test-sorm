@@ -1,4 +1,4 @@
-package name.valery1707.megatel.sorm.api.auth;
+package name.valery1707.megatel.sorm.app;
 
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;

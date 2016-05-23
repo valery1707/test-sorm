@@ -1,7 +1,7 @@
 package name.valery1707.megatel.sorm.api.account.session;
 
-import name.valery1707.megatel.sorm.api.auth.AccountService;
 import name.valery1707.megatel.sorm.api.auth.AccountSessionRepo;
+import name.valery1707.megatel.sorm.app.AccountService;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.Account;

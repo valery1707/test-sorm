@@ -1,4 +1,4 @@
-package name.valery1707.megatel.sorm.api.auth;
+package name.valery1707.megatel.sorm.app;
 
 import org.jetbrains.annotations.Contract;
 import org.springframework.security.core.Authentication;
