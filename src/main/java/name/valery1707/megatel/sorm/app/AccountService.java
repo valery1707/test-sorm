@@ -1,17 +1,14 @@
 package name.valery1707.megatel.sorm.app;
 
-import name.valery1707.megatel.sorm.api.auth.AccountRepo;
 import name.valery1707.megatel.sorm.domain.Account;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.util.*;
 
 import static java.util.stream.Collectors.joining;
@@ -21,24 +18,21 @@ import static name.valery1707.megatel.sorm.app.AccountUtils.currentUserDetails;
 @Scope(scopeName = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class AccountService implements AuditorAware<Account> {
 
-	@Inject
-	private AccountRepo accountRepo;
-
-	private Optional<UserDetails> userDetails;
+	private Optional<AppUserDetails> userDetails;
 	private Optional<Account> account;
 	private Collection<String> rights;
 
 	@PostConstruct
 	public void init() {
 		userDetails = currentUserDetails();
-		account = userDetails.map(UserDetails::getUsername).map(accountRepo::getByUsernameAndIsActiveTrue);
+		account = userDetails.map(AppUserDetails::getAccount);
 		rights = account
 				.map(Account::getRole)
 				.map(Account.Role::getRights)
 				.orElse(Collections.emptyList());
 	}
 
-	public Optional<UserDetails> getUserDetails() {
+	public Optional<AppUserDetails> getUserDetails() {
 		return userDetails;
 	}
 

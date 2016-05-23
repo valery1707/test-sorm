@@ -1,11 +1,11 @@
 package name.valery1707.megatel.sorm.api.auth;
 
+import name.valery1707.megatel.sorm.app.AppUserDetails;
 import name.valery1707.megatel.sorm.app.AppUserDetailsService;
 import name.valery1707.megatel.sorm.domain.Account;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -53,7 +53,7 @@ public class AuthController {
 		if (user == null) {
 			return null;
 		}
-		UserDetails principal = (UserDetails) user.getPrincipal();
+		AppUserDetails principal = (AppUserDetails) user.getPrincipal();
 		Collection<String> rights = principal.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.map(Account.Role::valueOf)
