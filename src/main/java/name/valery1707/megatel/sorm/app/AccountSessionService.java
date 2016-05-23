@@ -7,6 +7,7 @@ import name.valery1707.megatel.sorm.domain.AccountSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +41,7 @@ public class AccountSessionService {
 
 	@Transactional
 	public void login(AccountSession.Login mode, Authentication authentication) {
+		SecurityContextHolder.getContext().setAuthentication(authentication);//todo Нужно ли откатывать назад текущее значение?
 		WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
 		AccountSession session = new AccountSession(mode, details.getSessionId(), toJSON(details));
 		AccountSession save = sessionRepo.save(session);

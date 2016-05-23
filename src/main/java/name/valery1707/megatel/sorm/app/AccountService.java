@@ -42,7 +42,12 @@ public class AccountService implements AuditorAware<Account> {
 
 	@Override
 	public Account getCurrentAuditor() {
-		return getAccount().orElse(null);
+		return getAccount().orElseGet(() -> {
+					//Если аккаунт отсутствует в кеше, то пытаемся снова его получить
+					init();
+					return getAccount().orElse(null);
+				}
+		);
 	}
 
 	public void requireAuthorized() {
