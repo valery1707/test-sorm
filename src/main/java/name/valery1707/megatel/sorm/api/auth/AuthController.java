@@ -9,7 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,13 +50,15 @@ public class AuthController {
 	@Inject
 	private AccountRepo accountRepo;
 
+	@Inject
+	private PasswordEncoder passwordEncoder;
+
 	@RequestMapping(method = RequestMethod.PATCH)
 	@Transactional
 	public Map<String, Object> changePassword(Authentication user, @RequestBody @Valid ChangePassword pass) {
 		if (user == null) {
 			throw new AccessDeniedException("User is not logged in");
 		}
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();//todo Вынести в общий бин
 		Account account = accountRepo.getOne(AccountUtils.toUserDetails(user).getAccount().getId());
 		if (!passwordEncoder.matches(pass.getOldPassword(), account.getPassword())) {
 			throw new AccessDeniedException("Old password is invalid");
