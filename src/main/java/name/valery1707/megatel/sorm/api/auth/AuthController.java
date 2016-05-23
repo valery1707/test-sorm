@@ -1,15 +1,26 @@
 package name.valery1707.megatel.sorm.api.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import name.valery1707.megatel.sorm.app.AccountUtils;
 import name.valery1707.megatel.sorm.app.AppUserDetails;
 import name.valery1707.megatel.sorm.app.AppUserDetailsService;
 import name.valery1707.megatel.sorm.domain.Account;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +45,51 @@ public class AuthController {
 	@RequestMapping
 	public Map<String, Object> current(Authentication user) {
 		return toAccount(user);
+	}
+
+	@Inject
+	private AccountRepo accountRepo;
+
+	@RequestMapping(method = RequestMethod.PATCH)
+	@Transactional
+	public Map<String, Object> changePassword(Authentication user, @RequestBody @Valid ChangePassword pass) {
+		if (user == null) {
+			throw new AccessDeniedException("User is not logged in");
+		}
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();//todo Вынести в общий бин
+		Account account = accountRepo.getOne(AccountUtils.toUserDetails(user).getAccount().getId());
+		if (!passwordEncoder.matches(pass.getOldPassword(), account.getPassword())) {
+			throw new AccessDeniedException("Old password is invalid");
+		}
+		accountRepo.setPasswordById(passwordEncoder.encode(pass.getNewPassword()), account.getId());
+		return toAccount(user);
+	}
+
+	public static class ChangePassword {
+		@NotNull
+		@Size(min = 3)
+		@JsonProperty("old")
+		private String oldPassword;
+		@NotNull
+		@Size(min = 3)
+		@JsonProperty("new")
+		private String newPassword;
+
+		public String getOldPassword() {
+			return oldPassword;
+		}
+
+		public void setOldPassword(String oldPassword) {
+			this.oldPassword = oldPassword;
+		}
+
+		public String getNewPassword() {
+			return newPassword;
+		}
+
+		public void setNewPassword(String newPassword) {
+			this.newPassword = newPassword;
+		}
 	}
 
 	//todo Вместо дублирования списка прав на стороне клиента их можно получать отсюда, но запрос выполняется позднее чем проверка прав

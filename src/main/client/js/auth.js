@@ -181,10 +181,33 @@ factory('principal', ['$q', '$resource', function ($q, $resource) {
 			);
 
 			return deferred.promise;
+		},
+		changePassword: function (oldPassword, newPassword) {
+			const pass = {
+				old: oldPassword,
+				new: newPassword
+			};
+			$resource(apiBaseUrl + '/auth', {}, {
+				pass: {
+					method: 'PATCH',
+					isArray: false
+				}
+			}).pass({}, pass,
+					function (data) {
+						if (data && data.permission) {
+							//deferred.resolve(_identity);
+						} else {
+							//deferred.reject(_identity);
+						}
+					},
+					function (error) {
+						//deferred.reject(error);
+					}
+			);
 		}
 	};
 }]).
-controller('authController', ['$scope', '$state', 'principal', 'toastr', function ($scope, $state, principal, toastr) {
+controller('authController', ['$scope', '$state', 'principal', 'toastr', 'dialogs', function ($scope, $state, principal, toastr, dialogs) {
 	$scope.principal = principal;
 	principal.identity();//Запрос данных с сервера
 	$scope.logout = function () {
@@ -207,6 +230,34 @@ controller('authController', ['$scope', '$state', 'principal', 'toastr', functio
 						toastr.error('Error: ' + error, 'Unknown error');
 					}
 				});
+	};
+	$scope.changePasswordForm = function () {
+		dialogs.create('view/common/changePassword.html', 'changePasswordController', {test: 123}, {keyboard: true})
+				.result
+				.then(function (model) {
+					principal.changePassword(model.oldPassword, model.newPassword);
+				});
+	};
+}]).
+controller('changePasswordController', ['$scope', function ($scope) {
+	$scope.model = {};
+	$scope.cancel = function () {
+		$scope.$dismiss('Canceled');
+	};
+	$scope.save = function () {
+		console.log('$scope.model', $scope.model);
+		$scope.$close($scope.model);
+	};
+	$scope.hitEnter = function (evt) {
+		const isNullOrEmpty = function (value) {
+			return angular.equals(value, null) || angular.equals(value, '');
+		};
+		const notNullOrEmpty = function (value) {
+			return !isNullOrEmpty(value);
+		};
+		if (angular.equals(evt.keyCode, 13) && notNullOrEmpty($scope.model.oldPassword) && notNullOrEmpty($scope.model.newPassword)) {
+			$scope.save();
+		}
 	};
 }]).
 config(['$stateProvider', function ($stateProvider) {

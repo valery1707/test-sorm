@@ -13,6 +13,8 @@ angular.module('app', [
 	, 'ui.router'
 	, 'permission', 'permission.ui'
 	, 'ngAnimate', 'toastr'
+	, 'ui.bootstrap'
+	, 'dialogs.main'
 ]).
 config(['$routeProvider', function ($routeProvider) {
 	//$routeProvider.otherwise({redirectTo: '/main'});//todo dashboard?

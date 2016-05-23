@@ -38,6 +38,7 @@ var paths = {
 		, 'bower_components/jquery/dist/jquery.js'
 
 		, 'node_modules/bootstrap/dist/js/bootstrap.js'
+		, 'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
 
 		, 'node_modules/angular-ui-grid/ui-grid.js'
 		, 'bower_components/csv/index.js'
@@ -66,6 +67,9 @@ var paths = {
 
 		, 'bower_components/angular-permission/dist/angular-permission.js'
 		, 'bower_components/angular-permission/dist/angular-permission-ui.js'
+
+		, 'bower_components/angular-sanitize/angular-sanitize.js'
+		, 'bower_components/angular-dialog-service/dist/dialogs.js'
 	],
 	scriptsLibIE: [
 		'bower_components/html5shiv/dist/html5shiv.js'
@@ -77,6 +81,7 @@ var paths = {
 	],
 	stylesLibCommon: [
 		'node_modules/bootstrap/dist/css/bootstrap.css'
+		, 'bower_components/angular-bootstrap/ui-bootstrap-csp.css'
 
 		, 'node_modules/angular-ui-grid/ui-grid.css'
 
@@ -85,6 +90,8 @@ var paths = {
 		, 'bower_components/angular-toastr/dist/angular-toastr.css'
 
 		, 'bower_components/jquery-datetimepicker/jquery.datetimepicker.css'
+
+		, 'bower_components/angular-dialog-service/dist/dialogs.css'
 	],
 	stylesLibIE: [
 		'bower_components/github-fork-ribbon-css/gh-fork-ribbon.ie.css'

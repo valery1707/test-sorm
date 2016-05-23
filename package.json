@@ -42,7 +42,8 @@
     "angular-loading-spinner": "0.0.3",
     "angular-animate": "1.5.5",
     "angular-toastr": "1.7.0",
-    "angular-permission": "3.0.1"
+    "angular-permission": "3.0.1",
+    "angular-dialog-service": "5.3.0"
   },
   "devDependencies": {
     "bower": "1.7.7",
