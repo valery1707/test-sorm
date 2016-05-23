@@ -6,14 +6,18 @@ angular.module('app', [
 	'ngResource'
 	, 'ngTouch'
 	, 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns'
+	//https://github.com/ghiscoding/angular-validation/wiki
 	, 'ghiscoding.validation'
+	//https://github.com/angular-translate/angular-translate
 	, 'pascalprecht.translate'
 	, 'ngLoadingSpinner'
 	, 'angularSpinner'
 	, 'ui.router'
 	, 'permission', 'permission.ui'
+	//https://github.com/Foxandxss/angular-toastr
 	, 'ngAnimate', 'toastr'
 	, 'ui.bootstrap'
+	//https://github.com/m-e-conroy/angular-dialog-service
 	, 'dialogs.main'
 ]).
 config(['$routeProvider', function ($routeProvider) {
