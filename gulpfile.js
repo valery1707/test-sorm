@@ -101,6 +101,11 @@ var paths = {
 			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff',
 			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2'
 		]
+	},
+	assetsLibCommon: {
+		'./locale/validation': [
+			'bower_components/ghiscoding.angular-validation/locales/validation/*.json'
+		]
 	}
 };
 
@@ -205,6 +210,13 @@ gulp.task('scriptsLibIE', function () {
 			.pipe(rename({suffix: '.min'}))
 			.pipe(uglify())
 			.pipe(gulp.dest('src/main/webapp/js/'));
+});
+gulp.task('assetsLibCommon', function () {
+	for (var dir in paths.assetsLibCommon) {
+		//noinspection JSUnfilteredForInLoop
+		gulp.src(paths.assetsLibCommon[dir])
+				.pipe(gulp.dest('src/main/webapp/' + dir))
+	}
 });
 
 gulp.task('default', function () {

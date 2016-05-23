@@ -32,5 +32,18 @@ run(['$rootScope', '$state', '$stateParams', function ($rootScope, $state, $stat
 	// to active whenever 'contacts.list' or one of its decendents is active.
 	$rootScope.$state = $state;
 	$rootScope.$stateParams = $stateParams;
+}]).
+config(['$translateProvider', function ($translateProvider) {
+	$translateProvider.useStaticFilesLoader({
+		files: [
+			{
+				prefix: 'locale/validation/',
+				suffix: '.json'
+			}
+		]
+	});
+
+	// define translation maps you want to use on startup
+	$translateProvider.preferredLanguage('en');
 }])
 ;

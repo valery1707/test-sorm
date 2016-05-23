@@ -173,7 +173,7 @@ gulp_bowerInstall {
 	outputs.dir new File(buildDir, 'bower_components')
 }
 task webBuild {
-	dependsOn gulp_images, gulp_stylesLibCommon, gulp_stylesLibIE, gulp_stylesApp, gulp_scriptsLibCommon, gulp_scriptsLibIE, gulp_scriptsApp
+	dependsOn gulp_images, gulp_stylesLibCommon, gulp_stylesLibIE, gulp_stylesApp, gulp_scriptsLibCommon, gulp_scriptsLibIE, gulp_scriptsApp, gulp_assetsLibCommon
 	mustRunAfter webPrepare
 }
 gulp_stylesLibCommon {
