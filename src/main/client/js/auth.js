@@ -183,6 +183,8 @@ factory('principal', ['$q', '$resource', function ($q, $resource) {
 			return deferred.promise;
 		},
 		changePassword: function (oldPassword, newPassword) {
+			var deferred = $q.defer();
+
 			const pass = {
 				old: oldPassword,
 				new: newPassword
@@ -195,15 +197,17 @@ factory('principal', ['$q', '$resource', function ($q, $resource) {
 			}).pass({}, pass,
 					function (data) {
 						if (data && data.permission) {
-							//deferred.resolve(_identity);
+							deferred.resolve(data);
 						} else {
-							//deferred.reject(_identity);
+							deferred.reject(data);
 						}
 					},
 					function (error) {
-						//deferred.reject(error);
+						deferred.reject(error);
 					}
 			);
+
+			return deferred.promise;
 		}
 	};
 }]).
@@ -232,21 +236,22 @@ controller('authController', ['$scope', '$state', 'principal', 'toastr', 'dialog
 				});
 	};
 	$scope.changePasswordForm = function () {
-		dialogs.create('view/common/changePassword.html', 'changePasswordController', {test: 123}, {keyboard: true})
-				.result
-				.then(function (model) {
-					principal.changePassword(model.oldPassword, model.newPassword);
-				});
+		dialogs.create('view/common/changePassword.html', 'changePasswordController', {test: 123}, {keyboard: true});
 	};
 }]).
-controller('changePasswordController', ['$scope', function ($scope) {
+controller('changePasswordController', ['$scope', 'principal', 'toastr', function ($scope, principal, toastr) {
 	$scope.model = {};
 	$scope.cancel = function () {
 		$scope.$dismiss('Canceled');
 	};
 	$scope.save = function () {
-		console.log('$scope.model', $scope.model);
-		$scope.$close($scope.model);
+		principal.changePassword($scope.model.oldPassword, $scope.model.newPassword)
+				.then(function () {
+					$scope.$close();
+					toastr.success('Password changed', 'Change password');
+				}, function (error) {
+					toastr.error(error.statusText, 'Error');
+				});
 	};
 	$scope.hitEnter = function (evt) {
 		const isNullOrEmpty = function (value) {
