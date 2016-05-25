@@ -10,7 +10,7 @@ config(['$stateProvider', function ($stateProvider) {
 factory('broSmtpService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/bro/smtp', {}, serviceCommonConfig);
 }]).
-controller('broSmtpCtrl', ['$scope', 'broSmtpService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$stateParams', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $stateParams) {
+controller('broSmtpCtrl', ['$scope', 'broSmtpService', 'uiGridConstants', 'gridHelper', '$stateParams', function ($scope, service, uiGridConstants, gridHelper, $stateParams) {
 	$scope.filterModel = {
 		taskId: $stateParams.id
 	};
@@ -26,7 +26,7 @@ controller('broSmtpCtrl', ['$scope', 'broSmtpService', 'uiGridConstants', 'gridH
 			{
 				field: 'ts',
 				sort: {direction: uiGridConstants.DESC, priority: 0},
-				filterHeaderTemplate: filterTemplate(),
+				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function(value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');

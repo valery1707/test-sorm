@@ -30,7 +30,7 @@ factory('broFilesService', ['$resource', function ($resource) {
 		}
 	}));
 }]).
-controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$stateParams', 'toastr', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $stateParams, toastr) {
+controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gridHelper', '$stateParams', 'toastr', function ($scope, service, uiGridConstants, gridHelper, $stateParams, toastr) {
 	$scope.filterModel = {
 		taskId: $stateParams.id
 	};
@@ -46,7 +46,7 @@ controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gri
 			{
 				field: 'ts',
 				sort: {direction: uiGridConstants.DESC, priority: 0},
-				filterHeaderTemplate: filterTemplate(),
+				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function(value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');

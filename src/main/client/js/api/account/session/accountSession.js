@@ -20,7 +20,7 @@ config(['$stateProvider', function ($stateProvider) {
 factory('accountSessionService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/account/session', {}, serviceCommonConfig);
 }]).
-controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $state, principal) {
+controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridConstants', 'gridHelper', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, principal) {
 	$scope.filterModel = {};
 
 	var paginationOptions = {
@@ -38,7 +38,7 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 			{
 				field: 'loginAt',
 				sort: {direction: uiGridConstants.DESC, priority: 0},
-				filterHeaderTemplate: filterTemplate(),
+				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
@@ -59,7 +59,7 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 			{field: 'details', visible: false},
 			{
 				field: 'logoutAt',
-				filterHeaderTemplate: filterTemplate(),
+				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');

@@ -50,7 +50,7 @@ config(['$stateProvider', function ($stateProvider) {
 factory('taskService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/task', {}, serviceCommonConfig);
 }]).
-controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $state, principal) {
+controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, principal) {
 	$scope.canView = function (){
 		return principal.hasPermission('task.view');
 	};
@@ -82,7 +82,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 			{field: 'clientAlias'},
 			{
 				field: 'periodStart',
-				filterHeaderTemplate: filterTemplate(),
+				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function(value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
@@ -90,7 +90,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 			},
 			{
 				field: 'periodFinish',
-				filterHeaderTemplate: filterTemplate(),
+				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function(value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');

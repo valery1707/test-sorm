@@ -54,5 +54,8 @@ service('dateTimePickerFilterTemplate', [function () {
 			   '  </div>' +
 			   '</div>';
 	};
+}]).
+run(['$templateCache', 'dateTimePickerFilterTemplate', function ($templateCache, dateTimePickerFilterTemplate) {
+	$templateCache.put('view/common/grid/filter/dateTime.html', dateTimePickerFilterTemplate());
 }])
 ;

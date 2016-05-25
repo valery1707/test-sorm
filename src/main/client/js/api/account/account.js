@@ -20,7 +20,7 @@ config(['$stateProvider', function ($stateProvider) {
 factory('accountService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/account', {}, serviceCommonConfig);
 }]).
-controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridHelper', 'dateTimePickerFilterTemplate', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, filterTemplate, $state, principal) {
+controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridHelper', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, principal) {
 	$scope.filterModel = {};
 
 	var paginationOptions = {
@@ -60,7 +60,7 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 			},
 			{
 				field: 'activeUntil',
-				filterHeaderTemplate: filterTemplate(),
+				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD');
