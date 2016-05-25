@@ -34,6 +34,7 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 	var roles = {
 		//Суперадминистратор
 		SUPER: [
+			, "account.list"
 			, "accountSession.list"
 		],
 		//Администратор
