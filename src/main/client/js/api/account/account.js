@@ -35,6 +35,38 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 				field: 'id',
 				sort: {direction: uiGridConstants.DESC, priority: 0}
 			},
+			{field: 'username'},
+			{
+				field: 'active',
+				filter: {
+					type: uiGridConstants.filter.SELECT,
+					selectOptions: [
+						{value: true, label: 'True'},
+						{value: false, label: 'False'}
+					]
+				}
+			},
+			{
+				field: 'role',
+				filter: {
+					type: uiGridConstants.filter.SELECT,
+					selectOptions: [
+						{value: 'SUPER', label: 'SUPER'},
+						{value: 'ADMIN', label: 'ADMIN'},
+						{value: 'OPERATOR', label: 'OPERATOR'},
+						{value: 'SUPERVISOR', label: 'SUPERVISOR'}
+					]
+				}
+			},
+			{
+				field: 'activeUntil',
+				filterHeaderTemplate: filterTemplate(),
+				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
+				filterTermMapper: function (value) {
+					return moment(value).format('YYYY-MM-DD');
+				}
+			},
+			{field: 'agency'},
 		],
 	});
 

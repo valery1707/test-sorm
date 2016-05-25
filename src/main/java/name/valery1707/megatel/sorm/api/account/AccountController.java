@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -36,6 +37,11 @@ public class AccountController {
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<Account, AccountFilter>(SpecificationMode.AND)
 				.withNumber(AccountFilter::getId, Account_.id)
+				.withString(AccountFilter::getUsername, Account_.username)
+				.withEquals(AccountFilter::isActive, Account_.isActive)
+				.withEquals(AccountFilter::getRole, Account_.role)
+				.withDate(AccountFilter::getActiveUntil, Account_.activeUntil)
+				.withString(AccountFilter::getAgency, Account_.agency)
 		;
 	}
 

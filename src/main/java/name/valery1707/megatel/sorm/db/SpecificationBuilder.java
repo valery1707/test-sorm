@@ -8,6 +8,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,15 @@ public class SpecificationBuilder<D, F> {
 
 	public SpecificationBuilder<D, F> withDateTime(Function<F, List<ZonedDateTime>> value, SingularAttribute<? super D, ZonedDateTime> field) {
 		return withDateTime(value, field(field));
+	}
+
+	public SpecificationBuilder<D, F> withDate(Function<F, List<LocalDate>> value, SingularExpressionGetter<? super D, LocalDate> fieldGetter) {
+		filters.add(new DateFilter<>(fieldGetter, value));
+		return this;
+	}
+
+	public SpecificationBuilder<D, F> withDate(Function<F, List<LocalDate>> value, SingularAttribute<? super D, LocalDate> fieldGetter) {
+		return withDate(value, field(fieldGetter));
 	}
 
 	public SpecificationBuilder<D, F> withDateTimeDecimal(Function<F, List<ZonedDateTime>> value, SingularExpressionGetter<? super D, BigDecimal> fieldGetter) {
