@@ -55,4 +55,19 @@ filter('formatBytes', function () {
 		}
 		return moment.duration(seconds, 'seconds').humanize();
 	}
-});
+}).
+//@see https://docs.angularjs.org/api/ng/directive/select#binding-select-to-a-non-string-value-via-ngmodel-parsing-formatting
+directive('convertToDate', function () {
+	return {
+		require: 'ngModel',
+		link: function (scope, element, attrs, ngModel) {
+			ngModel.$parsers.push(function (val) {
+				return val ? moment(val).format('YYYY-MM-DD') : null;
+			});
+			ngModel.$formatters.push(function (val) {
+				return val ? moment(val).format('YYYY-MM-DD') : null;
+			});
+		}
+	};
+})
+;

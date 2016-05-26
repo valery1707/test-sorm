@@ -1,0 +1,142 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span ng-if="model.id">
+        Редактирование пользователя {{model.id}}
+        </span>
+        <span ng-if="!model.id">
+            Создание пользователя
+        </span>
+    </div>
+    <div class="panel-body">
+        <!--todo https://www.forms-angular.org/#/schemas-->
+        <ng-form novalidate role="form" name="entityForm">
+
+            <!--username-->
+            <div class="form-group" title="Username">
+                <label for="username" class="sr-only">Username</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           name="username" id="username" ng-model="model.username"
+                           placeholder="Username" friendly-name="Username"
+                           validation="min_len:3"
+                    >
+                </div>
+            </div>
+
+            <!--password-->
+            <div class="form-group" title="Password" ng-if="!model.id">
+                <label for="password" class="sr-only">Password</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           name="password" id="password" ng-model="model.password"
+                           placeholder="Password" friendly-name="Password"
+                           validation="required|min_len:3"
+                    >
+                </div>
+            </div>
+
+            <!--newPassword-->
+            <div class="form-group" title="New password" ng-if="model.id">
+                <label for="newPassword" class="sr-only">New password</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
+                    <input type="password" class="form-control"
+                           name="newPassword" id="newPassword" ng-model="model.newPassword"
+                           placeholder="New password" friendly-name="New password"
+                           validation="min_len:3"
+                    >
+                </div>
+            </div>
+
+            <!--newPasswordConfirm-->
+            <div class="form-group" title="Confirm new password" ng-if="model.id">
+                <label for="newPasswordConfirm" class="sr-only">Confirm new password</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
+                    <input type="password" class="form-control"
+                           name="newPasswordConfirm" id="newPasswordConfirm" ng-model="model.newPasswordConfirm"
+                           placeholder="Confirm new password" friendly-name="Confirm new password"
+                           validation="min_len:3|match:model.newPassword,New password"
+                    >
+                </div>
+            </div>
+
+            <!--active-->
+            <div class="form-group" title="Active">
+                <div class="check-box">
+                    <label>
+                        <input type="checkbox"
+                               name="active" id="active" ng-model="model.active"
+                               friendly-name="Active"
+                        > Active
+                    </label>
+                </div>
+            </div>
+
+            <!--role-->
+            <div class="form-group" title="Role">
+                <label for="role" class="sr-only">Role</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></div>
+                    <!--todo https://docs.angularjs.org/api/ng/directive/select#using-select-with-ngoptions-and-setting-a-default-value-->
+                    <!--todo https://github.com/angular-ui/ui-select/-->
+                    <select class="form-control"
+                            name="role" id="role" ng-model="model.role"
+                            friendly-name="Role"
+                            validation="required"
+                    >
+                        <option value="SUPER">SUPER</option>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="OPERATOR">OPERATOR</option>
+                        <option value="SUPERVISOR">SUPERVISOR</option>
+                    </select>
+                </div>
+            </div>
+
+            <!--activeUntil-->
+            <div class="form-group" title="Active until">
+                <label for="activeUntil" class="sr-only">activeUntil</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           date-time-picker='{"onlyDate": true}'
+                           convert-to-date
+                           name="activeUntil" id="activeUntil" ng-model="model.activeUntil"
+                           placeholder="Active until" friendly-name="Active until"
+                    >
+                </div>
+            </div>
+
+            <!--agency-->
+            <div class="form-group" title="Agency">
+                <label for="agency" class="sr-only">Agency</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           name="agency" id="agency" ng-model="model.agency"
+                           placeholder="Agency" friendly-name="Agency"
+                           validation="required|min_len:3"
+                    >
+                </div>
+            </div>
+
+        </ng-form>
+    </div>
+    <div class="panel-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(entityForm.$dirty && entityForm.$invalid) || entityForm.$pristine">
+            Save
+        </button>
+    </div>
+</div>

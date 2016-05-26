@@ -3,18 +3,31 @@ package name.valery1707.megatel.sorm.api.account;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import name.valery1707.megatel.sorm.domain.Account;
 
-import java.time.format.DateTimeFormatter;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import static name.valery1707.megatel.sorm.DateUtils.LOCAL_DATE_PATTERN;
+import static name.valery1707.megatel.sorm.DateUtils.formatDate;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountDto {
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 	private long id;
+	@NotNull
 	private String username;
+
+	private String password;
+	private String oldPassword;
+	private String newPassword;
+
+	@NotNull
 	private boolean isActive;
-	private String role;
+	@NotNull
+	private Account.Role role;
+	@Pattern(regexp = LOCAL_DATE_PATTERN)
 	private String activeUntil;
+	@NotNull
 	private String agency;
 
 	public AccountDto() {
@@ -25,8 +38,8 @@ public class AccountDto {
 		setId(src.getId());
 		setUsername(src.getUsername());
 		setActive(src.isActive());
-		setRole(src.getRole().name());
-		setActiveUntil(src.getActiveUntil() != null ? src.getActiveUntil().format(FORMATTER) : null);
+		setRole(src.getRole());
+		setActiveUntil(formatDate(src.getActiveUntil()));
 		setAgency(src.getAgency());
 	}
 
@@ -46,6 +59,30 @@ public class AccountDto {
 		this.username = username;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+
 	public boolean isActive() {
 		return isActive;
 	}
@@ -54,11 +91,11 @@ public class AccountDto {
 		isActive = active;
 	}
 
-	public String getRole() {
+	public Account.Role getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(Account.Role role) {
 		this.role = role;
 	}
 

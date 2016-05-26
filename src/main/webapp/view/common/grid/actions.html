@@ -1,0 +1,10 @@
+<div class="ui-grid-cell-contents">
+    <div ng-repeat="action in grid.appScope.actions">
+        <button type="button"
+                class="btn btn-xs btn-default"
+                ng-if="grid.appScope.principal.hasAnyPermission(action.permissions)"
+                ng-click="action.action(grid, row)">
+            <span class="glyphicon glyphicon-{{action.icon}}" aria-hidden="true"></span>
+        </button>
+    </div>
+</div>

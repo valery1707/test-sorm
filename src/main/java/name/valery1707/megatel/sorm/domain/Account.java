@@ -18,6 +18,7 @@ public class Account extends ABaseEntity {
 	public enum Role {
 		SUPER(Arrays.asList(null
 				, "account.list"
+				, "account.item.edit"
 				, "accountSession.list"
 		)),
 		ADMIN(Arrays.asList(null
@@ -65,6 +66,7 @@ public class Account extends ABaseEntity {
 
 	private LocalDate activeUntil;
 
+	@NotNull
 	private String agency;
 
 	public String getUsername() {

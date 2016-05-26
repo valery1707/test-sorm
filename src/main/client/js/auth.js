@@ -35,6 +35,7 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 		//Суперадминистратор
 		SUPER: [
 			, "account.list"
+			, "account.item.edit"
 			, "accountSession.list"
 		],
 		//Администратор
@@ -85,7 +86,7 @@ factory('principal', ['$q', '$resource', function ($q, $resource) {
 			}
 
 			for (var i = 0; i < permissions.length; i++) {
-				if (this.hasPermission(roles[i])) {
+				if (this.hasPermission(permissions[i])) {
 					return true;
 				}
 			}

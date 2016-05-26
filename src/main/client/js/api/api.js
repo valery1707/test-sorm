@@ -1,5 +1,8 @@
 const apiBaseUrl = '/api';
 const serviceCommonConfig = {
+	save: {
+		method: 'PUT'
+	},
 	query: {
 		method: 'GET',
 		params: {},

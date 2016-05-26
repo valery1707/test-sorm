@@ -1,11 +1,15 @@
 angular.module('app').
-directive('dateTimePicker', function(){
+directive('dateTimePicker', function () {
 	return {
-		restrict : "A",
+		restrict: "A",
 		require: 'ngModel',
-		link : function(scope, element, attrs, ngModel){
-			$(function(){
+		link: function (scope, element, attrs, ngModel) {
+			$(function () {
 				const opt = attrs.dateTimePicker ? JSON.parse(attrs.dateTimePicker) : {};
+				if (opt.onlyDate) {
+					opt.timepicker = false;
+					opt.format = 'Y-m-d';
+				}
 				$(element).datetimepicker(jQuery.extend({
 					format: 'Y-m-d H:i',
 					step: 15,

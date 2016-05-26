@@ -11,15 +11,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import static name.valery1707.megatel.sorm.DateUtils.parseDate;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @RestController
@@ -54,5 +55,47 @@ public class AccountController {
 		Specification<Account> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(AccountDto::new);
+	}
+
+	@RequestMapping
+	public AccountDto get(@RequestParam long id) {
+		accountService.requireAnyRole(Account.Role.SUPER);
+		Account entity = repo.findOne(id);
+		if (entity == null) {
+			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", "Account", id));
+		}
+		return new AccountDto(entity);
+	}
+
+	@Inject
+	private PasswordEncoder passwordEncoder;
+
+	@RequestMapping(method = RequestMethod.PUT)
+	@Transactional
+	public void save(@RequestBody @Valid AccountDto dto) {
+		accountService.requireAnyRole(Account.Role.SUPER);
+		Account entity = null;
+		if (dto.getId() != 0) {
+			entity = repo.findOne(dto.getId());
+		}
+		if (entity == null) {
+			entity = new Account();
+		}
+		entity.setUsername(dto.getUsername());
+		if (dto.getId() != 0 && dto.getOldPassword() != null && dto.getNewPassword() != null) {
+			if (!passwordEncoder.matches(dto.getOldPassword(), entity.getPassword())) {
+				throw new AccessDeniedException("Old password is invalid");
+			}
+			entity.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+		} else if (dto.getId() == 0 && dto.getPassword() == null) {
+			throw new AccessDeniedException("Password required");//todo Different message
+		} else if (dto.getId() == 0 && dto.getPassword() != null) {
+			entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+		}
+		entity.setActive(dto.isActive());
+		entity.setRole(dto.getRole());
+		entity.setActiveUntil(parseDate(dto.getActiveUntil()));
+		entity.setAgency(dto.getAgency());
+		repo.save(entity);
 	}
 }
