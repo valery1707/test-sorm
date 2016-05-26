@@ -61,7 +61,7 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 			{
 				field: 'activeUntil',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
-				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
+				filters: [{placeholder: 'from', picker: {timepicker: false}}, {placeholder: 'to', picker: {timepicker: false}}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD');
 				}

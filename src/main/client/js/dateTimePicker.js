@@ -5,7 +5,8 @@ directive('dateTimePicker', function(){
 		require: 'ngModel',
 		link : function(scope, element, attrs, ngModel){
 			$(function(){
-				$(element).datetimepicker({
+				const opt = attrs.dateTimePicker ? JSON.parse(attrs.dateTimePicker) : {};
+				$(element).datetimepicker(jQuery.extend({
 					format: 'Y-m-d H:i',
 					step: 15,
 					lang: 'ru',
@@ -20,7 +21,7 @@ directive('dateTimePicker', function(){
 							ngModel.$setViewValue($input.val());
 						});
 					}
-				});
+				}, opt));
 			})
 		}
 	}
@@ -35,7 +36,7 @@ service('dateTimePickerFilterTemplate', [function () {
 			   '   type="text"' +
 			   '   style="display:inline; width:100%"' +
 			   '   class="ui-grid-filter-input ui-grid-filter-input-{{$index}}"' +
-			   '   date-time-picker' +
+			   '   date-time-picker="{{colFilter.picker || \'{}\'}}"' +
 			   '   ng-model="col.filters[$index].term"' +
 			   '   ng-attr-placeholder="{{colFilter.placeholder || \'\'}}"' +
 			   '   aria-label="{{colFilter.ariaLabel || aria.defaultFilterLabel}}">' +
