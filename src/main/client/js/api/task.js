@@ -51,9 +51,17 @@ factory('taskService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/task', {}, serviceCommonConfig);
 }]).
 controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, principal) {
-	$scope.canView = function (){
-		return principal.hasPermission('task.view');
-	};
+	$scope.principal = principal;
+
+	$scope.actions = [
+		{
+			permissions: ['task.view'],
+			icon: 'eye-open',
+			action: function (grid, row) {
+				$state.go('task.view.conn', {id: row.entity.id});
+			}
+		}
+	];
 
 	$scope.filterModel = {};
 
@@ -71,7 +79,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 				enableFiltering: false,
 				enableSorting: false,
 				enableColumnMenu: false,
-				cellTemplate: 'view/task/grid-actions.html',
+				cellTemplate: 'view/common/grid/actions.html',
 				width: 34, maxWidth: 34, minWidth: 34
 			},
 			{
@@ -99,10 +107,6 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 			{field: 'note'},
 		],
 	});
-
-	$scope.rowView = function (grid, row) {
-		$state.go('task.view.conn', {id: row.entity.id});
-	};
 
 	$scope.loadPage();
 }]).controller('taskViewCtrl', ['$scope', '$state', function ($scope, $state) {
