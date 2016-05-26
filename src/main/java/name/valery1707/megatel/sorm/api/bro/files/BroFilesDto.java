@@ -2,13 +2,10 @@ package name.valery1707.megatel.sorm.api.bro.files;
 
 import name.valery1707.megatel.sorm.domain.BroFiles;
 
-import java.time.format.DateTimeFormatter;
-
 import static name.valery1707.megatel.sorm.DateUtils.bigDecimalToZonedDateTime;
+import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
 
 public class BroFilesDto {
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
 	private String ts;
 
 	private String mimeType;
@@ -23,7 +20,7 @@ public class BroFilesDto {
 
 	public BroFilesDto(BroFiles src) {
 		this();
-		setTs(bigDecimalToZonedDateTime(src.getTs()).format(FORMATTER));
+		setTs(formatDateTime(bigDecimalToZonedDateTime(src.getTs())));
 		setMimeType(src.getMimeType());
 		setFilename(src.getFilename());
 		setExtracted(src.getExtracted());

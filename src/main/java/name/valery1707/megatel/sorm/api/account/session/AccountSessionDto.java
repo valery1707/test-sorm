@@ -3,13 +3,11 @@ package name.valery1707.megatel.sorm.api.account.session;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import name.valery1707.megatel.sorm.domain.AccountSession;
 
-import java.time.format.DateTimeFormatter;
+import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountSessionDto {
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
 	private long id;
 	private String accountUsername;
 	private String loginAt;
@@ -27,11 +25,11 @@ public class AccountSessionDto {
 		this();
 		this.setId(src.getId());
 		this.setAccountUsername(src.getAccount().getUsername());
-		this.setLoginAt(src.getLoginAt().format(FORMATTER));
+		this.setLoginAt(formatDateTime(src.getLoginAt()));
 		this.setLoginAs(src.getLoginAs().name());
 		this.setSessionId(src.getSessionId());
 		this.setDetails(src.getDetails());
-		this.setLogoutAt(src.getLogoutAt() != null ? src.getLogoutAt().format(FORMATTER) : null);
+		this.setLogoutAt(formatDateTime(src.getLogoutAt()));
 		this.setLogoutAs(src.getLogoutAs() != null ? src.getLogoutAs().name() : null);
 		this.setDuration(src.getDuration());
 	}

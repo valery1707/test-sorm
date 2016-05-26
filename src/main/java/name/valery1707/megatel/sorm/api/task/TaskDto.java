@@ -3,13 +3,11 @@ package name.valery1707.megatel.sorm.api.task;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import name.valery1707.megatel.sorm.domain.Task;
 
-import java.time.format.DateTimeFormatter;
+import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TaskDto {
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
 	private long id;
 	private String createdAt;
 	private String agency;
@@ -24,11 +22,11 @@ public class TaskDto {
 	public TaskDto(Task src) {
 		this();
 		setId(src.getId());
-		setCreatedAt(src.getCreatedAt().format(FORMATTER));
+		setCreatedAt(formatDateTime(src.getCreatedAt()));
 		setAgency(src.getAgency());
 		setClientAlias(src.getClientAlias());
-		setPeriodStart(src.getPeriodStart().format(FORMATTER));
-		setPeriodFinish(src.getPeriodFinish().format(FORMATTER));
+		setPeriodStart(formatDateTime(src.getPeriodStart()));
+		setPeriodFinish(formatDateTime(src.getPeriodFinish()));
 		setNote(src.getNote());
 	}
 

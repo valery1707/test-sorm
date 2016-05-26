@@ -3,15 +3,12 @@ package name.valery1707.megatel.sorm.api.bro.smtp;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import name.valery1707.megatel.sorm.domain.BroSmtp;
 
-import java.time.format.DateTimeFormatter;
-
 import static name.valery1707.megatel.sorm.DateUtils.bigDecimalToZonedDateTime;
+import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BroSmtpDto {
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-
 	private String ts;
 	private String idOrigHost;
 	private int idOrigPort;
@@ -31,7 +28,7 @@ public class BroSmtpDto {
 
 	public BroSmtpDto(BroSmtp src) {
 		this();
-		setTs(bigDecimalToZonedDateTime(src.getTs()).format(FORMATTER));
+		setTs(formatDateTime(bigDecimalToZonedDateTime(src.getTs())));
 		setIdOrigHost(src.getIdOrigHost());
 		setIdOrigPort(src.getIdOrigPort());
 		setIdRespHost(src.getIdRespHost());
