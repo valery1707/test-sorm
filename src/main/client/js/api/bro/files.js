@@ -3,7 +3,7 @@ config(['$stateProvider', function ($stateProvider) {
 	$stateProvider
 			.state('bro.files', {
 				url: "/files",
-				templateUrl: 'view/bro/files.html',
+				templateUrl: 'view/common/grid/grid.html',
 				controller: 'broFilesCtrl'
 			});
 }]).

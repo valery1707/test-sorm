@@ -13,7 +13,7 @@ config(['$stateProvider', function ($stateProvider) {
 			})
 			.state('task.list', {
 				url: "/",
-				templateUrl: 'view/task/list.html',
+				templateUrl: 'view/common/grid/grid.html',
 				controller: 'taskCtrl'
 			})
 			.state('task.view', {

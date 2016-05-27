@@ -3,7 +3,7 @@ config(['$stateProvider', function ($stateProvider) {
 	$stateProvider
 			.state('bro.conn', {
 				url: "/conn",
-				templateUrl: 'view/bro/conn.html',
+				templateUrl: 'view/common/grid/grid.html',
 				controller: 'broConnCtrl'
 			});
 }]).

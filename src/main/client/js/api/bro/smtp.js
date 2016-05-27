@@ -3,7 +3,7 @@ config(['$stateProvider', function ($stateProvider) {
 	$stateProvider
 			.state('bro.smtp', {
 				url: "/smtp",
-				templateUrl: 'view/bro/smtp.html',
+				templateUrl: 'view/common/grid/grid.html',
 				controller: 'broSmtpCtrl'
 			});
 }]).

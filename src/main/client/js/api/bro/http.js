@@ -3,7 +3,7 @@ config(['$stateProvider', function ($stateProvider) {
 	$stateProvider
 			.state('bro.http', {
 				url: "/http",
-				templateUrl: 'view/bro/http.html',
+				templateUrl: 'view/common/grid/grid.html',
 				controller: 'broHttpCtrl'
 			});
 }]).
