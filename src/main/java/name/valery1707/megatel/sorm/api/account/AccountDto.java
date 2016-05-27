@@ -2,15 +2,21 @@ package name.valery1707.megatel.sorm.api.account;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import name.valery1707.megatel.sorm.domain.Account;
+import org.hibernate.validator.constraints.ScriptAssert;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import static name.valery1707.megatel.sorm.DateUtils.LOCAL_DATE_PATTERN;
 import static name.valery1707.megatel.sorm.DateUtils.formatDate;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@ScriptAssert(lang = "JavaScript",
+		script = "(_this.id == 0 && _this.password != null) || (_this.id > 0 && _this.password == null)",
+		message = "{Account.password.constraint.requiredOnlyForNew}"
+)
 public class AccountDto {
 
 	private long id;
@@ -28,6 +34,7 @@ public class AccountDto {
 	@Pattern(regexp = LOCAL_DATE_PATTERN)
 	private String activeUntil;
 	@NotNull
+	@Size(min = 3)
 	private String agency;
 
 	public AccountDto() {

@@ -11,14 +11,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static name.valery1707.megatel.sorm.DateUtils.parseDate;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -72,8 +79,16 @@ public class AccountController {
 
 	@RequestMapping(method = RequestMethod.PUT)
 	@Transactional
-	public void save(@RequestBody @Valid AccountDto dto) {
+	public ResponseEntity<Map<String, ?>> save(@RequestBody @Valid AccountDto dto, BindingResult validation) {
 		accountService.requireAnyRole(Account.Role.SUPER);
+
+		if (validation.getErrorCount() > 0) {
+			Map<String, List<FieldError>> fieldErrorMap = validation.getFieldErrors()
+					.stream()
+					.collect(Collectors.groupingBy(FieldError::getField, Collectors.toList()));
+			return ResponseEntity.badRequest().body(fieldErrorMap);
+		}
+
 		Account entity = null;
 		if (dto.getId() != 0) {
 			entity = repo.findOne(dto.getId());
@@ -81,6 +96,7 @@ public class AccountController {
 		if (entity == null) {
 			entity = new Account();
 		}
+
 		entity.setUsername(dto.getUsername());
 		if (dto.getId() != 0 && dto.getOldPassword() != null && dto.getNewPassword() != null) {
 			if (!passwordEncoder.matches(dto.getOldPassword(), entity.getPassword())) {
@@ -97,5 +113,6 @@ public class AccountController {
 		entity.setActiveUntil(parseDate(dto.getActiveUntil()));
 		entity.setAgency(dto.getAgency());
 		repo.save(entity);
+		return ResponseEntity.ok(Collections.emptyMap());
 	}
 }

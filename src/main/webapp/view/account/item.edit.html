@@ -20,7 +20,7 @@
                     <input type="text" class="form-control"
                            name="username" id="username" ng-model="model.username"
                            placeholder="Username" friendly-name="Username"
-                           validation="min_len:3"
+                           validation="custom:serverErrorValidator('username')|min_len:3"
                     >
                 </div>
             </div>
@@ -31,10 +31,10 @@
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
-                    <input type="text" class="form-control"
+                    <input type="password" class="form-control"
                            name="password" id="password" ng-model="model.password"
                            placeholder="Password" friendly-name="Password"
-                           validation="required|min_len:3"
+                           validation="custom:serverErrorValidator('password')|required|min_len:3"
                     >
                 </div>
             </div>
@@ -48,7 +48,7 @@
                     <input type="password" class="form-control"
                            name="newPassword" id="newPassword" ng-model="model.newPassword"
                            placeholder="New password" friendly-name="New password"
-                           validation="min_len:3"
+                           validation="custom:serverErrorValidator('newPassword')|min_len:3"
                     >
                 </div>
             </div>
@@ -62,7 +62,7 @@
                     <input type="password" class="form-control"
                            name="newPasswordConfirm" id="newPasswordConfirm" ng-model="model.newPasswordConfirm"
                            placeholder="Confirm new password" friendly-name="Confirm new password"
-                           validation="min_len:3|match:model.newPassword,New password"
+                           validation="custom:serverErrorValidator('newPasswordConfirm')|min_len:3|match:model.newPassword,New password"
                     >
                 </div>
             </div>
@@ -90,7 +90,7 @@
                     <select class="form-control"
                             name="role" id="role" ng-model="model.role"
                             friendly-name="Role"
-                            validation="required"
+                            validation="custom:serverErrorValidator('role')|required"
                     >
                         <option value="SUPER">SUPER</option>
                         <option value="ADMIN">ADMIN</option>
@@ -111,6 +111,7 @@
                            convert-to-date
                            name="activeUntil" id="activeUntil" ng-model="model.activeUntil"
                            placeholder="Active until" friendly-name="Active until"
+                           validation="custom:serverErrorValidator('activeUntil')"
                     >
                 </div>
             </div>
@@ -124,7 +125,7 @@
                     <input type="text" class="form-control"
                            name="agency" id="agency" ng-model="model.agency"
                            placeholder="Agency" friendly-name="Agency"
-                           validation="required|min_len:3"
+                           validation="custom:serverErrorValidator('agency')|required|min_len:3"
                     >
                 </div>
             </div>
