@@ -21,7 +21,6 @@ public class AccountDto {
 
 	private long id;
 	@NotNull
-	//todo Distinct within id
 	private String username;
 
 	private String password;

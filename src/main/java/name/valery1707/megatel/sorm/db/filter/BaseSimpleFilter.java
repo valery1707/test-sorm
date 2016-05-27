@@ -8,7 +8,7 @@ import javax.persistence.criteria.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public abstract class BaseSimpleFilter<D, F, X> extends BaseFilter<D, F, X, X> {
+public class BaseSimpleFilter<D, F, X> extends BaseFilter<D, F, X, X> {
 
 	private final Function<CriteriaBuilder, BiFunction<Expression<X>, X, Predicate>> criteriaBuilder;
 

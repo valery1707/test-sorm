@@ -41,6 +41,10 @@ public class AccountController {
 	private AccountService accountService;
 
 	private SpecificationBuilder<Account, AccountFilter> specificationBuilder;
+	/**
+	 * (username = :username) AND (id != :id) AND (isActive IS TRUE)
+	 */
+	private SpecificationBuilder<Account, AccountDto> validateUsernameDistinct;
 
 	@PostConstruct
 	public void init() {
@@ -51,6 +55,12 @@ public class AccountController {
 				.withEquals(AccountFilter::getRole, Account_.role)
 				.withDate(AccountFilter::getActiveUntil, Account_.activeUntil)
 				.withString(AccountFilter::getAgency, Account_.agency)
+		;
+
+		validateUsernameDistinct = new SpecificationBuilder<Account, AccountDto>(SpecificationMode.AND)
+				.withEquals(AccountDto::getUsername, Account_.username)
+				.withCustomSimple(AccountDto::getId, Account_.id, cb -> (expression, value) -> cb.notEqual(expression, value))
+				.withCustomSimple(AccountDto::isActive, Account_.isActive, cb -> (expression, value) -> cb.isTrue(expression))
 		;
 	}
 
@@ -79,8 +89,11 @@ public class AccountController {
 	private PasswordEncoder passwordEncoder;
 
 	protected void validate(AccountDto dto, BindingResult validation) {
-		if (dto.getId() != 0) {//todo RequiredIf
-			ValidationUtils.rejectIfEmpty(validation, "newPassword", "empty");
+		if (dto.getUsername() != null) {
+			long count = repo.count(validateUsernameDistinct.build(dto));
+			if (count > 0) {
+				validation.rejectValue("username", "{Account.username.constraint.notUnique}", "Username must be unique");
+			}
 		}
 	}
 

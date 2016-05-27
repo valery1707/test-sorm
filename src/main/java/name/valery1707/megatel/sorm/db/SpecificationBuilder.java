@@ -4,6 +4,8 @@ import name.valery1707.megatel.sorm.db.filter.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.Nonnull;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.metamodel.SingularAttribute;
 import java.math.BigDecimal;
@@ -13,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,15 @@ public class SpecificationBuilder<D, F> {
 
 	public SpecificationBuilder(SpecificationMode mode) {
 		this.mode = mode;
+	}
+
+	public <X> SpecificationBuilder<D, F> withCustomSimple(Function<F, X> value, SingularExpressionGetter<? super D, X> fieldGetter, Function<CriteriaBuilder, BiFunction<Expression<X>, X, Predicate>> criteriaBuilder) {
+		filters.add(new BaseSimpleFilter<>(fieldGetter, value, criteriaBuilder));
+		return this;
+	}
+
+	public <X> SpecificationBuilder<D, F> withCustomSimple(Function<F, X> value, SingularAttribute<? super D, X> field, Function<CriteriaBuilder, BiFunction<Expression<X>, X, Predicate>> criteriaBuilder) {
+		return withCustomSimple(value, field(field), criteriaBuilder);
 	}
 
 	public <X> SpecificationBuilder<D, F> withEquals(Function<F, X> value, SingularExpressionGetter<D, X> fieldGetter) {
