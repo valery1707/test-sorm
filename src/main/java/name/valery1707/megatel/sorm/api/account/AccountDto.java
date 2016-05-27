@@ -21,9 +21,11 @@ public class AccountDto {
 
 	private long id;
 	@NotNull
+	//todo Distinct within id
 	private String username;
 
 	private String password;
+	//todo old+new или оба null или оба не null
 	private String oldPassword;
 	private String newPassword;
 
