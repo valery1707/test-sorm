@@ -55,6 +55,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 
 	$scope.actions = [
 		{
+			perRow: true,
 			permissions: ['task.view'],
 			icon: 'eye-open',
 			action: function (grid, row) {
@@ -79,7 +80,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 				enableFiltering: false,
 				enableSorting: false,
 				enableColumnMenu: false,
-				cellTemplate: 'view/common/grid/actions.html',
+				cellTemplate: 'view/common/grid/row-actions.html',
 				width: 34, maxWidth: 34, minWidth: 34
 			},
 			{

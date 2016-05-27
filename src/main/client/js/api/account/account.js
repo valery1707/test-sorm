@@ -48,6 +48,7 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 
 	$scope.actions = [
 		{
+			perRow: true,
 			permissions: ['account.update'],
 			icon: 'edit',
 			action: function (grid, row) {
@@ -64,7 +65,7 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 				enableFiltering: false,
 				enableSorting: false,
 				enableColumnMenu: false,
-				cellTemplate: 'view/common/grid/actions.html',
+				cellTemplate: 'view/common/grid/row-actions.html',
 				width: 34, maxWidth: 34, minWidth: 34
 			},
 			{
