@@ -35,6 +35,7 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 		//Суперадминистратор
 		SUPER: [
 			, "account.list"
+			, "account.create"
 			, "account.item.edit"
 			, "accountSession.list"
 		],

@@ -17,7 +17,8 @@
         <!--Menu-->
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li ng-class="{active: $state.includes('account')}" ng-if="principal.hasPermission('account.list')"><a ui-sref="account.list">Account</a></li>
+                <li ng-class="{active: $state.includes('account.list')}" ng-if="principal.hasPermission('account.list')"><a ui-sref="account.list">Account</a></li>
+                <li ng-class="{active: $state.includes('account.create')}" ng-if="principal.hasPermission('account.create')"><a ui-sref="account.create">Account+</a></li>
                 <li ng-class="{active: $state.includes('accountSession')}" ng-if="principal.hasPermission('accountSession.list')"><a ui-sref="accountSession.list">AccountSession</a></li>
                 <li ng-class="{active: $state.includes('task')}" ng-if="principal.hasPermission('task.list')"><a ui-sref="task.list">Tasks</a></li>
                 <li class="dropdown" ng-class="{active: $state.includes('bro')}">

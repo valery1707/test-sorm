@@ -26,6 +26,11 @@ config(['$stateProvider', function ($stateProvider) {
 				templateUrl: 'view/account/item.edit.html',
 				controller: 'accountCtrlEdit'
 			})
+			.state('account.create', {
+				url: "/new",
+				templateUrl: 'view/account/item.edit.html',
+				controller: 'accountCtrlEdit'
+			})
 	;
 }]).
 factory('accountService', ['$resource', function ($resource) {

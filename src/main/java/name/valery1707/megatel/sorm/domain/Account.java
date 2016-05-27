@@ -18,6 +18,7 @@ public class Account extends ABaseEntity {
 	public enum Role {
 		SUPER(Arrays.asList(null
 				, "account.list"
+				, "account.create"
 				, "account.item.edit"
 				, "accountSession.list"
 		)),
