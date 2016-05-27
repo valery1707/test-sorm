@@ -48,6 +48,13 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 
 	$scope.actions = [
 		{
+			permissions: ['account.create'],
+			icon: 'plus',
+			action: function (grid, row) {
+				$state.go('account.create');
+			}
+		},
+		{
 			perRow: true,
 			permissions: ['account.update'],
 			icon: 'edit',
