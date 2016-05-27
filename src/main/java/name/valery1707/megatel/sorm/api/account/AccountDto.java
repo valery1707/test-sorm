@@ -25,8 +25,6 @@ public class AccountDto {
 	private String username;
 
 	private String password;
-	//todo old+new или оба null или оба не null
-	private String oldPassword;
 	private String newPassword;
 
 	@NotNull
@@ -74,14 +72,6 @@ public class AccountDto {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getOldPassword() {
-		return oldPassword;
-	}
-
-	public void setOldPassword(String oldPassword) {
-		this.oldPassword = oldPassword;
 	}
 
 	public String getNewPassword() {

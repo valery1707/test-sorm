@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -77,10 +78,18 @@ public class AccountController {
 	@Inject
 	private PasswordEncoder passwordEncoder;
 
+	protected void validate(AccountDto dto, BindingResult validation) {
+		if (dto.getId() != 0) {//todo RequiredIf
+			ValidationUtils.rejectIfEmpty(validation, "newPassword", "empty");
+		}
+	}
+
 	@RequestMapping(method = RequestMethod.PUT)
 	@Transactional
 	public ResponseEntity<Map<String, ?>> save(@RequestBody @Valid AccountDto dto, BindingResult validation) {
 		accountService.requireAnyRole(Account.Role.SUPER);
+
+		validate(dto, validation);
 
 		if (validation.getErrorCount() > 0) {
 			Map<String, List<FieldError>> fieldErrorMap = validation.getFieldErrors()
@@ -98,13 +107,8 @@ public class AccountController {
 		}
 
 		entity.setUsername(dto.getUsername());
-		if (dto.getId() != 0 && dto.getOldPassword() != null && dto.getNewPassword() != null) {
-			if (!passwordEncoder.matches(dto.getOldPassword(), entity.getPassword())) {
-				throw new AccessDeniedException("Old password is invalid");
-			}
+		if (dto.getId() != 0 && dto.getNewPassword() != null) {
 			entity.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-		} else if (dto.getId() == 0 && dto.getPassword() == null) {
-			throw new AccessDeniedException("Password required");//todo Different message
 		} else if (dto.getId() == 0 && dto.getPassword() != null) {
 			entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		}
@@ -112,7 +116,9 @@ public class AccountController {
 		entity.setRole(dto.getRole());
 		entity.setActiveUntil(parseDate(dto.getActiveUntil()));
 		entity.setAgency(dto.getAgency());
+
 		repo.save(entity);
+
 		return ResponseEntity.ok(Collections.emptyMap());
 	}
 }
