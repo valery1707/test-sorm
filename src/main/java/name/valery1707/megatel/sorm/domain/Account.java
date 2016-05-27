@@ -19,7 +19,7 @@ public class Account extends ABaseEntity {
 		SUPER(Arrays.asList(null
 				, "account.list"
 				, "account.create"
-				, "account.item.edit"
+				, "account.update"
 				, "accountSession.list"
 		)),
 		ADMIN(Arrays.asList(null

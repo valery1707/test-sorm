@@ -21,7 +21,7 @@ config(['$stateProvider', function ($stateProvider) {
 				url: "/{id:[0-9]+}",
 				template: '<ui-view></ui-view>'
 			})
-			.state('account.item.edit', {
+			.state('account.item.update', {
 				url: "/edit",
 				templateUrl: 'view/account/item.edit.html',
 				controller: 'accountCtrlEdit'
@@ -48,10 +48,10 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 
 	$scope.actions = [
 		{
-			permissions: ['account.item.edit'],
+			permissions: ['account.update'],
 			icon: 'edit',
 			action: function (grid, row) {
-				$state.go('account.item.edit', {id: row.entity.id});
+				$state.go('account.item.update', {id: row.entity.id});
 			}
 		}
 	];
