@@ -69,5 +69,18 @@ directive('convertToDate', function () {
 			});
 		}
 	};
+}).
+directive('convertToDateTime', function () {
+	return {
+		require: 'ngModel',
+		link: function (scope, element, attrs, ngModel) {
+			ngModel.$parsers.push(function (val) {
+				return val ? moment(val).format('YYYY-MM-DDTHH:mm:ss') : null;
+			});
+			ngModel.$formatters.push(function (val) {
+				return val ? moment(val).format('YYYY-MM-DD HH:mm') : null;
+			});
+		}
+	};
 })
 ;

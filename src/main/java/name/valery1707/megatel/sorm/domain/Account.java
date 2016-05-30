@@ -24,6 +24,8 @@ public class Account extends ABaseEntity {
 		)),
 		ADMIN(Arrays.asList(null
 				, "task.list"
+				, "task.create"
+				, "task.update"
 		)),
 		OPERATOR(Arrays.asList(null
 				, "task.list"

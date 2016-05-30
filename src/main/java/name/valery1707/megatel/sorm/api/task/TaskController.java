@@ -11,13 +11,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static name.valery1707.megatel.sorm.DateUtils.parseDateTime;
 
 @RestController
 @RequestMapping("/api/task")
@@ -51,5 +60,52 @@ public class TaskController {
 		Specification<Task> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(TaskDto::new);
+	}
+
+	@RequestMapping
+	public TaskDto get(@RequestParam long id) {
+		accountService.requireAnyRole(Account.Role.ADMIN);
+		Task entity = repo.findOne(id);
+		if (entity == null) {
+			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", "Task", id));
+		}
+		return new TaskDto(entity);
+	}
+
+	private void validate(TaskDto dto, BindingResult validation) {
+
+	}
+
+	@RequestMapping(method = RequestMethod.PUT)
+	@Transactional
+	public ResponseEntity<Map<String, ?>> save(@RequestBody @Valid TaskDto dto, BindingResult validation) {
+		accountService.requireAnyRole(Account.Role.ADMIN);
+
+		validate(dto, validation);
+
+		if (validation.getErrorCount() > 0) {
+			Map<String, List<FieldError>> fieldErrorMap = validation.getFieldErrors()
+					.stream()
+					.collect(Collectors.groupingBy(FieldError::getField, Collectors.toList()));
+			return ResponseEntity.badRequest().body(fieldErrorMap);
+		}
+
+		Task entity = null;
+		if (dto.getId() != 0) {
+			entity = repo.findOne(dto.getId());
+		}
+		if (entity == null) {
+			entity = new Task();
+		}
+
+		entity.setAgency(dto.getAgency());
+		entity.setClientAlias(dto.getClientAlias());
+		entity.setPeriodStart(parseDateTime(dto.getPeriodStart()));
+		entity.setPeriodFinish(parseDateTime(dto.getPeriodFinish()));
+		entity.setNote(dto.getNote());
+
+		repo.save(entity);
+
+		return ResponseEntity.ok(Collections.emptyMap());
 	}
 }

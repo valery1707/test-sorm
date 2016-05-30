@@ -7,6 +7,7 @@ import javax.annotation.RegEx;
 import java.math.BigDecimal;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.util.function.Function;
@@ -17,16 +18,20 @@ public class DateUtils {
 	public static final ZoneId DEFAULT_ZONE_ID_NORM = DEFAULT_ZONE_OFFSET.normalized();
 	public static final String DEFAULT_ZONE_OFFSET_NAME = DEFAULT_ZONE_OFFSET.toString();
 	public static final DateTimeFormatter LOCAL_DATE_TIME_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+	public static final DateTimeFormatter ZONED_DATE_TIME_FORMAT = DateTimeFormatter.ISO_ZONED_DATE_TIME;
 	public static final DateTimeFormatter LOCAL_DATE_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
 	@RegEx
 	@RegExp
 	public static final String LOCAL_DATE_PATTERN = "(\\d{4})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])";
 	@RegEx
 	@RegExp
-	public static final String LOCAL_TIME_PATTERN = "([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])";
+	public static final String LOCAL_TIME_PATTERN = "([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])(\\.\\d+)?";
 	@RegEx
 	@RegExp
-	public static final String ZONED_DATE_TIME_PATTERN = LOCAL_DATE_PATTERN + "T" + LOCAL_TIME_PATTERN;
+	public static final String LOCAL_DATE_TIME_PATTERN = LOCAL_DATE_PATTERN + "T" + LOCAL_TIME_PATTERN;
+	@RegEx
+	@RegExp
+	public static final String ZONED_DATE_TIME_PATTERN = LOCAL_DATE_TIME_PATTERN + "([+-]\\d\\d:\\d\\d)?";
 
 	public static ZonedDateTime bigDecimalToZonedDateTime(BigDecimal src) {
 		LocalDateTime localDateTime = LocalDateTime.ofEpochSecond(
@@ -47,14 +52,17 @@ public class DateUtils {
 
 	@Contract("!null -> !null; null -> null")
 	public static String formatDate(LocalDate src) {
-		//todo Tests
 		return src != null ? src.format(LOCAL_DATE_FORMAT) : null;
 	}
 
 	@Contract("!null -> !null; null -> null")
 	public static String formatDateTime(ZonedDateTime src) {
-		//todo Tests
 		return src != null ? src.format(LOCAL_DATE_TIME_FORMAT) : null;
+	}
+
+	@Contract("!null -> !null; null -> null")
+	public static String formatDateTimeZoned(ZonedDateTime src) {
+		return src != null ? src.format(ZONED_DATE_TIME_FORMAT) : null;
 	}
 
 	private static <T extends Temporal> T parse(String src, String pattern, DateTimeFormatter formatter, Function<TemporalAccessor, T> mapper) {
@@ -70,12 +78,22 @@ public class DateUtils {
 	}
 
 	public static LocalDate parseDate(String src) {
-		//todo Tests
 		return parse(src, LOCAL_DATE_PATTERN, LOCAL_DATE_FORMAT, LocalDate::from);
 	}
 
 	public static ZonedDateTime parseDateTime(String src) {
-		//todo Tests
-		return parse(src, ZONED_DATE_TIME_PATTERN, LOCAL_DATE_TIME_FORMAT, ZonedDateTime::from);
+		return parse(src, LOCAL_DATE_TIME_PATTERN, LOCAL_DATE_TIME_FORMAT, temporalToZonedDateTime);
 	}
+
+	public static ZonedDateTime parseDateTimeZoned(String src) {
+		return parse(src, ZONED_DATE_TIME_PATTERN, ZONED_DATE_TIME_FORMAT, temporalToZonedDateTime);
+	}
+
+	private static final Function<TemporalAccessor, ZonedDateTime> temporalToZonedDateTime = temporalAccessor -> {
+		if (temporalAccessor.isSupported(ChronoField.OFFSET_SECONDS)) {
+			return ZonedDateTime.from(temporalAccessor);
+		} else {
+			return LocalDateTime.from(temporalAccessor).atZone(DEFAULT_ZONE_ID_NORM);
+		}
+	};
 }

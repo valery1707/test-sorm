@@ -42,6 +42,8 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 		//Администратор
 		ADMIN: [
 			, "task.list"
+			, "task.create"
+			, "task.update"
 		],
 		//Оператор/Обработчик
 		OPERATOR: [

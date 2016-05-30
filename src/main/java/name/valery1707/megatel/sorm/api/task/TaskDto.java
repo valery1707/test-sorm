@@ -1,7 +1,12 @@
 package name.valery1707.megatel.sorm.api.task;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import name.valery1707.megatel.sorm.DateUtils;
 import name.valery1707.megatel.sorm.domain.Task;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
 
@@ -9,11 +14,22 @@ import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TaskDto {
 	private long id;
+	private String createdBy;
 	private String createdAt;
+	@NotNull
+	@Size(min = 3)
 	private String agency;
+	@NotNull
+	@Size(min = 3)
 	private String clientAlias;
+	@NotNull
+	@Pattern(regexp = DateUtils.LOCAL_DATE_TIME_PATTERN)
 	private String periodStart;
+	@NotNull
+	@Pattern(regexp = DateUtils.LOCAL_DATE_TIME_PATTERN)
 	private String periodFinish;
+	@NotNull
+	@Size(min = 3)
 	private String note;
 
 	public TaskDto() {
@@ -22,6 +38,7 @@ public class TaskDto {
 	public TaskDto(Task src) {
 		this();
 		setId(src.getId());
+		setCreatedBy(src.getCreatedBy().getUsername());
 		setCreatedAt(formatDateTime(src.getCreatedAt()));
 		setAgency(src.getAgency());
 		setClientAlias(src.getClientAlias());
@@ -36,6 +53,14 @@ public class TaskDto {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public String getCreatedAt() {

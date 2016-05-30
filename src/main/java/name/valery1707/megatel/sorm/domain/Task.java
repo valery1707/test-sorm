@@ -1,6 +1,10 @@
 package name.valery1707.megatel.sorm.domain;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
@@ -8,19 +12,39 @@ import java.time.ZonedDateTime;
 @SuppressWarnings("unused")
 public class Task extends ABaseEntity {
 	@NotNull
+	@ManyToOne
+	@CreatedBy
+	private Account createdBy;
+
+	@NotNull
+	@CreatedDate
 	private ZonedDateTime createdAt;
-	//	private Account createdBy;//todo implement
+
 	@NotNull
 	private String agency;
+
 	@NotNull
 	private String clientAlias;
+
 	//	private Client client;//todo implement
+
 	@NotNull
 	private ZonedDateTime periodStart;
+
 	@NotNull
 	private ZonedDateTime periodFinish;
+
 	//	private String filter;//todo implement
+
 	private String note;
+
+	public Account getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Account createdBy) {
+		this.createdBy = createdBy;
+	}
 
 	public ZonedDateTime getCreatedAt() {
 		return createdAt;
