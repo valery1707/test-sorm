@@ -20,17 +20,7 @@
                 <li ng-class="{active: $state.includes('account')}" ng-if="principal.hasPermission('account.list')"><a ui-sref="account.list">Account</a></li>
                 <li ng-class="{active: $state.includes('accountSession')}" ng-if="principal.hasPermission('accountSession.list')"><a ui-sref="accountSession.list">AccountSession</a></li>
                 <li ng-class="{active: $state.includes('task')}" ng-if="principal.hasPermission('task.list')"><a ui-sref="task.list">Tasks</a></li>
-                <li class="dropdown" ng-class="{active: $state.includes('bro')}">
-                    <a data-target="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Bro <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li ui-sref-active="active"><a ui-sref="bro.conn">Conn</a></li>
-                        <li ui-sref-active="active"><a ui-sref="bro.http">Http</a></li>
-                        <li ui-sref-active="active"><a ui-sref="bro.files">Files</a></li>
-                        <li ui-sref-active="active"><a ui-sref="bro.smtp">SMTP</a></li>
-                    </ul>
-                </li>
                 <li ui-sref-active="active"><a ui-sref="todo">Todo</a></li>
-                <li ui-sref-active="active"><a ui-sref="about">About</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
