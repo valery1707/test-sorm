@@ -17,7 +17,11 @@
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></div>
-                    <p id="createdBy" class="form-control-static">{{model.createdBy}}</p>
+                    <input type="text" class="form-control"
+                           name="createdBy" id="createdBy" ng-model="model.createdBy"
+                           placeholder="Created by" friendly-name="Created by"
+                           readonly
+                    >
                 </div>
             </div>
 
@@ -27,7 +31,12 @@
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
-                    <p id="createdAt" class="form-control-static">{{model.createdAt}}</p>
+                    <input type="text" class="form-control"
+                           name="createdAt" id="createdAt" ng-model="model.createdAt"
+                           placeholder="Created at" friendly-name="Created at"
+                           convert-to-date-time
+                           readonly
+                    >
                 </div>
             </div>
 
