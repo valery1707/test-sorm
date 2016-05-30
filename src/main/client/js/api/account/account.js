@@ -116,56 +116,7 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 
 	$scope.loadPage();
 }]).
-controller('accountCtrlEdit', ['$scope', '$state', '$stateParams', 'accountService', 'toastr', function ($scope, $state, $stateParams, service, toastr) {
-	$scope.model = {};
-	$scope.serverErrors = {};
-	$scope.serverErrorValidator = function (field) {
-		const fieldDef = $scope.entityForm[field];
-		const fieldValue = fieldDef.$viewValue;
-		var errors = [];
-		const errorsDef = $scope.serverErrors[field];
-		if (errorsDef) {//Массив с ошибками
-			for (var errorI in errorsDef) {//Отдельная ошибка
-				if (errorsDef.hasOwnProperty(errorI)) {
-					const errorDef = errorsDef[errorI];
-					if (errorDef.rejectedValue == fieldValue) {
-						errors.push(errorDef.defaultMessage);
-					}
-				}
-			}
-		}
-		return {isValid: errors.length == 0, message: errors.join('\r\n<br/>')};
-	};
-	if ($stateParams.id) {
-		service.get($stateParams,
-				function (data) {
-					$scope.model = data;
-				},
-				function () {
-					$scope.cancel();
-				});
-	}
-	$scope.cancel = function () {
-		$state.go('account.list');
-	};
-	$scope.save = function () {
-		service.save($scope.model,
-				function (data) {
-					$state.go('account.list');
-				},
-				function (error) {
-					if (error && error.status === 400 && error.data) {
-						const errorsDef = error.data;
-						$scope.serverErrors = errorsDef;
-						for (var field in errorsDef) {
-							if (errorsDef.hasOwnProperty(field)) {
-								$scope.$broadcast('angularValidation.revalidate', field);
-							}
-						}
-					} else {
-						toastr.error('Unknown server error', 'Error');
-					}
-				});
-	};
+controller('accountCtrlEdit', ['$scope', '$state', '$stateParams', 'accountService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, service, toastr, formBuilder) {
+	formBuilder($scope, $state, $stateParams, service, toastr, 'account');
 }])
 ;
