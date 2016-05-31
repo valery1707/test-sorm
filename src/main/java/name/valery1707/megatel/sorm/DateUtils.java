@@ -25,7 +25,7 @@ public class DateUtils {
 	public static final String LOCAL_DATE_PATTERN = "(\\d{4})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])";
 	@RegEx
 	@RegExp
-	public static final String LOCAL_TIME_PATTERN = "([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])(\\.\\d+)?";
+	public static final String LOCAL_TIME_PATTERN = "([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])(\\.\\d+)?Z?";
 	@RegEx
 	@RegExp
 	public static final String LOCAL_DATE_TIME_PATTERN = LOCAL_DATE_PATTERN + "T" + LOCAL_TIME_PATTERN;
