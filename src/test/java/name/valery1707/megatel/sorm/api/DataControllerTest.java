@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.api;
 
+import name.valery1707.megatel.sorm.DateUtils;
 import name.valery1707.megatel.sorm.Launcher;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +15,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class DataControllerTest {
 	public static final MediaType CONTENT_TYPE = MediaType.APPLICATION_JSON;
 	public static final String ENCODING = "UTF-8";
-	private static final String ZONE_OFFSET_NOW = ZoneId.systemDefault().getRules().getOffset(ZonedDateTime.now().toInstant()).toString();
+	private static final String ZONE_OFFSET_NOW = DateUtils.DEFAULT_ZONE_OFFSET_NAME;
 
 	@Inject
 	private WebApplicationContext context;
