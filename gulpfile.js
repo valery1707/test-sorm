@@ -85,8 +85,6 @@ var paths = {
 
 		, 'node_modules/angular-ui-grid/ui-grid.css'
 
-		, 'bower_components/github-fork-ribbon-css/gh-fork-ribbon.css'
-
 		, 'bower_components/angular-toastr/dist/angular-toastr.css'
 
 		, 'bower_components/jquery-datetimepicker/jquery.datetimepicker.css'
@@ -94,7 +92,6 @@ var paths = {
 		, 'bower_components/angular-dialog-service/dist/dialogs.css'
 	],
 	stylesLibIE: [
-		'bower_components/github-fork-ribbon-css/gh-fork-ribbon.ie.css'
 	],
 	stylesLibCommonAssets: {
 		'.': [
