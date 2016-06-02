@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.api.account;
 
+import javaslang.Value;
 import name.valery1707.megatel.sorm.api.auth.AccountRepo;
 import name.valery1707.megatel.sorm.app.AccountService;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
@@ -17,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +26,6 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static name.valery1707.megatel.sorm.DateUtils.parseDate;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -105,10 +104,11 @@ public class AccountController {
 		validate(dto, validation);
 
 		if (validation.getErrorCount() > 0) {
-			Map<String, List<FieldError>> fieldErrorMap = validation.getFieldErrors()
-					.stream()
-					.collect(Collectors.groupingBy(FieldError::getField, Collectors.toList()));
-			return ResponseEntity.badRequest().body(fieldErrorMap);
+			javaslang.collection.Map<String, List<FieldError>> fieldErrorMap = javaslang.collection.List
+					.ofAll(validation.getFieldErrors())
+					.groupBy(FieldError::getField)
+					.mapValues(Value::toJavaList);
+			return ResponseEntity.badRequest().body(fieldErrorMap.toJavaMap());
 		}
 
 		Account entity = null;

@@ -1,16 +1,13 @@
 package name.valery1707.megatel.sorm.db.filter;
 
+import javaslang.collection.List;
 import name.valery1707.megatel.sorm.db.SingularExpressionGetter;
 
 import javax.annotation.Nonnull;
 import javax.persistence.criteria.*;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 public class NumberFilter<D, F, M extends Number & Comparable<M>> extends BaseFilter<D, F, M, String> {
 	private static final Pattern PORT_FILTER_PATTERN = Pattern.compile("^([>=<]?[=]?\\d+)|(\\d+\\.\\.\\d+)$");
@@ -27,7 +24,7 @@ public class NumberFilter<D, F, M extends Number & Comparable<M>> extends BaseFi
 	@Override
 	protected Predicate toPredicateImpl(Root<D> root, CriteriaQuery<?> query, CriteriaBuilder cb, @Nonnull String filter) {
 		Expression<M> field = field(root, cb);
-		List<Predicate> predicates = Stream.of(filter.split(","))
+		List<Predicate> predicates = List.of(filter.split(","))
 				.filter(Objects::nonNull)
 				.map(String::trim)
 				.filter(s -> !s.isEmpty() && PORT_FILTER_PATTERN.matcher(s).matches())
@@ -59,13 +56,12 @@ public class NumberFilter<D, F, M extends Number & Comparable<M>> extends BaseFi
 						}
 					}
 				})
-				.filter(Objects::nonNull)
-				.collect(toList());
+				.filter(Objects::nonNull);
 
 		if (predicates.isEmpty()) {
 			return null;
 		} else {
-			return cb.or(predicates.toArray(new Predicate[predicates.size()]));
+			return cb.or(predicates.toJavaArray(Predicate.class));
 		}
 	}
 }

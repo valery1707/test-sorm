@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.app;
 
+import javaslang.collection.List;
 import name.valery1707.megatel.sorm.domain.AccountSession;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -64,10 +65,10 @@ public class AccountSessionListener {
 	 */
 	@EventListener
 	public void sessionDestroyed(HttpSessionDestroyedEvent event) {
-		Authentication authentication = event.getSecurityContexts().stream()
+		Authentication authentication = List.ofAll(event.getSecurityContexts())
 				.map(SecurityContext::getAuthentication)
-				.filter(Objects::nonNull)
-				.findAny()
+				.find(Objects::nonNull)
+				.toJavaOptional()
 				.orElse(null);
 		sessionService.logout(authentication, event.getSession());
 	}

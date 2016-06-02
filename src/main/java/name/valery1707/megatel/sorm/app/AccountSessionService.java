@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -64,7 +65,7 @@ public class AccountSessionService {
 	}
 
 	@Transactional
-	public void logout(Authentication authentication, HttpSession session) {
+	public void logout(@Nullable Authentication authentication, HttpSession session) {
 		long current = System.currentTimeMillis();
 		long accessedTime = session.getLastAccessedTime();
 		boolean isTimeOut = (current - accessedTime) > (session.getMaxInactiveInterval() * 1000L);

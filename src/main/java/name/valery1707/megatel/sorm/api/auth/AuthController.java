@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 @RestController
@@ -112,12 +111,12 @@ public class AuthController {
 			return null;
 		}
 		AppUserDetails principal = (AppUserDetails) user.getPrincipal();
-		Collection<String> rights = principal.getAuthorities().stream()
+		Collection<String> rights = javaslang.collection.List.ofAll(principal.getAuthorities())
 				.map(GrantedAuthority::getAuthority)
 				.map(Account.Role::valueOf)
-				.flatMap(Account.Role::getRightsStream)
+				.flatMap(Account.Role::getRights)
 				.distinct()
-				.collect(toList());
+				.toJavaList();
 
 		Map<String, Object> account = new HashMap<>();
 		account.put("login", user.getName());

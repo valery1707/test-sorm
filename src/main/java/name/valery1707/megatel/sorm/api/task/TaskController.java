@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.api.task;
 
+import javaslang.Value;
 import name.valery1707.megatel.sorm.app.AccountService;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
@@ -24,7 +25,6 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static name.valery1707.megatel.sorm.DateUtils.parseDateTime;
 
@@ -84,10 +84,11 @@ public class TaskController {
 		validate(dto, validation);
 
 		if (validation.getErrorCount() > 0) {
-			Map<String, List<FieldError>> fieldErrorMap = validation.getFieldErrors()
-					.stream()
-					.collect(Collectors.groupingBy(FieldError::getField, Collectors.toList()));
-			return ResponseEntity.badRequest().body(fieldErrorMap);
+			javaslang.collection.Map<String, List<FieldError>> fieldErrorMap = javaslang.collection.List
+					.ofAll(validation.getFieldErrors())
+					.groupBy(FieldError::getField)
+					.mapValues(Value::toJavaList);
+			return ResponseEntity.badRequest().body(fieldErrorMap.toJavaMap());
 		}
 
 		Task entity = null;

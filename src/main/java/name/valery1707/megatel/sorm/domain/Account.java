@@ -1,5 +1,7 @@
 package name.valery1707.megatel.sorm.domain;
 
+import javaslang.collection.List;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -8,9 +10,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.stream.Stream;
-
-import static name.valery1707.megatel.sorm.utils.ImmutableListCollector.toImmutableList;
 
 @Entity
 @SuppressWarnings("unused")
@@ -38,19 +37,15 @@ public class Account extends ABaseEntity {
 		private final Collection<String> rights;
 
 		Role(Collection<String> rights) {
-			this.rights = rights.stream()
+			this.rights = List.ofAll(rights)
 					.filter(Objects::nonNull)
 					.distinct()
 					.sorted()
-					.collect(toImmutableList());
+					.toJavaList();
 		}
 
 		public Collection<String> getRights() {
 			return rights;
-		}
-
-		public Stream<String> getRightsStream() {
-			return getRights().stream();
 		}
 	}
 

@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.app;
 
+import javaslang.collection.List;
 import name.valery1707.megatel.sorm.domain.Account;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -9,9 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.function.Predicate;
 
-import static java.util.stream.Collectors.joining;
 import static name.valery1707.megatel.sorm.app.AccountUtils.currentUserDetails;
 
 @Service
@@ -60,17 +64,14 @@ public class AccountService implements AuditorAware<Account> {
 		requireAnyRole(Arrays.asList(roles));
 	}
 
-	public void requireAnyRole(List<Account.Role> roles) {
+	public void requireAnyRole(Collection<Account.Role> roles) {
 		requireAuthorized();
 		//todo Нужно ли логировать заблокированные обращения к API?
 		if (!roles.contains(account.get().getRole())) {
 			throw new AccessDeniedException(String.format(
 					"User '%s' does not have roles %s"
 					, account.get().getUsername()
-					, roles.stream()
-							.map(Enum::name)
-							.map(s -> "'" + s + "'")
-							.collect(joining(", "))
+					, List.ofAll(roles).mkString("'", "', '", "'")
 			));
 		}
 	}
@@ -79,19 +80,16 @@ public class AccountService implements AuditorAware<Account> {
 		requireAnyRight(Arrays.asList(rights));
 	}
 
-	public void requireAnyRight(List<String> rights) {
+	public void requireAnyRight(Collection<String> rights) {
 		requireAuthorized();
-		for (String right : rights) {
-			if (this.rights.contains(right)) {
-				return;
-			}
+		javaslang.collection.List<String> notFound = List.ofAll(rights)
+				.filter(((Predicate<String>) this.rights::contains).negate());
+		if (!notFound.isEmpty()) {
+			throw new AccessDeniedException(String.format(
+					"User '%s' does not have roles %s"
+					, account.get().getUsername()
+					, notFound.mkString("'", "', '", "'")
+			));
 		}
-		throw new AccessDeniedException(String.format(
-				"User '%s' does not have roles %s"
-				, account.get().getUsername()
-				, rights.stream()
-						.map(s -> "'" + s + "'")
-						.collect(joining(", "))
-		));
 	}
 }
