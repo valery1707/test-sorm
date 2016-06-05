@@ -107,7 +107,7 @@ dependencies {
 	compile 'org.apache.tomcat:tomcat-jdbc:8.5.2'
 
 	//Database migration tool
-	compile 'org.flywaydb:flyway-core:4.0'
+	compile 'org.flywaydb:flyway-core:4.0.1'
 
 	//Cache
 	compile 'com.github.ben-manes.caffeine:caffeine:2.3.0'
