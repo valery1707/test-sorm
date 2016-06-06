@@ -101,7 +101,7 @@ dependencies {
 	compile 'com.github.amr:mimetypes:0.0.2'
 
 	//JDBC driver (and implicit in-memory database server)
-	runtime 'com.h2database:h2:1.4.191'
+	runtime 'com.h2database:h2:1.4.192'
 	runtime 'mysql:mysql-connector-java:6.0.2'
 	//JDBC Connection pooling
 	compile 'org.apache.tomcat:tomcat-jdbc:8.5.2'
