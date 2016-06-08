@@ -1,8 +1,8 @@
 <div class="btn-group" role="group" aria-label="actions">
-    <button ng-repeat="action in actions" ng-if="!action.perRow"
+    <button ng-repeat="action in actions"
+            ng-if="!action.perRow && principal.hasAnyPermission(action.permissions)"
             type="button"
             class="btn btn-sm btn-default"
-            ng-if="principal.hasAnyPermission(action.permissions)"
             ng-click="action.action(gridApi.grid, row)">
         <span class="glyphicon glyphicon-{{action.icon}}" aria-hidden="true"></span>
     </button>

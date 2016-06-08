@@ -15,24 +15,24 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class Account extends ABaseEntity {
 	public enum Role {
-		SUPER(Arrays.asList(null
+		SUPER(Arrays.asList(null//Специальный внутренний админ, для настройки системы
 				, "account.list"
 				, "account.create"
 				, "account.update"
 				, "accountSession.list"
 		)),
-		ADMIN(Arrays.asList(null
+		ADMIN(Arrays.asList(null//Администратор
 				, "task.list"
 				, "task.create"
 				, "task.update"
 				, "task.delete"
 		)),
-		OPERATOR(Arrays.asList(null
+		OPERATOR(Arrays.asList(null//Оператор/обработчик
 				, "task.list"
 				, "task.view"
 		)),
-		SUPERVISOR(Arrays.asList(null
-				, "unknown"
+		SUPERVISOR(Arrays.asList(null//Надзор
+				, "task.list"
 		));
 
 		private final Collection<String> rights;

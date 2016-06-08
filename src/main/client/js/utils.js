@@ -36,6 +36,16 @@ function formatBytes_1000(bytes, decimals) {
 	return formatBytes(bytes, decimals, 1000, ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']);
 }
 
+/**
+ * Array Remove - By John Resig (MIT Licensed)
+ * @see https://stackoverflow.com/a/9815010/1263442
+ */
+Array.prototype.remove = function(from, to) {
+	var rest = this.slice((to || from) + 1 || this.length);
+	this.length = from < 0 ? this.length + from : from;
+	return this.push.apply(this, rest);
+};
+
 angular.module('app').
 filter('formatBytes', function () {
 	return function (bytes, k, decimals) {

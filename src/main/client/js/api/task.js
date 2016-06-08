@@ -5,7 +5,7 @@ config(['$stateProvider', function ($stateProvider) {
 				abstract: true,
 				data: {
 					permissions: {
-						only: ['ADMIN', 'OPERATOR']
+						only: ['ADMIN', 'OPERATOR', 'SUPERVISOR']
 					}
 				},
 				url: '/task',

@@ -16,16 +16,22 @@ service('gridHelper', [function () {
 			return col.field == '_actions';
 		});
 		if (actionCol) {
-			jQuery.extend(actionCol, {
-				name: '',
-				enableFiltering: false,
-				enableSorting: false,
-				enableColumnMenu: false,
-				cellTemplate: 'view/common/grid/row-actions.html',
-				width: actionColWidth,
-				maxWidth: actionColWidth,
-				minWidth: actionColWidth
-			});
+			if (actionColWidth <= 10) {
+				//Столбец есть, а действий нет
+				gridExt.columnDefs.remove(gridExt.columnDefs.indexOf(actionCol));
+			} else {
+				//Добавляем поля по-умолчанию
+				jQuery.extend(actionCol, jQuery.extend({
+					name: '',
+					enableFiltering: false,
+					enableSorting: false,
+					enableColumnMenu: false,
+					cellTemplate: 'view/common/grid/row-actions.html',
+					width: actionColWidth,
+					maxWidth: actionColWidth,
+					minWidth: actionColWidth
+				}, actionCol));
+			}
 		}
 		//endregion
 

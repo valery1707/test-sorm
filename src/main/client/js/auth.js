@@ -53,7 +53,7 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 		],
 		//Надзор
 		SUPERVISOR: [
-			, "unknown"
+			, "task.list"
 		]
 	};
 	for (var role in roles) {
