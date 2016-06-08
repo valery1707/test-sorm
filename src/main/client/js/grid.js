@@ -35,6 +35,18 @@ service('gridHelper', [function () {
 		}
 		//endregion
 
+		//region Filter columns by permission
+		if ($scope.principal) {
+			gridExt.columnDefs
+					.filter(function (col) {
+						return col != undefined && 'permissions' in col && !$scope.principal.hasAnyPermission(col.permissions);
+					})
+					.forEach(function (col) {
+						gridExt.columnDefs.remove(gridExt.columnDefs.indexOf(col));
+					});
+		}
+		//endregion
+
 		$scope.loadPage = function () {
 			$scope.isLoading = true;
 

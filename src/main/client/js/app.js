@@ -13,6 +13,7 @@ angular.module('app', [
 	, 'ngLoadingSpinner'
 	, 'angularSpinner'
 	, 'ui.router'
+	//https://github.com/Narzerus/angular-permission
 	, 'permission', 'permission.ui'
 	//https://github.com/Foxandxss/angular-toastr
 	, 'ngAnimate', 'toastr'
