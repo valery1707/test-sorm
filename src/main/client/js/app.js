@@ -18,7 +18,7 @@ angular.module('app', [
 	, 'ngAnimate', 'toastr'
 	, 'ui.bootstrap'
 	//https://github.com/m-e-conroy/angular-dialog-service
-	, 'dialogs.main'
+	, 'dialogs.main', 'dialogs.default-translations'
 ]).
 config(['$routeProvider', function ($routeProvider) {
 	//$routeProvider.otherwise({redirectTo: '/main'});//todo dashboard?
@@ -52,6 +52,7 @@ config(['$translateProvider', function ($translateProvider) {
 	$translateProvider.useSanitizeValueStrategy('sanitize');
 
 	// define translation maps you want to use on startup
-	$translateProvider.preferredLanguage('en');
+	$translateProvider.preferredLanguage('en-US');
+	$translateProvider.fallbackLanguage('en');
 }])
 ;

@@ -48,6 +48,7 @@ public class TaskController {
 				.withString(TaskFilter::getAgency, Task_.agency)
 				.withString(TaskFilter::getClientAlias, Task_.clientAlias)
 				.withString(TaskFilter::getNote, Task_.note)
+				.withEquals(TaskFilter::getShowOnlyActive, Task_.isActive)
 		;
 	}
 
@@ -56,7 +57,8 @@ public class TaskController {
 			@PageableDefault(size = 20) @SortDefault("id") Pageable pageable,
 			@RequestBody(required = false) TaskFilter filter
 	) {
-		accountService.requireAnyRole(Account.Role.ADMIN, Account.Role.OPERATOR);
+		accountService.requireAnyRole(Account.Role.ADMIN, Account.Role.OPERATOR, Account.Role.SUPERVISOR);
+		filter.setShowOnlyActive(accountService.hasAnyRole(Account.Role.SUPERVISOR) ? null : true);
 		Specification<Task> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(TaskDto::new);
@@ -70,6 +72,18 @@ public class TaskController {
 			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", "Task", id));
 		}
 		return new TaskDto(entity);
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE)
+	@Transactional
+	public void delete(@RequestParam long id) {
+		accountService.requireAnyRole(Account.Role.ADMIN);
+		Task entity = repo.findOne(id);
+		if (entity == null) {
+			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", "Task", id));
+		}
+		entity.setActive(false);
+		repo.save(entity);
 	}
 
 	private void validate(TaskDto dto, BindingResult validation) {
@@ -97,6 +111,8 @@ public class TaskController {
 		}
 		if (entity == null) {
 			entity = new Task();
+			//defaults
+			entity.setActive(true);
 		}
 
 		entity.setAgency(dto.getAgency());

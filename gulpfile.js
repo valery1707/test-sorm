@@ -70,6 +70,7 @@ var paths = {
 
 		, 'bower_components/angular-sanitize/angular-sanitize.js'
 		, 'bower_components/angular-dialog-service/dist/dialogs.js'
+		, 'bower_components/angular-dialog-service/dist/dialogs-default-translations.js'
 	],
 	scriptsLibIE: [
 		'bower_components/html5shiv/dist/html5shiv.js'

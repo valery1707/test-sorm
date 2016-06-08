@@ -1,6 +1,34 @@
 angular.module('app').
 service('gridHelper', [function () {
 	return function ($scope, service, paginationOptions, gridExt) {
+
+		//region Action column
+		var actionColWidth = 34;
+		if ($scope.principal && $scope.actions) {
+			var colActions = $scope.actions.filter(function (action) {
+				return action != undefined
+					   && 'perRow' in action && action.perRow
+					   && $scope.principal.hasAnyPermission(action.permissions)
+			});
+			actionColWidth = (colActions.length * (actionColWidth - 10)) + 10;
+		}
+		var actionCol = gridExt.columnDefs.find(function (col) {
+			return col.field == '_actions';
+		});
+		if (actionCol) {
+			jQuery.extend(actionCol, {
+				name: '',
+				enableFiltering: false,
+				enableSorting: false,
+				enableColumnMenu: false,
+				cellTemplate: 'view/common/grid/row-actions.html',
+				width: actionColWidth,
+				maxWidth: actionColWidth,
+				minWidth: actionColWidth
+			});
+		}
+		//endregion
+
 		$scope.loadPage = function () {
 			$scope.isLoading = true;
 

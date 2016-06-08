@@ -10,6 +10,7 @@ public class TaskFilter {
 	private List<ZonedDateTime> periodStart;
 	private List<ZonedDateTime> periodFinish;
 	private String note;
+	private Boolean showOnlyActive;
 
 	public String getId() {
 		return id;
@@ -57,5 +58,13 @@ public class TaskFilter {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public Boolean getShowOnlyActive() {
+		return showOnlyActive;
+	}
+
+	public void setShowOnlyActive(Boolean showOnlyActive) {
+		this.showOnlyActive = showOnlyActive;
 	}
 }

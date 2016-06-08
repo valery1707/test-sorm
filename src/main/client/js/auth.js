@@ -44,6 +44,7 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 			, "task.list"
 			, "task.create"
 			, "task.update"
+			, "task.delete"
 		],
 		//Оператор/Обработчик
 		OPERATOR: [

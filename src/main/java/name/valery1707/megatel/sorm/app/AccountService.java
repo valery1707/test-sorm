@@ -1,6 +1,7 @@
 package name.valery1707.megatel.sorm.app;
 
 import javaslang.collection.List;
+import javaslang.collection.Seq;
 import name.valery1707.megatel.sorm.domain.Account;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -55,9 +56,13 @@ public class AccountService implements AuditorAware<Account> {
 	}
 
 	public void requireAuthorized() {
-		if (!account.isPresent()) {
+		if (!isAuthorized()) {
 			throw new AccessDeniedException("User is not logged in");
 		}
+	}
+
+	public boolean isAuthorized() {
+		return account.isPresent();
 	}
 
 	public void requireAnyRole(Account.Role... roles) {
@@ -65,15 +70,32 @@ public class AccountService implements AuditorAware<Account> {
 	}
 
 	public void requireAnyRole(Collection<Account.Role> roles) {
+		requireAnyRole(List.ofAll(roles));
+	}
+
+	public void requireAnyRole(Seq<Account.Role> roles) {
 		requireAuthorized();
 		//todo Нужно ли логировать заблокированные обращения к API?
-		if (!roles.contains(account.get().getRole())) {
+		if (!hasAnyRole(roles)) {
 			throw new AccessDeniedException(String.format(
 					"User '%s' does not have roles %s"
 					, account.get().getUsername()
-					, List.ofAll(roles).mkString("'", "', '", "'")
+					, roles.mkString("'", "', '", "'")
 			));
 		}
+	}
+
+	public boolean hasAnyRole(Account.Role... roles) {
+		return hasAnyRole(Arrays.asList(roles));
+	}
+
+	public boolean hasAnyRole(Collection<Account.Role> roles) {
+		return hasAnyRole(List.ofAll(roles));
+	}
+
+	public boolean hasAnyRole(Seq<Account.Role> roles) {
+		return isAuthorized() &&
+			   roles.contains(account.get().getRole());
 	}
 
 	public void requireAnyRight(String... rights) {

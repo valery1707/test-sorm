@@ -65,7 +65,7 @@ config(['$stateProvider', function ($stateProvider) {
 factory('taskService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/task', {}, serviceCommonConfig);
 }]).
-controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, principal) {
+controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper', '$state', 'dialogs', 'toastr', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, dialogs, toastr, principal) {
 	$scope.principal = principal;
 
 	$scope.actions = [
@@ -74,6 +74,28 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 			icon: 'plus',
 			action: function (grid, row) {
 				$state.go('task.create');
+			}
+		},
+		{
+			perRow: true,
+			permissions: ['task.delete'],
+			icon: 'minus',
+			action: function (grid, row) {
+				dialogs.confirm('Remove task?', 'Remove task?').result.then(
+						function (yes) {
+							service.delete({id: row.entity.id},
+									function (success) {
+										toastr.info('Task deleted', 'Success');
+										$scope.loadPage();
+									},
+									function (error) {
+										const msg = error.statusText ? error.statusText : error;
+										toastr.error(msg, 'Server error');
+									});
+						},
+						function (no) {
+						}
+				);
 			}
 		},
 		{
@@ -105,13 +127,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 	gridHelper($scope, service, paginationOptions, {
 		columnDefs: [
 			{
-				field: '_actions',
-				name: '',
-				enableFiltering: false,
-				enableSorting: false,
-				enableColumnMenu: false,
-				cellTemplate: 'view/common/grid/row-actions.html',
-				width: 34, maxWidth: 34, minWidth: 34
+				field: '_actions'
 			},
 			{
 				field: 'id',
@@ -123,7 +139,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 				field: 'periodStart',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
-				filterTermMapper: function(value) {
+				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},
@@ -131,7 +147,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 				field: 'periodFinish',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
-				filterTermMapper: function(value) {
+				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},

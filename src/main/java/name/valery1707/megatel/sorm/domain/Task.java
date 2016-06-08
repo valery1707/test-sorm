@@ -38,6 +38,9 @@ public class Task extends ABaseEntity {
 
 	private String note;
 
+	@NotNull
+	private boolean isActive;
+
 	public Account getCreatedBy() {
 		return createdBy;
 	}
@@ -92,5 +95,13 @@ public class Task extends ABaseEntity {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean active) {
+		isActive = active;
 	}
 }
