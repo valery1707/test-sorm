@@ -54,6 +54,7 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 		//Надзор
 		SUPERVISOR: [
 			, "task.list"
+			, "task.list.active"
 		]
 	};
 	for (var role in roles) {

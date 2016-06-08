@@ -33,6 +33,7 @@ public class Account extends ABaseEntity {
 		)),
 		SUPERVISOR(Arrays.asList(null//Надзор
 				, "task.list"
+				, "task.list.active"
 		));
 
 		private final Collection<String> rights;

@@ -151,6 +151,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},
+			{field: 'active', permissions: ['task.list.active']},
 			{field: 'note'},
 		],
 	});

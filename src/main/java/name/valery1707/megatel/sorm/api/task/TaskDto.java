@@ -31,6 +31,7 @@ public class TaskDto {
 	@NotNull
 	@Size(min = 3)
 	private String note;
+	private Boolean isActive;
 
 	public TaskDto() {
 	}
@@ -45,6 +46,7 @@ public class TaskDto {
 		setPeriodStart(formatDateTime(src.getPeriodStart()));
 		setPeriodFinish(formatDateTime(src.getPeriodFinish()));
 		setNote(src.getNote());
+		setActive(src.isActive());
 	}
 
 	public long getId() {
@@ -109,5 +111,13 @@ public class TaskDto {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public Boolean getActive() {
+		return isActive;
+	}
+
+	public void setActive(Boolean active) {
+		isActive = active;
 	}
 }
