@@ -70,16 +70,10 @@ public class TaskController {
 		if (accountService.hasAnyRole(Account.Role.OPERATOR)) {
 			//todo Optimize
 			filter.setAllowedIds(taskPermitRepo
-					//todo Move to Repo interface?
-					.findAll((root, query, cb) -> {
-						return cb.and(
-								cb.equal(root.get(TaskPermit_.account), accountService.getCurrentAuditor()),
-								cb.lessThanOrEqualTo(root.get(TaskPermit_.periodStart), ZonedDateTime.now()),
-								cb.greaterThanOrEqualTo(root.get(TaskPermit_.periodFinish), ZonedDateTime.now())
-						);
-					})
+					.findAllowedAtTime(accountService.getCurrentAuditor(), ZonedDateTime.now())
 					.stream()
 					.map(permit -> permit.getTask().getId())
+					.distinct()
 					.collect(Collectors.toList()));
 		}
 		Specification<Task> spec = specificationBuilder.build(filter);
