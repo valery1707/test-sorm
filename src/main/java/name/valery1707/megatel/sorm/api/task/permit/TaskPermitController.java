@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -146,16 +147,26 @@ public class TaskPermitController {
 
 	@RequestMapping(path = "comboTask")
 	public List<TaskDto> comboTask() {
-		//todo Only Active
-		return taskRepo.findAll()
+		return taskRepo.findActive()
 				.stream().map(TaskDto::new)
 				.collect(toList());
 	}
 
+	/**
+	 * WHERE (isActive = :isActive) AND (activeUntil IS NULL OR activeUntil <= now()) AND (role = :role)
+	 */
+	private static final SpecificationBuilder<Account, AccountDto> comboAccountFilter = new SpecificationBuilder<Account, AccountDto>(SpecificationMode.AND)
+			.withEquals(AccountDto::isActive, Account_.isActive)
+			.withCustom(AccountDto::getActiveUntil, Account_.activeUntil, cb -> (field, filter) -> cb.or(cb.isNull(field), cb.lessThanOrEqualTo(field, LocalDate.now())))
+			.withEquals(AccountDto::getRole, Account_.role);
+
 	@RequestMapping(path = "comboAccount")
 	public List<AccountDto> comboAccount() {
-		//todo Only Active
-		return accountRepo.findAll()
+		AccountDto filter = new AccountDto();
+		filter.setActive(true);
+		filter.setActiveUntil("now");
+		filter.setRole(Account.Role.OPERATOR);
+		return accountRepo.findAll(comboAccountFilter.build(filter))
 				.stream().map(AccountDto::new)
 				.collect(toList());
 	}
