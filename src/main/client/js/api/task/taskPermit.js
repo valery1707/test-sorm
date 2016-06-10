@@ -117,7 +117,7 @@ controller('taskPermitCtrlEdit', ['$scope', '$state', '$stateParams', 'taskPermi
 	service.comboTask(
 			function (data) {
 				$scope.optTask = data.map(function (task) {
-					return {value: task.id, name: task.id};
+					return {value: task.id, name: '{id: ' + task.id + ', clientAlias: ' + task.clientAlias + ', agency: ' + task.agency + '}'};
 				});
 			},
 			function (error) {
@@ -126,7 +126,7 @@ controller('taskPermitCtrlEdit', ['$scope', '$state', '$stateParams', 'taskPermi
 	service.comboAccount(
 			function (data) {
 				$scope.optAccount = data.map(function (account) {
-					return {value: account.id, name: account.username};
+					return {value: account.id, name: '{username:' + account.username + ', agency:' + account.agency + '}'};
 				});
 			},
 			function (error) {
