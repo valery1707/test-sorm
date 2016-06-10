@@ -1,0 +1,128 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span ng-if="model.id">
+            Редактирование санкции для задания {{model.id}}
+        </span>
+        <span ng-if="!model.id">
+            Создание санкции для задания
+        </span>
+    </div>
+    <div class="panel-body">
+        <ng-form novalidate role="form" name="entityForm">
+
+            <!--createdBy-->
+            <div class="form-group" title="Created by" ng-if="model.id">
+                <label for="createdBy" class="sr-only">Created by</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           name="createdBy" id="createdBy" ng-model="model.createdBy"
+                           placeholder="Created by" friendly-name="Created by"
+                           readonly
+                    >
+                </div>
+            </div>
+
+            <!--createdAt-->
+            <div class="form-group" title="Created at" ng-if="model.id">
+                <label for="createdAt" class="sr-only">Created at</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           name="createdAt" id="createdAt" ng-model="model.createdAt"
+                           placeholder="Created at" friendly-name="Created at"
+                           convert-to-date-time
+                           readonly
+                    >
+                </div>
+            </div>
+
+            <!--agency-->
+            <div class="form-group" title="Agency">
+                <label for="agency" class="sr-only">Agency</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           name="agency" id="agency" ng-model="model.agency"
+                           placeholder="Agency" friendly-name="Agency"
+                           validation="custom:serverErrorValidator('agency')|required|min_len:3"
+                    >
+                </div>
+            </div>
+
+            <!--taskId-->
+            <div class="form-group" title="Task">
+                <label for="taskId" class="sr-only">Task</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></div>
+                    <select class="form-control"
+                            name="taskId" id="taskId" ng-model="model.taskId"
+                            ng-options="option.name for option in optTask track by option.value"
+                            friendly-name="Task"
+                            validation="custom:serverErrorValidator('taskId')|required"
+                    ></select>
+                </div>
+            </div>
+
+            <!--accountId-->
+            <div class="form-group" title="Account">
+                <label for="accountId" class="sr-only">Account</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></div>
+                    <select class="form-control"
+                            name="accountId" id="accountId" ng-model="model.accountId"
+                            ng-options="option.name for option in optAccount track by option.value"
+                            friendly-name="Account"
+                            validation="custom:serverErrorValidator('accountId')|required"
+                    ></select>
+                </div>
+            </div>
+
+            <!--periodStart-->
+            <div class="form-group" title="Period start">
+                <label for="periodStart" class="sr-only">Period start</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           date-time-picker
+                           convert-to-date-time
+                           name="periodStart" id="periodStart" ng-model="model.periodStart"
+                           placeholder="Period start" friendly-name="Period start"
+                           validation="custom:serverErrorValidator('periodStart')"
+                    >
+                </div>
+            </div>
+
+            <!--periodFinish-->
+            <div class="form-group" title="Period finish">
+                <label for="periodFinish" class="sr-only">Period finish</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           date-time-picker
+                           convert-to-date-time
+                           name="periodFinish" id="periodFinish" ng-model="model.periodFinish"
+                           placeholder="Period finish" friendly-name="Period finish"
+                           validation="custom:serverErrorValidator('periodFinish')"
+                    >
+                </div>
+            </div>
+
+        </ng-form>
+    </div>
+    <div class="panel-footer">
+        <button type="button" class="btn btn-default" ng-click="cancel()">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(entityForm.$dirty && entityForm.$invalid) || entityForm.$pristine">
+            Save
+        </button>
+    </div>
+</div>

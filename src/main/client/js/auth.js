@@ -32,27 +32,36 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 	});
 	var common = ['isAuthenticated'];
 	var roles = {
-		//Суперадминистратор
+		////Специальный внутренний админ, для настройки системы
 		SUPER: [
+			//Пользователи
 			, "account.list"
 			, "account.create"
 			, "account.update"
+			//Сессии пользователей
 			, "accountSession.list"
 		],
 		//Администратор
 		ADMIN: [
+			//Задание на перехват
 			, "task.list"
 			, "task.create"
 			, "task.update"
 			, "task.delete"
+			//Санкции на перехват
+			, "taskPermit.list"
+			, "taskPermit.create"
+			, "taskPermit.delete"
 		],
 		//Оператор/Обработчик
 		OPERATOR: [
+			//Задание на перехват
 			, "task.list"
 			, "task.view"
 		],
 		//Надзор
 		SUPERVISOR: [
+			//Задание на перехват
 			, "task.list"
 			, "task.list.active"
 		]

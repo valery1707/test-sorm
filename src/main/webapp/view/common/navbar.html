@@ -19,7 +19,15 @@
             <ul class="nav navbar-nav">
                 <li ng-class="{active: $state.includes('account')}" ng-if="principal.hasPermission('account.list')"><a ui-sref="account.list">Account</a></li>
                 <li ng-class="{active: $state.includes('accountSession')}" ng-if="principal.hasPermission('accountSession.list')"><a ui-sref="accountSession.list">AccountSession</a></li>
-                <li ng-class="{active: $state.includes('task')}" ng-if="principal.hasPermission('task.list')"><a ui-sref="task.list">Tasks</a></li>
+                <li class="dropdown" ng-class="{active: $state.includes('task') || $state.includes('taskPermit')}">
+                    <a data-target="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        Tasks <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-class="{active: $state.includes('task')}" ng-if="principal.hasPermission('task.list')"><a ui-sref="task.list">Tasks</a></li>
+                        <li ng-class="{active: $state.includes('taskPermit')}" ng-if="principal.hasPermission('taskPermit.list')"><a ui-sref="taskPermit.list">Task permits</a></li>
+                    </ul>
+                </li>
                 <li ui-sref-active="active"><a ui-sref="todo">Todo</a></li>
             </ul>
 
