@@ -1,11 +1,13 @@
 package name.valery1707.megatel.sorm.api.task;
 
 import javaslang.Value;
+import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
 import name.valery1707.megatel.sorm.app.AccountService;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.Account;
 import name.valery1707.megatel.sorm.domain.Task;
+import name.valery1707.megatel.sorm.domain.TaskPermit_;
 import name.valery1707.megatel.sorm.domain.Task_;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,9 +24,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static name.valery1707.megatel.sorm.DateUtils.parseDateTime;
 
@@ -33,6 +37,9 @@ import static name.valery1707.megatel.sorm.DateUtils.parseDateTime;
 public class TaskController {
 	@Inject
 	private TaskRepo repo;
+
+	@Inject
+	private TaskPermitRepo taskPermitRepo;
 
 	@Inject
 	private AccountService accountService;
@@ -49,6 +56,7 @@ public class TaskController {
 				.withString(TaskFilter::getClientAlias, Task_.clientAlias)
 				.withString(TaskFilter::getNote, Task_.note)
 				.withEquals(TaskFilter::getShowOnlyActive, Task_.isActive)
+				.withCustom(TaskFilter::getAllowedIds, Task_.id, cb -> (field, filter) -> filter.isEmpty() ? cb.isNull(field) : field.in(filter))
 		;
 	}
 
@@ -59,6 +67,21 @@ public class TaskController {
 	) {
 		accountService.requireAnyRole(Account.Role.ADMIN, Account.Role.OPERATOR, Account.Role.SUPERVISOR);
 		filter.setShowOnlyActive(accountService.hasAnyRole(Account.Role.SUPERVISOR) ? null : true);
+		if (accountService.hasAnyRole(Account.Role.OPERATOR)) {
+			//todo Optimize
+			filter.setAllowedIds(taskPermitRepo
+					//todo Move to Repo interface?
+					.findAll((root, query, cb) -> {
+						return cb.and(
+								cb.equal(root.get(TaskPermit_.account), accountService.getCurrentAuditor()),
+								cb.lessThanOrEqualTo(root.get(TaskPermit_.periodStart), ZonedDateTime.now()),
+								cb.greaterThanOrEqualTo(root.get(TaskPermit_.periodFinish), ZonedDateTime.now())
+						);
+					})
+					.stream()
+					.map(permit -> permit.getTask().getId())
+					.collect(Collectors.toList()));
+		}
 		Specification<Task> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(TaskDto::new);

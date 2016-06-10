@@ -11,6 +11,7 @@ public class TaskFilter {
 	private List<ZonedDateTime> periodFinish;
 	private String note;
 	private Boolean showOnlyActive;
+	private List<Long> allowedIds;
 
 	public String getId() {
 		return id;
@@ -66,5 +67,13 @@ public class TaskFilter {
 
 	public void setShowOnlyActive(Boolean showOnlyActive) {
 		this.showOnlyActive = showOnlyActive;
+	}
+
+	public List<Long> getAllowedIds() {
+		return allowedIds;
+	}
+
+	public void setAllowedIds(List<Long> allowedIds) {
+		this.allowedIds = allowedIds;
 	}
 }

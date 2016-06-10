@@ -37,6 +37,14 @@ public class SpecificationBuilder<D, F> {
 		return this;
 	}
 
+	public <X, Y> SpecificationBuilder<D, F> withCustom(Function<F, X> value, SingularExpressionGetter<? super D, Y> fieldGetter, Function<CriteriaBuilder, BiFunction<Expression<Y>, X, Predicate>> criteriaBuilder) {
+		return with(new BaseCustomFilter<>(fieldGetter, value, criteriaBuilder));
+	}
+
+	public <X, Y> SpecificationBuilder<D, F> withCustom(Function<F, X> value, SingularAttribute<? super D, Y> field, Function<CriteriaBuilder, BiFunction<Expression<Y>, X, Predicate>> criteriaBuilder) {
+		return withCustom(value, field(field), criteriaBuilder);
+	}
+
 	public <X> SpecificationBuilder<D, F> withCustomSimple(Function<F, X> value, SingularExpressionGetter<? super D, X> fieldGetter, Function<CriteriaBuilder, BiFunction<Expression<X>, X, Predicate>> criteriaBuilder) {
 		return with(new BaseSimpleFilter<>(fieldGetter, value, criteriaBuilder));
 	}
