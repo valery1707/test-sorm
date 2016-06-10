@@ -63,6 +63,7 @@
                     <select class="form-control"
                             name="taskId" id="taskId" ng-model="model.taskId"
                             ng-options="option.name for option in optTask track by option.value"
+                            convert-option-to-value
                             friendly-name="Task"
                             validation="custom:serverErrorValidator('taskId')|required"
                     ></select>
@@ -78,6 +79,7 @@
                     <select class="form-control"
                             name="accountId" id="accountId" ng-model="model.accountId"
                             ng-options="option.name for option in optAccount track by option.value"
+                            convert-option-to-value
                             friendly-name="Account"
                             validation="custom:serverErrorValidator('accountId')|required"
                     ></select>
