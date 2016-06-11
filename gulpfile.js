@@ -39,6 +39,7 @@ var paths = {
 
 		, 'node_modules/bootstrap/dist/js/bootstrap.js'
 		, 'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
+		, 'bower_components/bootstrap-hover-dropdown/bootstrap-hover-dropdown.js'
 
 		, 'node_modules/angular-ui-grid/ui-grid.js'
 		, 'bower_components/csv/index.js'

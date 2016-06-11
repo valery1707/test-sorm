@@ -43,7 +43,8 @@
     "angular-animate": "1.5.5",
     "angular-toastr": "1.7.0",
     "angular-permission": "3.0.1",
-    "angular-dialog-service": "5.3.0"
+    "angular-dialog-service": "5.3.0",
+    "bootstrap-hover-dropdown": "2.2.1"
   },
   "devDependencies": {
     "bower": "1.7.7",

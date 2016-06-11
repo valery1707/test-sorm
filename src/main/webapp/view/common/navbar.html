@@ -20,7 +20,7 @@
                 <li ng-class="{active: $state.includes('account')}" ng-if="principal.hasPermission('account.list')"><a ui-sref="account.list">Account</a></li>
                 <li ng-class="{active: $state.includes('accountSession')}" ng-if="principal.hasPermission('accountSession.list')"><a ui-sref="accountSession.list">AccountSession</a></li>
                 <li class="dropdown" ng-class="{active: $state.includes('task') || $state.includes('taskPermit')}" ng-if="principal.hasAnyPermission(['task.list', 'taskPermit.list'])">
-                    <a data-target="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a data-target="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" nav-dropdown-hover>
                         Tasks <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
@@ -33,7 +33,7 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a data-target="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <a data-target="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" nav-dropdown-hover>
                         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         {{principal.account().name}}
                         <span class="caret"></span>

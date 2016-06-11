@@ -40,7 +40,7 @@ function formatBytes_1000(bytes, decimals) {
  * Array Remove - By John Resig (MIT Licensed)
  * @see https://stackoverflow.com/a/9815010/1263442
  */
-Array.prototype.remove = function(from, to) {
+Array.prototype.remove = function (from, to) {
 	var rest = this.slice((to || from) + 1 || this.length);
 	this.length = from < 0 ? this.length + from : from;
 	return this.push.apply(this, rest);
@@ -103,6 +103,22 @@ directive('convertOptionToValue', function () {
 			ngModel.$formatters.push(function (val) {
 				return val;
 			});
+		}
+	};
+}).
+directive('navDropdownHover', function () {
+	return {
+		restrict: "A",
+		link: function (scope, element, attrs) {
+			$(function () {
+				const opt = attrs.navDropdownHover ? JSON.parse(attrs.navDropdownHover) : {};
+				jQuery.extend(opt, {
+					delay: 500,
+					instantlyCloseOthers: true,
+					hoverDelay: 0
+				});
+				$(element).dropdownHover(opt);
+			})
 		}
 	};
 })
