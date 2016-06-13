@@ -8,7 +8,6 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -48,11 +47,9 @@ public class BroConfigPublisher {
 				.namingPattern("bro-publisher-%d")
 				.build();
 		executor = Executors.newFixedThreadPool(hashByServer.size(), threadFactory);//todo Configure?
-
-		publish();
 	}
 
-	@Scheduled(fixedDelay = 10 * 1000)
+	@Async
 	public void publishIfNeeded() {
 		if (isNeedPublish()) {
 			publish();
@@ -70,6 +67,7 @@ public class BroConfigPublisher {
 	@Async
 	public void publish() {
 		if (lock.tryLock()) {
+			LOG.debug("Start publish");
 			try {
 				Map<Long, ZonedDateTime> hash = calcHash();
 				String hashValue = calcHashValue(hash);
@@ -87,6 +85,7 @@ public class BroConfigPublisher {
 			} finally {
 				lock.unlock();
 			}
+			LOG.debug("Complete publish");
 		}
 	}
 
