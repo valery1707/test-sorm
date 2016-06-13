@@ -2,6 +2,8 @@ package name.valery1707.megatel.sorm.domain;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -19,6 +21,15 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 	@NotNull
 	@CreatedDate
 	private ZonedDateTime createdAt;
+
+	@NotNull
+	@ManyToOne
+	@LastModifiedBy
+	private Account modifiedBy;
+
+	@NotNull
+	@LastModifiedDate
+	private ZonedDateTime modifiedAt;
 
 	@NotNull
 	private String agency;
@@ -55,6 +66,22 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 
 	public void setCreatedAt(ZonedDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public Account getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(Account modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public ZonedDateTime getModifiedAt() {
+		return modifiedAt;
+	}
+
+	public void setModifiedAt(ZonedDateTime modifiedAt) {
+		this.modifiedAt = modifiedAt;
 	}
 
 	public String getAgency() {
