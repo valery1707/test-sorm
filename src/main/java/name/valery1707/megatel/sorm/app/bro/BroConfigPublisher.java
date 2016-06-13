@@ -1,5 +1,7 @@
 package name.valery1707.megatel.sorm.app.bro;
 
+import com.samskivert.mustache.Mustache;
+import com.samskivert.mustache.Template;
 import javaslang.concurrent.Future;
 import name.valery1707.megatel.sorm.api.task.TaskRepo;
 import name.valery1707.megatel.sorm.domain.IBaseEntity;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +41,8 @@ public class BroConfigPublisher {
 	private final ReentrantLock lock = new ReentrantLock();
 	private ExecutorService executor;
 	private final Map<String, String> hashByServer = new HashMap<>();
+	private Template templateInit;
+	private Template templateTask;
 
 	@PostConstruct
 	public void init() {
@@ -47,6 +53,10 @@ public class BroConfigPublisher {
 				.namingPattern("bro-publisher-%d")
 				.build();
 		executor = Executors.newFixedThreadPool(hashByServer.size(), threadFactory);//todo Configure?
+
+		Mustache.Compiler compiler = Mustache.compiler();
+		templateInit = compiler.compile(new InputStreamReader(this.getClass().getResourceAsStream("/bro/amt_init.bro"), StandardCharsets.UTF_8));
+		templateTask = compiler.compile(new InputStreamReader(this.getClass().getResourceAsStream("/bro/amt_task_00.bro"), StandardCharsets.UTF_8));
 	}
 
 	@Async
@@ -116,12 +126,10 @@ public class BroConfigPublisher {
 	}
 
 	private String drawInitTemplate() {
-		//todo Отрисовка шаблона с шаблонизатором
-		return "##! Скрипт с глобальными настройками:";
+		return templateInit.execute(null);
 	}
 
 	private String drawTaskTemplate(Task task) {
-		//todo Отрисовка шаблона с шаблонизатором
-		return "##! Скрипт для каждого задания (имя файла включает номер задания)";
+		return templateTask.execute(task);
 	}
 }
