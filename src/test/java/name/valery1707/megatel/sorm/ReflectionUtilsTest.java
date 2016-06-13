@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm;
 
+import javaslang.control.Try;
 import name.valery1707.megatel.sorm.domain.Data;
 import name.valery1707.megatel.sorm.dto.DataDto;
 import org.junit.Test;
@@ -33,8 +34,12 @@ public class ReflectionUtilsTest {
 		assertThat(data.apply(null)).isNotNull();
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+	@Test
 	public void testConvert_StringMath() throws Exception {
-		ReflectionUtils.findConverter(String.class, Math.class);
+		Try<Function<String, Math>> of = Try.of(() -> ReflectionUtils.findConverter(String.class, Math.class));
+		assertThat(of.isFailure()).isTrue();
+		assertThat(of.getCause()).isNotNull();
+		assertThat(of.getCause().getMessage()).isEqualTo("Could not find converter from 'java.lang.String' to 'java.lang.Math'");
 	}
 }
