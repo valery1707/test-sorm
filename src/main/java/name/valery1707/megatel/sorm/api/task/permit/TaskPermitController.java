@@ -1,31 +1,28 @@
 package name.valery1707.megatel.sorm.api.task.permit;
 
-import javaslang.Value;
+import name.valery1707.megatel.sorm.api.BaseEntityController;
 import name.valery1707.megatel.sorm.api.account.AccountDto;
 import name.valery1707.megatel.sorm.api.auth.AccountRepo;
 import name.valery1707.megatel.sorm.api.task.TaskDto;
 import name.valery1707.megatel.sorm.api.task.TaskRepo;
-import name.valery1707.megatel.sorm.app.AccountService;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -35,9 +32,7 @@ import static name.valery1707.megatel.sorm.db.SingularAttributeGetter.field;
 
 @RestController
 @RequestMapping("/api/task/permit")
-public class TaskPermitController {
-	@Inject
-	private TaskPermitRepo repo;
+public class TaskPermitController extends BaseEntityController<TaskPermit, TaskPermitRepo, TaskPermitFilter, TaskPermitDto> {
 
 	@Inject
 	private TaskRepo taskRepo;
@@ -45,14 +40,13 @@ public class TaskPermitController {
 	@Inject
 	private AccountRepo accountRepo;
 
-	@Inject
-	private AccountService accountService;
+	public TaskPermitController() {
+		super("taskPermit");
+	}
 
-	private SpecificationBuilder<TaskPermit, TaskPermitFilter> specificationBuilder;
-
-	@PostConstruct
-	public void init() {
-		specificationBuilder = new SpecificationBuilder<TaskPermit, TaskPermitFilter>(SpecificationMode.AND)
+	@Override
+	protected SpecificationBuilder<TaskPermit, TaskPermitFilter> buildUserFilter() {
+		return new SpecificationBuilder<TaskPermit, TaskPermitFilter>(SpecificationMode.AND)
 				.withNumber(TaskPermitFilter::getId, TaskPermit_.id)
 				.withString(TaskPermitFilter::getAgency, TaskPermit_.agency)
 				.withNumber(TaskPermitFilter::getTaskId, field(TaskPermit_.task).nest(Task_.id))
@@ -60,7 +54,13 @@ public class TaskPermitController {
 				.withDateTime(TaskPermitFilter::getPeriodStart, TaskPermit_.periodStart)
 				.withDateTime(TaskPermitFilter::getPeriodFinish, TaskPermit_.periodFinish)
 				.withEquals(TaskPermitFilter::getShowOnlyActive, TaskPermit_.isActive)
-		;
+				;
+	}
+
+	@Override
+	protected void applyPermanentFilter(TaskPermitFilter filter) {
+		super.applyPermanentFilter(filter);
+		filter.setShowOnlyActive(true);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -68,36 +68,11 @@ public class TaskPermitController {
 			@PageableDefault(size = 20) @SortDefault("id") Pageable pageable,
 			@RequestBody(required = false) TaskPermitFilter filter
 	) {
-		accountService.requireAnyRole(Account.Role.ADMIN);
-		filter.setShowOnlyActive(true);
-		Specification<TaskPermit> spec = specificationBuilder.build(filter);
-		return repo.findAll(spec, pageable)
-				.map(TaskPermitDto::new);
+		return super.findByFilter(pageable, filter);
 	}
 
-	@RequestMapping
-	public TaskPermitDto get(@RequestParam long id) {
-		accountService.requireAnyRole(Account.Role.ADMIN);
-		TaskPermit entity = repo.findOne(id);
-		if (entity == null) {
-			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", "TaskPermit", id));
-		}
-		return new TaskPermitDto(entity);
-	}
-
-	@RequestMapping(method = RequestMethod.DELETE)
-	@Transactional
-	public void delete(@RequestParam long id) {
-		accountService.requireAnyRole(Account.Role.ADMIN);
-		TaskPermit entity = repo.findOne(id);
-		if (entity == null) {
-			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", "TaskPermit", id));
-		}
-		entity.setActive(false);
-		repo.save(entity);
-	}
-
-	private void validate(TaskPermitDto dto, BindingResult validation) {
+	@Override
+	protected void validate(TaskPermitDto dto, BindingResult validation) {
 		Task task = taskRepo.findOne(dto.getTaskId());
 		if (task == null) {
 			validation.rejectValue("taskId", "{TaskPermit.taskId.constraint.exists}", "Task must exists");
@@ -112,37 +87,16 @@ public class TaskPermitController {
 	@RequestMapping(method = RequestMethod.PUT)
 	@Transactional
 	public ResponseEntity<Map<String, ?>> save(@RequestBody @Valid TaskPermitDto dto, BindingResult validation) {
-		accountService.requireAnyRole(Account.Role.ADMIN);
+		return super.save(dto, validation);
+	}
 
-		validate(dto, validation);
-
-		if (validation.getErrorCount() > 0) {
-			javaslang.collection.Map<String, List<FieldError>> fieldErrorMap = javaslang.collection.List
-					.ofAll(validation.getFieldErrors())
-					.groupBy(FieldError::getField)
-					.mapValues(Value::toJavaList);
-			return ResponseEntity.badRequest().body(fieldErrorMap.toJavaMap());
-		}
-
-		TaskPermit entity = null;
-		if (dto.getId() != 0) {
-			entity = repo.findOne(dto.getId());
-		}
-		if (entity == null) {
-			entity = new TaskPermit();
-			//defaults
-			entity.setActive(true);
-		}
-
+	@Override
+	protected void dto2domain(TaskPermitDto dto, TaskPermit entity) {
 		entity.setAgency(dto.getAgency());
 		entity.setTask(taskRepo.getOne(dto.getTaskId()));
 		entity.setAccount(accountRepo.getOne(dto.getAccountId()));
 		entity.setPeriodStart(parseDateTime(dto.getPeriodStart()));
 		entity.setPeriodFinish(parseDateTime(dto.getPeriodFinish()));
-
-		repo.save(entity);
-
-		return ResponseEntity.ok(Collections.emptyMap());
 	}
 
 	@RequestMapping(path = "comboTask")

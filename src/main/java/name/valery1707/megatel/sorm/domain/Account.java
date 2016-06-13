@@ -1,6 +1,7 @@
 package name.valery1707.megatel.sorm.domain;
 
 import javaslang.collection.List;
+import javaslang.collection.Seq;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.TreeSet;
 
 @Entity
 @SuppressWarnings("unused")
@@ -49,18 +51,25 @@ public class Account extends ABaseEntity {
 				, "task.list.active"
 		));
 
-		private final Collection<String> rights;
+		private final List<String> rights;
 
 		Role(Collection<String> rights) {
 			this.rights = List.ofAll(rights)
 					.filter(Objects::nonNull)
 					.distinct()
 					.sorted()
-					.toJavaList();
+			;
 		}
 
 		public Collection<String> getRights() {
-			return rights;
+			return rights.toJavaList();
+		}
+
+		public static Seq<Role> hasRights(String... rights) {
+			TreeSet<String> search = new TreeSet<>(Arrays.asList(rights));
+			return List
+					.of(Role.values())
+					.filter(role -> role.rights.exists(search::contains));
 		}
 	}
 

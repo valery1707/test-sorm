@@ -1,6 +1,7 @@
 package name.valery1707.megatel.sorm.api.account;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import name.valery1707.megatel.sorm.api.BaseDto;
 import name.valery1707.megatel.sorm.domain.Account;
 import org.hibernate.validator.constraints.ScriptAssert;
 
@@ -17,7 +18,7 @@ import static name.valery1707.megatel.sorm.DateUtils.formatDate;
 		script = "(_this.id == 0 && _this.password != null) || (_this.id > 0 && _this.password == null)",
 		message = "{Account.password.constraint.requiredOnlyForNew}"
 )
-public class AccountDto {
+public class AccountDto implements BaseDto {
 
 	private long id;
 	@NotNull

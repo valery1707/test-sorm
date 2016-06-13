@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
  */
 @Entity
 @SuppressWarnings("unused")
-public class TaskPermit extends ABaseEntity {
+public class TaskPermit extends ABaseEntity implements LogicRemovableEntity {
 	/**
 	 * Пользователь, создавший запись
 	 */

@@ -10,7 +10,7 @@ import java.time.ZonedDateTime;
 
 @Entity
 @SuppressWarnings("unused")
-public class Task extends ABaseEntity {
+public class Task extends ABaseEntity implements LogicRemovableEntity {
 	@NotNull
 	@ManyToOne
 	@CreatedBy

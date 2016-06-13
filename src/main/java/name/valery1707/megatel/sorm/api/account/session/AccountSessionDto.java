@@ -1,13 +1,14 @@
 package name.valery1707.megatel.sorm.api.account.session;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import name.valery1707.megatel.sorm.api.BaseDto;
 import name.valery1707.megatel.sorm.domain.AccountSession;
 
 import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AccountSessionDto {
+public class AccountSessionDto implements BaseDto {
 	private long id;
 	private String accountUsername;
 	private String loginAt;

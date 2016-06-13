@@ -2,6 +2,7 @@ package name.valery1707.megatel.sorm.api.task;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import name.valery1707.megatel.sorm.DateUtils;
+import name.valery1707.megatel.sorm.api.BaseDto;
 import name.valery1707.megatel.sorm.domain.Task;
 
 import javax.validation.constraints.NotNull;
@@ -12,7 +13,7 @@ import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class TaskDto {
+public class TaskDto implements BaseDto {
 	private long id;
 	private String createdBy;
 	private String createdAt;
