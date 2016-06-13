@@ -40,7 +40,7 @@ public class BroConfigPublisher {
 
 	@PostConstruct
 	public void init() {
-		hashByServer.put("out", "");
+		hashByServer.put("out", "");//todo Описание серверов Bro
 
 		ThreadFactory threadFactory = new BasicThreadFactory.Builder()
 				.daemon(true)
@@ -90,6 +90,7 @@ public class BroConfigPublisher {
 	}
 
 	private String publish(String server, Map<String, String> files) {
+		//todo Работа с файлами на серверах
 		files.forEach((name, content) -> {
 			LOG.info("[{}]", name);
 			LOG.info(content);
@@ -115,12 +116,12 @@ public class BroConfigPublisher {
 	}
 
 	private String drawInitTemplate() {
-		// TODO: 2016-06-13
+		//todo Отрисовка шаблона с шаблонизатором
 		return "##! Скрипт с глобальными настройками:";
 	}
 
 	private String drawTaskTemplate(Task task) {
-		// TODO: 2016-06-13
+		//todo Отрисовка шаблона с шаблонизатором
 		return "##! Скрипт для каждого задания (имя файла включает номер задания)";
 	}
 }
