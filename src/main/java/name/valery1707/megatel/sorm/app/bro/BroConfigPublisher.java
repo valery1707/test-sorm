@@ -100,11 +100,15 @@ public class BroConfigPublisher {
 				}
 				files.put("amt.bro", drawRunnerTemplate(files.keySet()));
 
-				Map<Server, Future<Server>> publish = hashByServer.entrySet().stream()
+				Map<Server, Future<Boolean>> publish = hashByServer.entrySet().stream()
 						.filter(entry -> !entry.getValue().equals(hashValue))
 						.collect(toMap(Map.Entry::getKey, entry -> Future.of(executor, () -> publish(entry.getKey(), files, hashValue))));
 				publish.values().forEach(Future::await);
-				publish.forEach((server, result) -> hashByServer.put(server, hashValue));
+				publish.forEach((server, result) -> {
+					if (result.get()) {
+						hashByServer.put(server, hashValue);
+					}
+				});
 			} finally {
 				lock.unlock();
 			}
@@ -112,7 +116,7 @@ public class BroConfigPublisher {
 		}
 	}
 
-	private Server publish(Server server, Map<String, String> files, String hashValue) {
+	private boolean publish(Server server, Map<String, String> files, String hashValue) {
 		MDC.put("server", String.format("[%s@%s:%d] ", server.getUsername(), server.getHost(), server.getPort()));
 		SshClientHelper helper = new SshClientHelper(server, sshConfig);
 		try {
@@ -129,10 +133,10 @@ public class BroConfigPublisher {
 				helper.upload(fileWithPath);
 				helper.clean(conf, file -> file.isRegularFile() && !fileWithPath.containsKey(new File(file.getPath())));
 			}
-			return server;
-		} catch (IOException ignored) {
-			//todo Ignore?
-			return server;
+			return true;
+		} catch (IOException e) {
+			LOG.warn("Catch exception: ", e);
+			return false;
 		} finally {
 			helper.disconnect();
 			MDC.clear();
