@@ -136,6 +136,8 @@ public class BroConfigPublisher {
 				helper.cleanTmp(conf);
 				helper.upload(fileWithPath);
 				helper.clean(conf, file -> file.isRegularFile() && !fileWithPath.containsKey(new File(file.getPath())));
+				//todo Добавить включение нашего файла в основной конфиг Bro
+				//todo Перезапустить Bro
 			}
 			return true;
 		} catch (IOException e) {
