@@ -4,17 +4,24 @@ import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
 import javaslang.concurrent.Future;
 import name.valery1707.megatel.sorm.api.task.TaskRepo;
+import name.valery1707.megatel.sorm.app.ssh.SshClientHelper;
 import name.valery1707.megatel.sorm.domain.IBaseEntity;
+import name.valery1707.megatel.sorm.domain.Server;
 import name.valery1707.megatel.sorm.domain.Task;
+import net.schmizz.sshj.Config;
+import net.schmizz.sshj.DefaultConfig;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
@@ -39,14 +46,18 @@ public class BroConfigPublisher {
 	private TaskRepo taskRepo;
 
 	private final ReentrantLock lock = new ReentrantLock();
+
+	private Config sshConfig;
 	private ExecutorService executor;
-	private final Map<String, String> hashByServer = new HashMap<>();
+	private final Map<Server, String> hashByServer = new HashMap<>();
 	private Template templateInit;
 	private Template templateTask;
 
 	@PostConstruct
 	public void init() {
-		hashByServer.put("out", "");//todo Описание серверов Bro
+		sshConfig = new DefaultConfig();
+
+		hashByServer.put(new Server("127.0.0.1", 22, "username", "password", "/opt/bro", "/home/user/megatel-bro-scripts"), "");//todo Описание серверов Bro
 
 		ThreadFactory threadFactory = new BasicThreadFactory.Builder()
 				.daemon(true)
@@ -82,14 +93,15 @@ public class BroConfigPublisher {
 				Map<Long, ZonedDateTime> hash = calcHash();
 				String hashValue = calcHashValue(hash);
 
+				//todo Если нет активных задач вообще
 				Map<String, String> files = taskRepo.findAll(hash.keySet()).stream()
 						.collect(toMap(task -> "amt_task_" + task.getId() + ".bro", this::drawTaskTemplate, (v1, v2) -> v1, TreeMap::new));
 				files.put("amt_init.bro", drawInitTemplate());
 				files.put("amt.bro", drawRunnerTemplate(files.keySet()));
 
-				Map<String, Future<String>> publish = hashByServer.entrySet().stream()
+				Map<Server, Future<Server>> publish = hashByServer.entrySet().stream()
 						.filter(entry -> !entry.getValue().equals(hashValue))
-						.collect(toMap(Map.Entry::getKey, entry -> Future.of(executor, () -> publish(entry.getKey(), files))));
+						.collect(toMap(Map.Entry::getKey, entry -> Future.of(executor, () -> publish(entry.getKey(), files, hashValue))));
 				publish.values().forEach(Future::await);
 				publish.forEach((server, result) -> hashByServer.put(server, hashValue));
 			} finally {
@@ -99,13 +111,31 @@ public class BroConfigPublisher {
 		}
 	}
 
-	private String publish(String server, Map<String, String> files) {
-		//todo Работа с файлами на серверах
-		files.forEach((name, content) -> {
-			LOG.info("[{}]", name);
-			LOG.info(content);
-		});
-		return server;
+	private Server publish(Server server, Map<String, String> files, String hashValue) {
+		MDC.put("server", String.format("[%s@%s:%d] ", server.getUsername(), server.getHost(), server.getPort()));
+		SshClientHelper helper = new SshClientHelper(server, sshConfig);
+		try {
+			helper.connect();
+			File conf = new File(server.getConfPath());
+			File hashPath = new File(conf, "task.hash");
+			helper.mkdir(conf);
+			if (!helper.hasSameContent(hashPath, hashValue)) {
+				TreeMap<File, String> fileWithPath = files
+						.entrySet().stream()
+						.collect(toMap(e -> new File(conf, e.getKey()), Map.Entry::getValue, (v1, v2) -> v1, TreeMap::new));
+				fileWithPath.put(hashPath, hashValue);
+				helper.cleanTmp(conf);
+				helper.upload(fileWithPath);
+				helper.clean(conf, file -> file.isRegularFile() && !fileWithPath.containsKey(new File(file.getPath())));
+			}
+			return server;
+		} catch (IOException ignored) {
+			//todo Ignore?
+			return server;
+		} finally {
+			helper.disconnect();
+			MDC.clear();
+		}
 	}
 
 	private Map<Long, ZonedDateTime> calcHash() {
