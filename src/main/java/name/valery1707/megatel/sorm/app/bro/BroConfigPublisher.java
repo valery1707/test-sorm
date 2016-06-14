@@ -93,10 +93,11 @@ public class BroConfigPublisher {
 				Map<Long, ZonedDateTime> hash = calcHash();
 				String hashValue = calcHashValue(hash);
 
-				//todo Если нет активных задач вообще
 				Map<String, String> files = taskRepo.findAll(hash.keySet()).stream()
 						.collect(toMap(task -> "amt_task_" + task.getId() + ".bro", this::drawTaskTemplate, (v1, v2) -> v1, TreeMap::new));
-				files.put("amt_init.bro", drawInitTemplate());
+				if (!files.isEmpty()) {
+					files.put("amt_init.bro", drawInitTemplate());
+				}
 				files.put("amt.bro", drawRunnerTemplate(files.keySet()));
 
 				Map<Server, Future<Server>> publish = hashByServer.entrySet().stream()
