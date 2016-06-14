@@ -35,7 +35,7 @@ public class SshClientHelper {
 		ssh.addHostKeyVerifier((hostname, port, key) -> true);//todo Доверяем любому ключу - это не секурно
 		ssh.connect(server.getHost(), server.getPort());
 		ssh.authPassword(server.getUsername(), server.getPassword());
-		//ssh.useCompression();//todo Make sure JZlib is in classpath for this to work
+		ssh.useCompression();
 	}
 
 	public void disconnect() {
