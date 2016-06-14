@@ -5,11 +5,13 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
+@Entity
 @SuppressWarnings("unused")
 public class Server extends ABaseEntity {
 	@NotNull

@@ -43,6 +43,9 @@ public class BroConfigPublisher {
 	private static final Logger LOG = LoggerFactory.getLogger(BroConfigPublisher.class);
 
 	@Inject
+	private ServerRepo serverRepo;
+
+	@Inject
 	private TaskRepo taskRepo;
 
 	private final ReentrantLock lock = new ReentrantLock();
@@ -57,13 +60,14 @@ public class BroConfigPublisher {
 	public void init() {
 		sshConfig = new DefaultConfig();
 
-		hashByServer.put(new Server("127.0.0.1", 22, "username", "password", "/opt/bro", "/home/user/megatel-bro-scripts"), "");//todo Описание серверов Bro
+		//todo Информация о серверах Bro собирается только при запуске - это не совсем корректно
+		serverRepo.findAll().forEach(server -> hashByServer.put(server, ""));
 
 		ThreadFactory threadFactory = new BasicThreadFactory.Builder()
 				.daemon(true)
 				.namingPattern("bro-publisher-%d")
 				.build();
-		executor = Executors.newFixedThreadPool(hashByServer.size(), threadFactory);//todo Configure?
+		executor = Executors.newFixedThreadPool(Math.max(1, hashByServer.size()), threadFactory);
 
 		Mustache.Compiler compiler = Mustache.compiler();
 		templateInit = compiler.compile(new InputStreamReader(this.getClass().getResourceAsStream("/bro/amt_init.bro"), StandardCharsets.UTF_8));
