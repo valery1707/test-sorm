@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm;
 
+import javaslang.Function1;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
 
@@ -65,12 +66,13 @@ public class DateUtils {
 		return src != null ? src.format(ZONED_DATE_TIME_FORMAT) : null;
 	}
 
+	private static final Function1<String, Pattern> patternCompiler = Function1.<String, Pattern>of(Pattern::compile).memoized();
+
 	private static <T extends Temporal> T parse(String src, String pattern, DateTimeFormatter formatter, Function<TemporalAccessor, T> mapper) {
 		if (src == null) {
 			return null;
 		}
-		//todo Cache compiled patterns
-		if (!Pattern.compile(pattern).matcher(src).matches()) {
+		if (!patternCompiler.apply(pattern).matcher(src).matches()) {
 			return null;
 		}
 		TemporalAccessor accessor = formatter.parse(src);

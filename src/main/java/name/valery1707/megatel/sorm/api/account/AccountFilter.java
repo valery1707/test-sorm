@@ -8,7 +8,7 @@ import java.util.List;
 public class AccountFilter {
 	private String id;
 	private String username;
-	private Boolean isActive;//todo Implement filter
+	private Boolean isActive;
 	private Account.Role role;
 	private List<LocalDate> activeUntil;
 	private String agency;

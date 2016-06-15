@@ -50,19 +50,6 @@ public class Server extends ABaseEntity {
 	@NotNull
 	private String confPath;
 
-	public Server() {
-	}
-
-	public Server(String host, int port, String username, String password, String broPath, String confPath) {
-		//todo remove
-		this.host = host;
-		this.port = port;
-		this.username = username;
-		this.password = password;
-		this.broPath = broPath;
-		this.confPath = confPath;
-	}
-
 	public Account getCreatedBy() {
 		return createdBy;
 	}
