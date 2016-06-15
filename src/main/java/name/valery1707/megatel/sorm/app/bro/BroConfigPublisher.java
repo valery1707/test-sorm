@@ -108,11 +108,11 @@ public class BroConfigPublisher {
 						.filter(entry -> !entry.getValue().equals(hashValue))
 						.collect(toMap(Map.Entry::getKey, entry -> Future.of(executor, () -> publish(entry.getKey(), files, hashValue))));
 				publish.values().forEach(Future::await);
-				publish.forEach((server, result) -> {
-					if (result.get()) {
-						hashByServer.put(server, hashValue);
-					}
-				});
+				publish.entrySet()
+						.stream()
+						.filter(entry -> entry.getValue().isSuccess())
+						.filter(entry -> entry.getValue().get())
+						.forEach(entry -> hashByServer.put(entry.getKey(), hashValue));
 			} finally {
 				lock.unlock();
 			}
@@ -125,6 +125,8 @@ public class BroConfigPublisher {
 		SshClientHelper helper = new SshClientHelper(server, sshConfig);
 		try {
 			helper.connect();
+			File bro = new File(server.getBroPath());
+			helper.checkConfig(bro);
 			File conf = new File(server.getConfPath());
 			File hashPath = new File(conf, "task.hash");
 			helper.mkdir(conf);
@@ -136,7 +138,7 @@ public class BroConfigPublisher {
 				helper.cleanTmp(conf);
 				helper.upload(fileWithPath);
 				helper.clean(conf, file -> file.isRegularFile() && !fileWithPath.containsKey(new File(file.getPath())));
-				//todo Добавить включение нашего файла в основной конфиг Bro
+				helper.includeIntoBro(new File(bro, "share/bro/site/local.bro"), new File(conf, "amt.bro"));//todo Configure `broConfPath`?
 				//todo Перезапустить Bro
 			}
 			return true;
