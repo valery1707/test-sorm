@@ -33,6 +33,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
@@ -52,7 +53,7 @@ public class BroConfigPublisher {
 
 	private Config sshConfig;
 	private ExecutorService executor;
-	private final Map<Server, String> hashByServer = new HashMap<>();
+	private final Map<Long, String> hashByServer = new HashMap<>();
 	private Template templateInit;
 	private Template templateTask;
 
@@ -60,8 +61,8 @@ public class BroConfigPublisher {
 	public void init() {
 		sshConfig = new DefaultConfig();
 
-		//todo Информация о серверах Bro собирается только при запуске - это не совсем корректно
-		serverRepo.findAll().forEach(server -> hashByServer.put(server, ""));
+		//todo Информация о количестве серверов Bro собирается только при запуске - это не совсем корректно
+		serverRepo.findAll().forEach(server -> hashByServer.put(server.getId(), ""));
 
 		ThreadFactory threadFactory = new BasicThreadFactory.Builder()
 				.daemon(true)
@@ -97,6 +98,8 @@ public class BroConfigPublisher {
 				Map<Long, ZonedDateTime> hash = calcHash();
 				String hashValue = calcHashValue(hash);
 
+				Map<Long, Server> servers = serverRepo.findAll().stream().collect(toMap(IBaseEntity::getId, Function.identity()));
+
 				Map<String, String> files = taskRepo.findAll(hash.keySet()).stream()
 						.collect(toMap(task -> "amt_task_" + task.getId() + ".bro", this::drawTaskTemplate, (v1, v2) -> v1, TreeMap::new));
 				if (!files.isEmpty()) {
@@ -104,9 +107,9 @@ public class BroConfigPublisher {
 				}
 				files.put("amt.bro", drawRunnerTemplate(files.keySet()));
 
-				Map<Server, Future<Boolean>> publish = hashByServer.entrySet().stream()
+				Map<Long, Future<Boolean>> publish = hashByServer.entrySet().stream()
 						.filter(entry -> !entry.getValue().equals(hashValue))
-						.collect(toMap(Map.Entry::getKey, entry -> Future.of(executor, () -> publish(entry.getKey(), files, hashValue))));
+						.collect(toMap(Map.Entry::getKey, entry -> Future.of(executor, () -> publish(servers.get(entry.getKey()), files, hashValue))));
 				publish.values().forEach(Future::await);
 				publish.entrySet()
 						.stream()
