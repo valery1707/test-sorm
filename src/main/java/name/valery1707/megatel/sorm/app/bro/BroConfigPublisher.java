@@ -133,14 +133,19 @@ public class BroConfigPublisher {
 			File conf = new File(server.getConfPath());
 			File hashPath = new File(conf, "task.hash");
 			helper.mkdir(conf);
+			LOG.info("Check task hash");
 			if (!helper.hasSameContent(hashPath, hashValue)) {
 				TreeMap<File, String> fileWithPath = files
 						.entrySet().stream()
 						.collect(toMap(e -> new File(conf, e.getKey()), Map.Entry::getValue, (v1, v2) -> v1, TreeMap::new));
 				fileWithPath.put(hashPath, hashValue);
+				LOG.info("Clean tmp files");
 				helper.cleanTmp(conf);
+				LOG.info("Upload new configuration");
 				helper.upload(fileWithPath);
+				LOG.info("Remove old configuration");
 				helper.clean(conf, file -> file.isRegularFile() && !fileWithPath.containsKey(new File(file.getPath())));
+				LOG.info("Include AMT configuration into Bro");
 				helper.includeIntoBro(new File(bro, "share/bro/site/local.bro"), new File(conf, "amt.bro"));//todo Configure `broConfPath`?
 				//todo Перезапустить Bro
 			}
