@@ -222,6 +222,7 @@ public class SshClientHelper {
 				String broConfTmp = "/tmp/" + broConfFile.getName();
 				upload(ftp, HashMap.of(new File(broConfTmp), broConf).toJavaMap());
 				execute(String.format("sudo mv %s %s", broConfTmp, broConfPath));
+				execute(String.format("sudo chown root:bro %s", broConfPath));
 			}
 		}
 	}
