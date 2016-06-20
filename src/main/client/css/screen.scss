@@ -46,7 +46,7 @@
 @for $i from 10 through 20 {
   @media (min-height: 50px * $i) {
     .grid {
-      height: (50px * $i) - 100px;
+      height: (50px * $i) - 150px;
     }
   }
 }
