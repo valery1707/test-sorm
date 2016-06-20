@@ -129,10 +129,10 @@ public class BroFilesController {
 		headers.setContentType(MediaType.valueOf(files.getMimeType()));
 		headers.setContentLength(file.length());
 		headers.setContentDispositionFormData("attachment", files.getFilename());
+		headers.add("X-Filename", files.getFilename());
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.headers(headers)
-				.header("X-Filename", files.getFilename())
 				.body(isr);
 	}
 
