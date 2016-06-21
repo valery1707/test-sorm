@@ -2,6 +2,7 @@ package name.valery1707.megatel.sorm.app.bro;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Template;
+import javaslang.collection.List;
 import javaslang.concurrent.Future;
 import name.valery1707.megatel.sorm.api.task.TaskRepo;
 import name.valery1707.megatel.sorm.app.ssh.SshClientHelper;
@@ -147,7 +148,9 @@ public class BroConfigPublisher {
 				helper.clean(conf, file -> file.isRegularFile() && !fileWithPath.containsKey(new File(file.getPath())));
 				LOG.info("Include AMT configuration into Bro");
 				helper.includeIntoBro(new File(bro, "share/bro/site/local.bro"), new File(conf, "amt.bro"));//todo Configure `broConfPath`?
-				//todo Перезапустить Bro
+				LOG.info("Bro deploy");
+				List<String> broCtlDeploy = helper.execute(String.format("sudo %s/bin/broctl deploy", server.getBroPath()));
+				LOG.info("Bro deploy: {}", broCtlDeploy.mkString(" "));
 			}
 			return true;
 		} catch (IOException e) {
