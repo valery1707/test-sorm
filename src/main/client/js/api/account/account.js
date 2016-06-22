@@ -36,15 +36,8 @@ config(['$stateProvider', function ($stateProvider) {
 factory('accountService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/account', {}, serviceCommonConfig);
 }]).
-controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridHelper', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, principal) {
+controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridHelper', '$state', 'dialogs', 'toastr', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, dialogs, toastr, principal) {
 	$scope.principal = principal;
-	$scope.filterModel = {};
-
-	var paginationOptions = {
-		pageNumber: 1,
-		pageSize: 25,
-		sort: ["id,ASC"]
-	};
 
 	$scope.actions = [
 		{
@@ -52,6 +45,28 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 			icon: 'plus',
 			action: function (grid, row) {
 				$state.go('account.create');
+			}
+		},
+		{
+			perRow: true,
+			permissions: ['account.delete'],
+			icon: 'minus',
+			action: function (grid, row) {
+				dialogs.confirm('Remove account?', 'Remove account?').result.then(
+						function (yes) {
+							service.delete({id: row.entity.id},
+									function (success) {
+										toastr.info('Account deleted', 'Success');
+										$scope.loadPage();
+									},
+									function (error) {
+										const msg = error.statusText ? error.statusText : error;
+										toastr.error(msg, 'Server error');
+									});
+						},
+						function (no) {
+						}
+				);
 			}
 		},
 		{
@@ -64,16 +79,18 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 		}
 	];
 
+	$scope.filterModel = {};
+
+	var paginationOptions = {
+		pageNumber: 1,
+		pageSize: 25,
+		sort: ["id,ASC"]
+	};
+
 	gridHelper($scope, service, paginationOptions, {
 		columnDefs: [
 			{
-				field: '_actions',
-				name: '',
-				enableFiltering: false,
-				enableSorting: false,
-				enableColumnMenu: false,
-				cellTemplate: 'view/common/grid/row-actions.html',
-				width: 34, maxWidth: 34, minWidth: 34
+				field: '_actions'
 			},
 			{
 				field: 'id',

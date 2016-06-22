@@ -15,7 +15,7 @@ import java.util.TreeSet;
 
 @Entity
 @SuppressWarnings("unused")
-public class Account extends ABaseEntity {
+public class Account extends ABaseEntity implements LogicRemovableEntity {
 	public enum Role {
 		//Специальный внутренний админ, для настройки системы
 		SUPER(Arrays.asList(null
@@ -23,6 +23,7 @@ public class Account extends ABaseEntity {
 				, "account.list"
 				, "account.create"
 				, "account.update"
+				, "account.delete"
 				//Сессии пользователей
 				, "accountSession.list"
 		)),
@@ -107,10 +108,12 @@ public class Account extends ABaseEntity {
 		this.password = password;
 	}
 
+	@Override
 	public boolean isActive() {
 		return isActive;
 	}
 
+	@Override
 	public void setActive(boolean active) {
 		isActive = active;
 	}

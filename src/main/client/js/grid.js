@@ -148,6 +148,7 @@ service('formBuilder', [function () {
 			return {isValid: errors.length == 0, message: errors.join('\r\n<br/>')};
 		};
 		if ($stateParams.id) {
+			//todo Обработка дефолтов
 			service.get($stateParams,
 					function (data) {
 						$scope.model = data;

@@ -38,6 +38,7 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 			, "account.list"
 			, "account.create"
 			, "account.update"
+			, "account.delete"
 			//Сессии пользователей
 			, "accountSession.list"
 		],
