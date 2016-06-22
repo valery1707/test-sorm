@@ -11,6 +11,6 @@ public interface TaskRepo extends JpaRepository<Task, Long>, JpaSpecificationExe
 	/**
 	 * @see <a href="https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html#function_sysdate">MySQL documentation for SYSDATE</a>
 	 */
-	@Query("SELECT T FROM Task AS T WHERE (SYSDATE() between T.periodStart AND T.periodFinish)")
+	@Query("SELECT T FROM Task AS T WHERE (SYSDATE() between T.periodStart AND T.periodFinish) AND (T.isActive IS TRUE)")
 	List<Task> findActive();
 }
