@@ -159,7 +159,14 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 	$scope.loadPage();
 }]).
 controller('taskCtrlEdit', ['$scope', '$state', '$stateParams', 'taskService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, service, toastr, formBuilder) {
+	$scope.selectTagSimple = function (tag) {
+		return tag.replace(',', '').replace('/', '').trim();
+	};
 	formBuilder($scope, $state, $stateParams, service, toastr, 'task');
+	//todo Default
+	$scope.model.filter = {
+		email: []
+	};
 }]).
 controller('taskViewCtrl', ['$scope', '$state', function ($scope, $state) {
 	$scope.tabs = [

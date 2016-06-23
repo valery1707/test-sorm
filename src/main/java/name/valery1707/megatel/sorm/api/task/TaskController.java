@@ -1,5 +1,8 @@
 package name.valery1707.megatel.sorm.api.task;
 
+import javaslang.Tuple;
+import javaslang.collection.HashMap;
+import javaslang.collection.Stream;
 import name.valery1707.megatel.sorm.api.BaseEntityController;
 import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
 import name.valery1707.megatel.sorm.app.AccountService;
@@ -27,6 +30,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static name.valery1707.megatel.sorm.DateUtils.parseDateTime;
+import static name.valery1707.megatel.sorm.domain.TaskFilter.TaskFilterBuilder.aTaskFilter;
+import static name.valery1707.megatel.sorm.domain.TaskFilterValue.TaskFilterValueBuilder.aTaskFilterValue;
 
 @RestController
 @RequestMapping("/api/task")
@@ -85,11 +90,39 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 	}
 
 	@Override
+	protected void validate(TaskDto dto, BindingResult validation) {
+		super.validate(dto, validation);
+		//todo Необходимо валидировать фильтры
+	}
+
+	@Override
 	protected void dto2domain(TaskDto dto, Task entity) {
 		entity.setAgency(dto.getAgency());
 		entity.setClientAlias(dto.getClientAlias());
 		entity.setPeriodStart(parseDateTime(dto.getPeriodStart()));
 		entity.setPeriodFinish(parseDateTime(dto.getPeriodFinish()));
 		entity.setNote(dto.getNote());
+		//todo В таком режиме сильно расходуются id из-за постоянного пересоздания вложенных объектов
+		entity.getFilter().putAll(HashMap.ofAll(dto.getFilter())
+				.filter(f ->
+						TaskDto.DEFAULT_FILTERS.containsKey(f._1()) &&
+						f._2() != null && !f._2().isEmpty()
+				)
+				.map((name, list) -> {
+					return Tuple.of(
+							name,
+							aTaskFilter()
+									.withTask(entity)
+									.withName(name)
+									.withValue(Stream.ofAll(list)
+											.map(f -> aTaskFilterValue()
+													.withValue(f)
+													.build())
+											.toJavaSet())
+									.build()
+					);
+				})
+				.toJavaMap()
+		);
 	}
 }

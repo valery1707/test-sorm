@@ -5,10 +5,13 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @SuppressWarnings("unused")
@@ -45,7 +48,12 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 	@NotNull
 	private ZonedDateTime periodFinish;
 
-	//	private String filter;//todo implement
+	@NotNull
+	@Size(min = 1)
+	@Valid
+	@OneToMany(mappedBy = "task", cascade = {CascadeType.ALL}, orphanRemoval = true)
+	@MapKey(name = "name")
+	private Map<String, TaskFilter> filter = new HashMap<>();
 
 	private String note;
 
@@ -116,6 +124,15 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 		this.periodFinish = periodFinish;
 	}
 
+	public Map<String, TaskFilter> getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Map<String, TaskFilter> filter) {
+		this.filter = filter;
+		filter.values().forEach(v -> v.setTask(this));
+	}
+
 	public String getNote() {
 		return note;
 	}
@@ -130,5 +147,97 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 
 	public void setActive(boolean active) {
 		isActive = active;
+	}
+
+	public static final class TaskBuilder {
+		private Account createdBy;
+		private ZonedDateTime createdAt;
+		private Account modifiedBy;
+		private ZonedDateTime modifiedAt;
+		private String agency;
+		private String clientAlias;
+		private ZonedDateTime periodStart;
+		private ZonedDateTime periodFinish;
+		private Map<String, TaskFilter> filter = new HashMap<>();
+		private String note;
+		private Long id;
+
+		private TaskBuilder() {
+		}
+
+		public static TaskBuilder aTask() {
+			return new TaskBuilder();
+		}
+
+		public TaskBuilder withCreatedBy(Account createdBy) {
+			this.createdBy = createdBy;
+			return this;
+		}
+
+		public TaskBuilder withCreatedAt(ZonedDateTime createdAt) {
+			this.createdAt = createdAt;
+			return this;
+		}
+
+		public TaskBuilder withModifiedBy(Account modifiedBy) {
+			this.modifiedBy = modifiedBy;
+			return this;
+		}
+
+		public TaskBuilder withModifiedAt(ZonedDateTime modifiedAt) {
+			this.modifiedAt = modifiedAt;
+			return this;
+		}
+
+		public TaskBuilder withAgency(String agency) {
+			this.agency = agency;
+			return this;
+		}
+
+		public TaskBuilder withClientAlias(String clientAlias) {
+			this.clientAlias = clientAlias;
+			return this;
+		}
+
+		public TaskBuilder withPeriodStart(ZonedDateTime periodStart) {
+			this.periodStart = periodStart;
+			return this;
+		}
+
+		public TaskBuilder withPeriodFinish(ZonedDateTime periodFinish) {
+			this.periodFinish = periodFinish;
+			return this;
+		}
+
+		public TaskBuilder withFilter(Map<String, TaskFilter> filter) {
+			this.filter = filter;
+			return this;
+		}
+
+		public TaskBuilder withNote(String note) {
+			this.note = note;
+			return this;
+		}
+
+		public TaskBuilder withId(Long id) {
+			this.id = id;
+			return this;
+		}
+
+		public Task build() {
+			Task task = new Task();
+			task.setCreatedBy(createdBy);
+			task.setCreatedAt(createdAt);
+			task.setModifiedBy(modifiedBy);
+			task.setModifiedAt(modifiedAt);
+			task.setAgency(agency);
+			task.setClientAlias(clientAlias);
+			task.setPeriodStart(periodStart);
+			task.setPeriodFinish(periodFinish);
+			task.setFilter(filter);
+			task.setNote(note);
+			task.setId(id);
+			return task;
+		}
 	}
 }

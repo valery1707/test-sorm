@@ -182,6 +182,7 @@ global watch_emails: table[string] of set[count] = {};
 ## table[email] => pattern
 global watch_emails_p: table[string] of pattern = {};
 function watch_email(s: string, taskId: count) {
+	#todo URL
 	local p: pattern = string_to_pattern(s, T);
 	local tasks: set[count] = set();
 	if (s in watch_emails) {
