@@ -34,6 +34,7 @@ var paths = {
 		, 'node_modules/angular-mocks/angular-mocks.js'
 		, 'node_modules/angular-touch/angular-touch.js'
 		, 'node_modules/angular-ui-router/release/angular-ui-router.js'
+		, 'bower_components/angular-ui-select/dist/select.js'
 
 		, 'bower_components/jquery/dist/jquery.js'
 
@@ -84,6 +85,7 @@ var paths = {
 	stylesLibCommon: [
 		'node_modules/bootstrap/dist/css/bootstrap.css'
 		, 'bower_components/angular-bootstrap/ui-bootstrap-csp.css'
+		, 'bower_components/angular-ui-select/dist/select.css'
 
 		, 'node_modules/angular-ui-grid/ui-grid.css'
 

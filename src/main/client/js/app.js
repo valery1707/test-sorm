@@ -6,6 +6,9 @@ angular.module('app', [
 	'ngResource'
 	, 'ngTouch'
 	, 'ui.grid', 'ui.grid.pagination', 'ui.grid.resizeColumns'
+	//https://github.com/angular-ui/ui-select
+	, 'ui.select'
+	, 'ngSanitize'
 	//https://github.com/ghiscoding/angular-validation/wiki
 	, 'ghiscoding.validation'
 	//https://github.com/angular-translate/angular-translate
@@ -55,5 +58,8 @@ config(['$translateProvider', function ($translateProvider) {
 	// define translation maps you want to use on startup
 	$translateProvider.preferredLanguage('en-US');
 	$translateProvider.fallbackLanguage('en');
+}]).
+config(['uiSelectConfig', function (uiSelectConfig) {
+	uiSelectConfig.theme = 'bootstrap';
 }])
 ;
