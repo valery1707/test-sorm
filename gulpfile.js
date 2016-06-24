@@ -50,7 +50,10 @@ var paths = {
 		, 'bower_components/angular-translate/angular-translate.js'
 		, 'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js'
 
-		, 'bower_components/ghiscoding.angular-validation/dist/angular-validation.min.js'
+		, 'bower_components/ghiscoding.angular-validation/src/validation-directive.js'
+		, 'bower_components/ghiscoding.angular-validation/src/validation-common.js'
+		, 'bower_components/ghiscoding.angular-validation/src/validation-rules.js'
+		, 'bower_components/ghiscoding.angular-validation/src/validation-service.js'
 
 		, 'bower_components/moment/moment.js'
 

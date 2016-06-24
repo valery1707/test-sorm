@@ -133,13 +133,15 @@ service('formBuilder', [function () {
 		$scope.serverErrorValidator = function (field) {
 			const fieldDef = $scope.entityForm[field];
 			const fieldValue = fieldDef.$viewValue;
+			object_remove_empty_array_fields(fieldValue);
 			var errors = [];
 			const errorsDef = $scope.serverErrors[field];
 			if (errorsDef) {//Массив с ошибками
 				for (var errorI in errorsDef) {//Отдельная ошибка
 					if (errorsDef.hasOwnProperty(errorI)) {
 						const errorDef = errorsDef[errorI];
-						if (errorDef.rejectedValue == fieldValue) {
+						if (object_equals(errorDef.rejectedValue, fieldValue)) {
+							//todo Format messages
 							errors.push(errorDef.defaultMessage);
 						}
 					}

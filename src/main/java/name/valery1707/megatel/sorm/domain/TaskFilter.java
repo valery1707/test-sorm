@@ -1,5 +1,7 @@
 package name.valery1707.megatel.sorm.domain;
 
+import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -7,12 +9,35 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Set;
+import java.util.function.Predicate;
 
 @Entity
 @SuppressWarnings("unused")
 public class TaskFilter extends ABaseEntity {
+	private static final EmailValidator EMAIL_VALIDATOR = new EmailValidator();
+
+	/**
+	 * @see TaskFilter#name Regexp with supported type names
+	 */
 	public enum TaskFilterType {
-		EMAIL, IP
+		EMAIL("Must be a valid email address: {1}", s -> EMAIL_VALIDATOR.isValid(s, null)),
+		IP("", s -> true);//todo IP validator
+
+		private final String message;
+		private final Predicate<String> validator;
+
+		TaskFilterType(String message, Predicate<String> validator) {
+			this.message = message;
+			this.validator = validator;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public Predicate<String> getValidator() {
+			return validator;
+		}
 	}
 
 	@NotNull

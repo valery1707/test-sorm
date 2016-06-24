@@ -46,6 +46,29 @@ Array.prototype.remove = function (from, to) {
 	return this.push.apply(this, rest);
 };
 
+/**
+ * todo https://github.com/ReactiveSets/toubkal/blob/master/lib/util/value_equals.js
+ * (при выполнении нужно проверить работу валидации для фильтра по email/IP в задачах)
+ * @param a
+ * @param b
+ */
+function object_equals(a, b) {
+	return (a === b) || (JSON.stringify(a) === JSON.stringify(b));
+}
+
+function object_remove_empty_array_fields(object) {
+	if (object instanceof Object) {
+		for (var p in object) {
+			if (object.hasOwnProperty(p)) {
+				const v = object[p];
+				if (v instanceof Array && v.length == 0) {
+					object[p] = undefined;
+				}
+			}
+		}
+	}
+}
+
 angular.module('app').
 filter('formatBytes', function () {
 	return function (bytes, k, decimals) {

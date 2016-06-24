@@ -102,7 +102,7 @@
 
             <!--filter-->
             <div class="form-group" title="Filter">
-                <label for="filter" class="sr-only">Filter</label>
+                <label class="sr-only">Filter</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span></div>
@@ -112,22 +112,33 @@
                             <div class="col-lg-12 col-sm-12">
                                 <div class="input-group">
                                     <span class="input-group-addon">
-                                        <label><input type="checkbox" aria-label="..."> Emails </label>
+                                        <label>Emails</label>
                                     </span>
+                                    <!--todo Client validation for email-->
                                     <ui-select class="form-control"
                                                name="filterEmail" id="filterEmail" ng-model="model.filter.email"
                                                multiple aria-multiselectable="true" sortable="true"
-                                               tagging="selectTagSimple" tagging-label="false" tagging-tokens="SPACE|ENTER|,|/"
-                                               title="Enter emails">
+                                               tagging="selectTagSimple" tagging-label="false" tagging-tokens="SPACE|ENTER|,"
+                                               placeholder="Email" friendly-name="Email"
+                                               title="Enter emails"
+                                    >
                                         <ui-select-match placeholder="Enter emails...">{{$item}}</ui-select-match>
-                                        <!--todo validate-->
                                         <ui-select-choices repeat="option in model.filter.email | filter:$select.search">
                                             {{option}}
                                         </ui-select-choices>
                                     </ui-select>
+                                    <input type="hidden"
+                                           name="filter[email]" ng-model="model.filter.email"
+                                           validation="custom:serverErrorValidator('filter[email]')"
+                                    >
                                 </div>
                             </div>
                         </div>
+                        <!--todo IP filter-->
+                        <input type="hidden"
+                               name="filter" ng-model="model.filter"
+                               validation="custom:serverErrorValidator('filter')"
+                        >
                     </div>
                 </div>
             </div>

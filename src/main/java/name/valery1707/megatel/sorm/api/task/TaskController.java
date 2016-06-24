@@ -3,6 +3,7 @@ package name.valery1707.megatel.sorm.api.task;
 import javaslang.Tuple;
 import javaslang.collection.HashMap;
 import javaslang.collection.Stream;
+import javaslang.control.Option;
 import name.valery1707.megatel.sorm.api.BaseEntityController;
 import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
 import name.valery1707.megatel.sorm.app.AccountService;
@@ -10,7 +11,9 @@ import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.Account;
 import name.valery1707.megatel.sorm.domain.Task;
+import name.valery1707.megatel.sorm.domain.TaskFilter.TaskFilterType;
 import name.valery1707.megatel.sorm.domain.Task_;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -26,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -92,7 +97,36 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 	@Override
 	protected void validate(TaskDto dto, BindingResult validation) {
 		super.validate(dto, validation);
-		//todo Необходимо валидировать фильтры
+		//todo Можно редактировать только задачу с датой активации в будущем
+		//todo Нужно помнить что в DTO может быть значение дат отличающееся от того что в БД
+
+		validateFilter(dto.getFilter() != null ? dto.getFilter() : Collections.emptyMap(), validation);
+	}
+
+	private void validateFilter(Map<String, List<String>> filter, BindingResult validation) {
+		//Оставляем только известные типы фильтров
+		filter.keySet().retainAll(TaskDto.DEFAULT_FILTERS.keySet().toJavaSet());
+		//Удаляем пустые фильтры
+		filter.entrySet().removeIf(e -> e.getValue() == null);
+		filter.values().forEach(f -> f.removeIf(StringUtils::isBlank));
+		filter.entrySet().removeIf(e -> e.getValue().isEmpty());
+		//Проверка размера
+		if (filter.isEmpty()) {
+			validation.rejectValue("filter", "{Task.filter.constraint.empty}", "Filters must be non empty");
+		}
+		//Проверка значений для каждого типа фильтра
+		for (TaskFilterType filterType : TaskFilterType.values()) {
+			String name = filterType.name().toLowerCase();
+			Stream<String> nonValid = Option.of(filter.get(name))
+					.map(Stream::ofAll).getOrElse(Stream.empty())
+					.filter(filterType.getValidator().negate());
+			if (nonValid.nonEmpty()) {
+				validation.rejectValue(String.format("filter[%s]", name),
+						String.format("{Task.filter.constraint.%s}", name),
+						new Object[]{nonValid.mkString(", ")},
+						filterType.getMessage());
+			}
+		}
 	}
 
 	@Override

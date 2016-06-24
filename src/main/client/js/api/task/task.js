@@ -160,7 +160,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 }]).
 controller('taskCtrlEdit', ['$scope', '$state', '$stateParams', 'taskService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, service, toastr, formBuilder) {
 	$scope.selectTagSimple = function (tag) {
-		return tag.replace(',', '').replace('/', '').trim();
+		return tag.replace(',', '').trim();
 	};
 	formBuilder($scope, $state, $stateParams, service, toastr, 'task');
 	//todo Default
