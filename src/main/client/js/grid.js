@@ -141,8 +141,10 @@ service('formBuilder', [function () {
 					if (errorsDef.hasOwnProperty(errorI)) {
 						const errorDef = errorsDef[errorI];
 						if (object_equals(errorDef.rejectedValue, fieldValue)) {
-							//todo Format messages
-							errors.push(errorDef.defaultMessage);
+							const msg = errorDef.defaultMessage;
+							const args = [errorDef.rejectedValue];
+							Array.prototype.push.apply(args, errorDef.arguments);
+							errors.push(msg.format(args));
 						}
 					}
 				}
