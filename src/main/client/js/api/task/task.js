@@ -162,11 +162,11 @@ controller('taskCtrlEdit', ['$scope', '$state', '$stateParams', 'taskService', '
 	$scope.selectTagSimple = function (tag) {
 		return tag.replace(',', '').trim();
 	};
-	formBuilder($scope, $state, $stateParams, service, toastr, 'task');
-	//todo Default
-	$scope.model.filter = {
-		email: []
-	};
+	formBuilder($scope, $state, $stateParams, service, toastr, 'task', {
+		filter: {
+			email: []
+		}
+	});
 }]).
 controller('taskViewCtrl', ['$scope', '$state', function ($scope, $state) {
 	$scope.tabs = [

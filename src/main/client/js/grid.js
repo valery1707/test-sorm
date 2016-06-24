@@ -127,13 +127,16 @@ service('gridHelper', [function () {
 	}
 }]).
 service('formBuilder', [function () {
-	return function ($scope, $state, $stateParams, service, toastr, prefix) {
+	return function ($scope, $state, $stateParams, service, toastr, prefix, defs) {
 		$scope.model = {};
 		$scope.serverErrors = {};
 		$scope.serverErrorValidator = function (field) {
 			const fieldDef = $scope.entityForm[field];
-			const fieldValue = fieldDef.$viewValue;
-			object_remove_empty_array_fields(fieldValue);
+			var fieldValue = fieldDef.$viewValue;
+			if (fieldValue instanceof Object && (!fieldValue instanceof Array)) {
+				fieldValue = jQuery.extend({}, fieldValue);
+				object_remove_empty_array_fields(fieldValue);
+			}
 			var errors = [];
 			const errorsDef = $scope.serverErrors[field];
 			if (errorsDef) {//Массив с ошибками
@@ -152,7 +155,7 @@ service('formBuilder', [function () {
 			return {isValid: errors.length == 0, message: errors.join('\r\n<br/>')};
 		};
 		if ($stateParams.id) {
-			//todo Обработка дефолтов
+			//Загрузка из БД
 			service.get($stateParams,
 					function (data) {
 						$scope.model = data;
@@ -160,6 +163,13 @@ service('formBuilder', [function () {
 					function () {
 						$scope.cancel();
 					});
+		} else {
+			//Применение дефолтов
+			if (typeof defs === "function") {
+				defs($scope.model);
+			} else if (defs instanceof Object) {
+				jQuery.extend(true, $scope.model, defs);
+			}
 		}
 		$scope.cancel = function () {
 			$state.go(prefix + '.list');
