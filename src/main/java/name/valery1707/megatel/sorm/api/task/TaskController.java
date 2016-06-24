@@ -12,6 +12,7 @@ import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.Account;
 import name.valery1707.megatel.sorm.domain.Task;
 import name.valery1707.megatel.sorm.domain.TaskFilter.TaskFilterType;
+import name.valery1707.megatel.sorm.domain.TaskFilterValue;
 import name.valery1707.megatel.sorm.domain.Task_;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -98,7 +99,9 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 	protected void validate(TaskDto dto, BindingResult validation) {
 		super.validate(dto, validation);
 		//todo Можно редактировать только задачу с датой активации в будущем
-		//todo Нужно помнить что в DTO может быть значение дат отличающееся от того что в БД
+		// Нужно помнить что в DTO может быть значение дат отличающееся от того что в БД
+
+		//todo Валидация периодов активности
 
 		validateFilter(dto.getFilter() != null ? dto.getFilter() : Collections.emptyMap(), validation);
 	}
@@ -136,12 +139,31 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 		entity.setPeriodStart(parseDateTime(dto.getPeriodStart()));
 		entity.setPeriodFinish(parseDateTime(dto.getPeriodFinish()));
 		entity.setNote(dto.getNote());
-		//todo В таком режиме сильно расходуются id из-за постоянного пересоздания вложенных объектов
+
+		//region filter
+		//Удаляем старые фильтры, которые убрал пользователь
+		entity.getFilter().keySet().retainAll(dto.getFilter().keySet());
+		//В том что осталось выполняем преобразования так что бы сохранить все ID
+		entity.getFilter().forEach((name, filterBase) -> {
+			List<String> filterUser = dto.getFilter().get(name);
+			//Убираем значения, которые убрал пользователь
+			filterBase.getValue().removeIf(v -> !filterUser.contains(v.getValue()));
+			//Добавляем новые значения
+			Stream<String> filterSaved = Stream.ofAll(filterBase.getValue()).map(TaskFilterValue::getValue);
+			Stream<String> filterAdded = Stream.ofAll(filterUser).removeAll(filterSaved);
+			filterBase.getValue().addAll(
+					filterAdded.map(v -> aTaskFilterValue()
+							.withTaskFilter(filterBase)
+							.withValue(v)
+							.build()
+					).toJavaList()
+			);
+		});
+		//Добавляем новые фильтры
 		entity.getFilter().putAll(HashMap.ofAll(dto.getFilter())
-				.filter(f ->
-						TaskDto.DEFAULT_FILTERS.containsKey(f._1()) &&
-						f._2() != null && !f._2().isEmpty()
-				)
+				//Оставляем только новые фильтры
+				.filter(f -> !entity.getFilter().keySet().contains(f._1()))
+				//Создаём объекты для БД
 				.map((name, list) -> {
 					return Tuple.of(
 							name,
@@ -158,5 +180,6 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 				})
 				.toJavaMap()
 		);
+		//endregion
 	}
 }
