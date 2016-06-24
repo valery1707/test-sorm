@@ -134,7 +134,7 @@ public class BroConfigPublisher {
 			File conf = new File(server.getConfPath());
 			File hashPath = new File(conf, "task.hash");
 			helper.mkdir(conf);
-			LOG.info("Check task hash");
+			LOG.info("Task hash: checking");
 			if (!helper.hasSameContent(hashPath, hashValue)) {
 				TreeMap<File, String> fileWithPath = files
 						.entrySet().stream()
@@ -148,9 +148,11 @@ public class BroConfigPublisher {
 				helper.clean(conf, file -> file.isRegularFile() && !fileWithPath.containsKey(new File(file.getPath())));
 				LOG.info("Include AMT configuration into Bro");
 				helper.includeIntoBro(new File(bro, "share/bro/site/local.bro"), new File(conf, "amt.bro"));//todo Configure `broConfPath`?
-				LOG.info("Bro deploy");
+				LOG.info("Bro deploy...");
 				List<String> broCtlDeploy = helper.execute(String.format("sudo %s/bin/broctl deploy", server.getBroPath()));
 				LOG.info("Bro deploy: {}", broCtlDeploy.mkString(" "));
+			} else {
+				LOG.info("Task hash: already actual");
 			}
 			return true;
 		} catch (IOException e) {
