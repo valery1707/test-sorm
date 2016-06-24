@@ -15,7 +15,9 @@ event bro_init() &priority=-10 {
 	AMT::watch_email("{{this.value}}", taskId);
 		{{/this.value}}
 	{{/filter.email}}
-	AMT::watch_ip_addr(127.0.0.1, taskId);
-	AMT::watch_ip_addr(178.89.247.179, taskId);
-	AMT::watch_ip_addr(178.89.247.180, taskId);
+	{{#filter.ip}}
+		{{#this.value}}
+	AMT::watch_ip_addr({{this.value}}, taskId);
+		{{/this.value}}
+	{{/filter.ip}}
 }

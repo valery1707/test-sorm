@@ -59,4 +59,25 @@ public class BroTaskTemplateTest {
 				.contains("AMT::watch_email(\"test@gmail.com\", taskId);")
 		;
 	}
+
+	@Test
+	public void testFilterIp() throws Exception {
+		Task task = aTask()
+				.withId(1L)
+				.withFilter(Collections.singletonMap("ip", aTaskFilter()
+						.withName("ip")
+						.withValue(new HashSet<>(Arrays.asList(
+								aTaskFilterValue().withValue("127.0.0.1").build(),
+								aTaskFilterValue().withValue("192.168.1.1").build()
+						)))
+						.build()))
+				.build();
+		String execute = templateTask.execute(task);
+		assertThat(execute)
+				.isNotEmpty()
+				.contains("module AMT_TASK_1;")
+				.contains("AMT::watch_ip_addr(127.0.0.1, taskId);")
+				.contains("AMT::watch_ip_addr(192.168.1.1, taskId);")
+		;
+	}
 }

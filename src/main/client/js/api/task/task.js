@@ -164,7 +164,8 @@ controller('taskCtrlEdit', ['$scope', '$state', '$stateParams', 'taskService', '
 	};
 	formBuilder($scope, $state, $stateParams, service, toastr, 'task', {
 		filter: {
-			email: []
+			email: [],
+			ip: []
 		}
 	});
 }]).

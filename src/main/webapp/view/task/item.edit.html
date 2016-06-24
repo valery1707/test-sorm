@@ -134,7 +134,32 @@
                                 </div>
                             </div>
                         </div>
-                        <!--todo IP filter-->
+                        <div class="row">
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <label>IP</label>
+                                    </span>
+                                    <!--todo Client validation for IP-->
+                                    <ui-select class="form-control"
+                                               name="filterIp" id="filterIp" ng-model="model.filter.ip"
+                                               multiple aria-multiselectable="true" sortable="true"
+                                               tagging="selectTagSimple" tagging-label="false" tagging-tokens="SPACE|ENTER|,"
+                                               placeholder="IP" friendly-name="IP"
+                                               title="Enter IP addresses"
+                                    >
+                                        <ui-select-match placeholder="Enter IP addresses...">{{$item}}</ui-select-match>
+                                        <ui-select-choices repeat="option in model.filter.ip | filter:$select.search">
+                                            {{option}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <input type="hidden"
+                                           name="filter[ip]" ng-model="model.filter.ip"
+                                           validation="custom:serverErrorValidator('filter[ip]')"
+                                    >
+                                </div>
+                            </div>
+                        </div>
                         <input type="hidden"
                                name="filter" ng-model="model.filter"
                                validation="custom:serverErrorValidator('filter')"

@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.domain;
 
+import org.apache.commons.validator.routines.InetAddressValidator;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 
 import javax.persistence.CascadeType;
@@ -21,7 +22,7 @@ public class TaskFilter extends ABaseEntity {
 	 */
 	public enum TaskFilterType {
 		EMAIL("Must be a valid email address: {1}", s -> EMAIL_VALIDATOR.isValid(s, null)),
-		IP("", s -> true);//todo IP validator
+		IP("Must be a valid IP address: {1}", InetAddressValidator.getInstance()::isValid);
 
 		private final String message;
 		private final Predicate<String> validator;

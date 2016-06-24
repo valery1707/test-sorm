@@ -133,7 +133,7 @@ service('formBuilder', [function () {
 		$scope.serverErrorValidator = function (field) {
 			const fieldDef = $scope.entityForm[field];
 			var fieldValue = fieldDef.$viewValue;
-			if (fieldValue instanceof Object && (!fieldValue instanceof Array)) {
+			if ((fieldValue instanceof Object) && !(fieldValue instanceof Array)) {
 				fieldValue = jQuery.extend({}, fieldValue);
 				object_remove_empty_array_fields(fieldValue);
 			}
