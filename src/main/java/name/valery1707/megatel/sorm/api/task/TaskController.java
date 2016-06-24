@@ -33,7 +33,6 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static name.valery1707.megatel.sorm.DateUtils.parseDateTime;
 import static name.valery1707.megatel.sorm.domain.TaskFilter.TaskFilterBuilder.aTaskFilter;
@@ -73,11 +72,7 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 		if (accountService.hasAnyRole(Account.Role.OPERATOR)) {
 			//todo Optimize
 			filter.setAllowedIds(taskPermitRepo
-					.findAllowedAtTime(accountService.getCurrentAuditor(), ZonedDateTime.now())
-					.stream()
-					.map(permit -> permit.getTask().getId())
-					.distinct()
-					.collect(Collectors.toList()));
+					.findAllowedTaskAtTime(accountService.getCurrentAuditor(), ZonedDateTime.now()));
 		}
 	}
 

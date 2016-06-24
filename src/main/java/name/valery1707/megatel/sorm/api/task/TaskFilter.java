@@ -2,6 +2,7 @@ package name.valery1707.megatel.sorm.api.task;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class TaskFilter {
 	private String id;
@@ -11,7 +12,7 @@ public class TaskFilter {
 	private List<ZonedDateTime> periodFinish;
 	private String note;
 	private Boolean showOnlyActive;
-	private List<Long> allowedIds;
+	private Set<Long> allowedIds;
 
 	public String getId() {
 		return id;
@@ -69,11 +70,11 @@ public class TaskFilter {
 		this.showOnlyActive = showOnlyActive;
 	}
 
-	public List<Long> getAllowedIds() {
+	public Set<Long> getAllowedIds() {
 		return allowedIds;
 	}
 
-	public void setAllowedIds(List<Long> allowedIds) {
+	public void setAllowedIds(Set<Long> allowedIds) {
 		this.allowedIds = allowedIds;
 	}
 }
