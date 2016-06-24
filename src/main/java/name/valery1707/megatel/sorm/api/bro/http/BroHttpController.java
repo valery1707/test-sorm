@@ -54,6 +54,7 @@ public class BroHttpController {
 			@RequestBody(required = false) BroHttpFilter filter
 	) {
 		accountService.requireAnyRight("task.view");
+		//todo Фильтрация по выбранной задаче
 		Specification<BroHttp> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(BroHttpDto::new);

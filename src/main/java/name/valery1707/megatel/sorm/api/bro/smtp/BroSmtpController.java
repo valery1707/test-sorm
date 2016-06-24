@@ -51,6 +51,7 @@ public class BroSmtpController {
 			@RequestBody(required = false) BroSmtpFilter filter
 	) {
 		accountService.requireAnyRight("task.view");
+		//todo Фильтрация по выбранной задаче
 		Specification<BroSmtp> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(BroSmtpDto::new);

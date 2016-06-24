@@ -17,4 +17,7 @@ public interface TaskPermitRepo extends JpaRepository<TaskPermit, Long>, JpaSpec
 
 	@Query("SELECT TP.task.id FROM TaskPermit AS TP WHERE (TP.account = :account) AND (:time BETWEEN TP.periodStart AND TP.periodFinish)")
 	Set<Long> findAllowedTaskAtTime(@Param("account") Account account, @Param("time") ZonedDateTime time);
+
+	@Query("SELECT COUNT(TP.task.id) > 0 FROM TaskPermit AS TP WHERE (TP.account = :account) AND (:time BETWEEN TP.periodStart AND TP.periodFinish) AND (TP.task.id = :taskId)")
+	boolean isAllowedTask(@Param("account") Account account, @Param("time") ZonedDateTime time, @Param("taskId") Long taskId);
 }

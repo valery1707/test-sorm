@@ -65,6 +65,7 @@ public class BroFilesController {
 			@RequestBody(required = false) BroFilesFilter filter
 	) {
 		accountService.requireAnyRight("task.view");
+		//todo Фильтрация по выбранной задаче
 		Specification<BroFiles> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(BroFilesDto::new);

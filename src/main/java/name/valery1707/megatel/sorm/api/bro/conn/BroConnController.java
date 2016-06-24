@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.api.bro.conn;
 
+import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
 import name.valery1707.megatel.sorm.app.AccountService;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
@@ -17,12 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping("/api/bro/conn")
 public class BroConnController {
 	@Inject
 	private BroConnRepo repo;
+
+	@Inject
+	private TaskPermitRepo taskPermitRepo;
 
 	@Inject
 	private AccountService accountService;
@@ -32,6 +37,7 @@ public class BroConnController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<BroConn, BroConnFilter>(SpecificationMode.AND)
+				.withCustom(BroConnFilter::getTaskId, BroConn_.amtTasksList, cb -> (field, id) -> cb.like(field, "%," + id + ",%"))
 				.withDateTimeDecimal(BroConnFilter::getTs, BroConn_.ts)
 				.withIp(BroConnFilter::getIdOrigHost, BroConn_.idOrigIp)
 				.withIp(BroConnFilter::getIdRespHost, BroConn_.idRespIp)
@@ -47,6 +53,9 @@ public class BroConnController {
 			@RequestBody(required = false) BroConnFilter filter
 	) {
 		accountService.requireAnyRight("task.view");
+		if (!taskPermitRepo.isAllowedTask(accountService.getCurrentAuditor(), ZonedDateTime.now(), filter.getTaskId())) {
+			filter.setTaskId(-1L);
+		}
 		Specification<BroConn> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(BroConnDto::new);

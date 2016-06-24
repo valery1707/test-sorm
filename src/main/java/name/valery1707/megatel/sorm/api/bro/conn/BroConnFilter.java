@@ -1,15 +1,26 @@
 package name.valery1707.megatel.sorm.api.bro.conn;
 
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 public class BroConnFilter {
+	@NotNull
+	private Long taskId;
 	private List<ZonedDateTime> ts;
 	private String proto;
 	private String idOrigHost;
 	private String idOrigPort;
 	private String idRespHost;
 	private String idRespPort;
+
+	public Long getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Long taskId) {
+		this.taskId = taskId;
+	}
 
 	public List<ZonedDateTime> getTs() {
 		return ts;
