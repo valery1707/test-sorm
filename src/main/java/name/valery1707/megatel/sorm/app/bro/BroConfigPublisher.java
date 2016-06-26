@@ -1,7 +1,5 @@
 package name.valery1707.megatel.sorm.app.bro;
 
-import com.samskivert.mustache.Mustache;
-import com.samskivert.mustache.Template;
 import javaslang.collection.List;
 import javaslang.concurrent.Future;
 import name.valery1707.megatel.sorm.api.task.TaskRepo;
@@ -17,19 +15,15 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,13 +45,14 @@ public class BroConfigPublisher {
 	@Inject
 	private TaskRepo taskRepo;
 
+	@Inject
+	private BroConfigWriter configWriter;
+
 	private final ReentrantLock lock = new ReentrantLock();
 
 	private Config sshConfig;
 	private ExecutorService executor;
 	private final Map<Long, String> hashByServer = new HashMap<>();
-	private Template templateInit;
-	private Template templateTask;
 
 	@PostConstruct
 	public void init() {
@@ -71,10 +66,6 @@ public class BroConfigPublisher {
 				.namingPattern("bro-publisher-%d")
 				.build();
 		executor = Executors.newFixedThreadPool(Math.max(1, hashByServer.size()), threadFactory);
-
-		Mustache.Compiler compiler = Mustache.compiler();
-		templateInit = compiler.compile(new InputStreamReader(this.getClass().getResourceAsStream("/bro/amt_init.bro"), StandardCharsets.UTF_8));
-		templateTask = compiler.compile(new InputStreamReader(this.getClass().getResourceAsStream("/bro/amt_task_00.bro"), StandardCharsets.UTF_8));
 	}
 
 	@Async
@@ -93,7 +84,6 @@ public class BroConfigPublisher {
 	}
 
 	@Async
-	@Transactional(readOnly = true)//todo Check
 	public void publish() {
 		if (lock.tryLock()) {
 			LOG.debug("Start publish");
@@ -103,12 +93,7 @@ public class BroConfigPublisher {
 
 				Map<Long, Server> servers = serverRepo.findAll().stream().collect(toMap(IBaseEntity::getId, Function.identity()));
 
-				Map<String, String> files = taskRepo.findAll(hash.keySet()).stream()
-						.collect(toMap(task -> "amt_task_" + task.getId() + ".bro", this::drawTaskTemplate, (v1, v2) -> v1, TreeMap::new));
-				if (!files.isEmpty()) {
-					files.put("amt_init.bro", drawInitTemplate());
-				}
-				files.put("amt.bro", drawRunnerTemplate(files.keySet()));
+				Map<String, String> files = configWriter.writeConf(hash.keySet());
 
 				Map<Long, Future<Boolean>> publish = hashByServer.entrySet().stream()
 						.filter(entry -> !entry.getValue().equals(hashValue))
@@ -175,19 +160,5 @@ public class BroConfigPublisher {
 		return hash.entrySet().stream()
 				.map(entry -> "{id: " + entry.getKey() + ", modifiedAt: '" + entry.getValue() + "'}")
 				.collect(joining(", ", "[", "]"));
-	}
-
-	private String drawRunnerTemplate(Set<String> fileNames) {
-		return fileNames.stream()
-				.map(name -> "@load ./" + name)
-				.collect(joining("\n"));
-	}
-
-	private String drawInitTemplate() {
-		return templateInit.execute(null);
-	}
-
-	private String drawTaskTemplate(Task task) {
-		return templateTask.execute(task);
 	}
 }
