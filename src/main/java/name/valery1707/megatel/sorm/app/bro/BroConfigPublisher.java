@@ -129,7 +129,7 @@ public class BroConfigPublisher {
 				fileWithPath.put(hashPath, hashValue);
 				LOG.info("Clean tmp files");
 				helper.cleanTmp(conf);
-				LOG.info("Upload new configuration");
+				LOG.info("Upload {} new configurations", fileWithPath.size() - 3);
 				helper.upload(fileWithPath);
 				LOG.info("Remove old configuration");
 				helper.clean(conf, file -> file.isRegularFile() && !fileWithPath.containsKey(new File(file.getPath())));
@@ -138,10 +138,18 @@ public class BroConfigPublisher {
 				LOG.info("Bro deploy...");
 				List<String> broCtlDeploy = helper.execute(String.format("sudo %s/bin/broctl deploy", server.getBroPath()));
 				LOG.info("Bro deploy: {}", broCtlDeploy.mkString(" "));
+				boolean success = broCtlDeploy.exists(s -> s.contains("starting bro ..."));
+				if (!success) {
+					LOG.warn("Bro deploy failed, remove hash for redeploy");
+					helper.clean(conf, file -> file.isRegularFile() && file.getName().equalsIgnoreCase(hashPath.getName()));
+				} else {
+					LOG.info("Bro deploy success");
+				}
+				return success;
 			} else {
 				LOG.info("Task hash: already actual");
+				return true;
 			}
-			return true;
 		} catch (IOException e) {
 			LOG.warn("Catch exception: ", e);
 			return false;
