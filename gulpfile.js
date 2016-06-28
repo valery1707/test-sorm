@@ -34,12 +34,12 @@ var paths = {
 		, 'node_modules/angular-mocks/angular-mocks.js'
 		, 'node_modules/angular-touch/angular-touch.js'
 		, 'node_modules/angular-ui-router/release/angular-ui-router.js'
-		, 'bower_components/angular-ui-select/dist/select.js'
+		, 'node_modules/ui-select/dist/select.js'
 
 		, 'bower_components/jquery/dist/jquery.js'
 
 		, 'node_modules/bootstrap/dist/js/bootstrap.js'
-		, 'bower_components/angular-bootstrap/ui-bootstrap-tpls.js'
+		, 'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
 		, 'bower_components/bootstrap-hover-dropdown/bootstrap-hover-dropdown.js'
 
 		, 'node_modules/angular-ui-grid/ui-grid.js'
@@ -47,13 +47,13 @@ var paths = {
 		, 'bower_components/pdfmake/build/pdfmake.js'
 		, 'bower_components/pdfmake/build/vfs_fonts.js'
 
-		, 'bower_components/angular-translate/angular-translate.js'
-		, 'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js'
+		, 'node_modules/angular-translate/dist/angular-translate.js'
+		, 'node_modules/angular-translate-loader-static-files/angular-translate-loader-static-files.js'
 
-		, 'bower_components/ghiscoding.angular-validation/src/validation-directive.js'
-		, 'bower_components/ghiscoding.angular-validation/src/validation-common.js'
-		, 'bower_components/ghiscoding.angular-validation/src/validation-rules.js'
-		, 'bower_components/ghiscoding.angular-validation/src/validation-service.js'
+		, 'node_modules/angular-validation-ghiscoding/src/validation-directive.js'
+		, 'node_modules/angular-validation-ghiscoding/src/validation-common.js'
+		, 'node_modules/angular-validation-ghiscoding/src/validation-rules.js'
+		, 'node_modules/angular-validation-ghiscoding/src/validation-service.js'
 
 		, 'bower_components/moment/moment.js'
 
@@ -62,20 +62,20 @@ var paths = {
 		, 'bower_components/FileSaver.js/index.js'
 		, 'bower_components/Blob.js/index.js'
 
-		, 'bower_components/spin.js/spin.js'
-		, 'bower_components/spin.js/jquery.spin.js'
-		, 'bower_components/angular-spinner/angular-spinner.js'
-		, 'bower_components/angular-loading-spinner/angular-loading-spinner.js'
+		, 'node_modules/spin.js/spin.js'
+		, 'node_modules/spin.js/jquery.spin.js'
+		, 'node_modules/angular-spinner/angular-spinner.js'
+		, 'node_modules/angular-loading-spinner/angular-loading-spinner.js'
 
-		, 'bower_components/angular-animate/angular-animate.js'
-		, 'bower_components/angular-toastr/dist/angular-toastr.tpls.js'
+		, 'node_modules/angular-animate/angular-animate.js'
+		, 'node_modules/angular-toastr/dist/angular-toastr.tpls.js'
 
-		, 'bower_components/angular-permission/dist/angular-permission.js'
-		, 'bower_components/angular-permission/dist/angular-permission-ui.js'
+		, 'node_modules/angular-permission/dist/angular-permission.js'
+		, 'node_modules/angular-permission/dist/angular-permission-ui.js'
 
-		, 'bower_components/angular-sanitize/angular-sanitize.js'
-		, 'bower_components/angular-dialog-service/dist/dialogs.js'
-		, 'bower_components/angular-dialog-service/dist/dialogs-default-translations.js'
+		, 'node_modules/angular-sanitize/angular-sanitize.js'
+		, 'node_modules/angular-dialog-service/dist/dialogs.js'
+		, 'node_modules/angular-dialog-service/dist/dialogs-default-translations.js'
 	],
 	scriptsLibIE: [
 		'bower_components/html5shiv/dist/html5shiv.js'
@@ -87,16 +87,16 @@ var paths = {
 	],
 	stylesLibCommon: [
 		'node_modules/bootstrap/dist/css/bootstrap.css'
-		, 'bower_components/angular-bootstrap/ui-bootstrap-csp.css'
-		, 'bower_components/angular-ui-select/dist/select.css'
+		, 'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css'
+		, 'node_modules/ui-select/dist/select.css'
 
 		, 'node_modules/angular-ui-grid/ui-grid.css'
 
-		, 'bower_components/angular-toastr/dist/angular-toastr.css'
+		, 'node_modules/angular-toastr/dist/angular-toastr.css'
 
 		, 'bower_components/jquery-datetimepicker/jquery.datetimepicker.css'
 
-		, 'bower_components/angular-dialog-service/dist/dialogs.css'
+		, 'node_modules/angular-dialog-service/dist/dialogs.css'
 	],
 	stylesLibIE: [
 	],
@@ -115,7 +115,7 @@ var paths = {
 	},
 	assetsLibCommon: {
 		'./locale/validation': [
-			'bower_components/ghiscoding.angular-validation/locales/validation/*.json'
+			'node_modules/angular-validation-ghiscoding/locales/validation/*.json'
 		]
 	}
 };
