@@ -45,6 +45,7 @@ public class BroHttpController {
 				.withNumber(BroHttpFilter::getRequestBodyLen, BroHttp_.requestBodyLen)
 				.withNumber(BroHttpFilter::getResponseBodyLen, BroHttp_.responseBodyLen)
 				.withNumber(BroHttpFilter::getStatusCode, BroHttp_.statusCode)
+				.withCustom(BroHttpFilter::getHasFiles, BroHttp_.respFuids, cb -> (field, hasFiles) -> hasFiles ? cb.isNotNull(field) : cb.isNull(field))
 		;
 	}
 

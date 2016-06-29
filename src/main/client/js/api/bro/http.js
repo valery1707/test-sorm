@@ -44,7 +44,16 @@ controller('broHttpCtrl', ['$scope', 'broHttpService', 'uiGridConstants', 'gridH
 			{field: 'requestBodyLen', cellFilter: 'formatBytes:1024:2'},
 			{field: 'responseBodyLen', cellFilter: 'formatBytes:1024:2'},
 			{field: 'statusCode'},
-			{field: 'hasFiles', enableFiltering: false},
+			{
+				field: 'hasFiles',
+				filter: {
+					type: uiGridConstants.filter.SELECT,
+					selectOptions: [
+						{value: true, label: 'True'},
+						{value: false, label: 'False'}
+					]
+				}
+			},
 		],
 	});
 

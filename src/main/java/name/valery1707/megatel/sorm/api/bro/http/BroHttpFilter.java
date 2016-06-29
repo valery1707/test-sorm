@@ -17,6 +17,7 @@ public class BroHttpFilter {
 	private String requestBodyLen;
 	private String responseBodyLen;
 	private String statusCode;
+	private Boolean hasFiles;
 
 	public List<ZonedDateTime> getTs() {
 		return ts;
@@ -120,5 +121,13 @@ public class BroHttpFilter {
 
 	public void setStatusCode(String statusCode) {
 		this.statusCode = statusCode;
+	}
+
+	public Boolean getHasFiles() {
+		return hasFiles;
+	}
+
+	public void setHasFiles(Boolean hasFiles) {
+		this.hasFiles = hasFiles;
 	}
 }
