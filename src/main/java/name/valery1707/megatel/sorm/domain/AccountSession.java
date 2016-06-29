@@ -40,7 +40,7 @@ public class AccountSession extends ABaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Logout logoutAs;
 
-	@Formula("TIME_TO_SEC(TIMEDIFF(coalesce(logout_at, current_time()), login_at))")
+	@Formula("TIME_TO_SEC(TIMEDIFF(coalesce(logout_at, SYSDATE()), login_at))")
 	private long duration;
 
 	public AccountSession() {
