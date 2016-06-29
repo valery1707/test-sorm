@@ -8,4 +8,6 @@ import java.math.BigDecimal;
 
 public interface BroFilesRepo extends JpaRepository<BroFiles, BigDecimal>, JpaSpecificationExecutor<BroFiles> {
 	BroFiles getByExtracted(String extracted);
+
+	BroFiles getByFuid(String fuid);
 }
