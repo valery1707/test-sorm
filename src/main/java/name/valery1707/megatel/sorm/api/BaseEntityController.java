@@ -149,7 +149,7 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 		canRead();
 		D entity = repo.findOne(id);
 		if (entity == null) {
-			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", "TaskPermit", id));
+			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", domainClass.getName(), id));
 		}
 		return domain2dto(entity);
 	}
@@ -160,7 +160,7 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 		canDelete();
 		D entity = repo.findOne(id);
 		if (entity == null) {
-			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", "TaskPermit", id));
+			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", domainClass.getName(), id));
 		}
 		if (entity instanceof LogicRemovableEntity) {
 			((LogicRemovableEntity) entity).setActive(false);
