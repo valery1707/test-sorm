@@ -8,9 +8,53 @@ config(['$stateProvider', function ($stateProvider) {
 			});
 }]).
 factory('broHttpService', ['$resource', function ($resource) {
-	return $resource(apiBaseUrl + '/bro/http', {}, serviceCommonConfig);
+	const url = apiBaseUrl + '/bro/http';
+	return $resource(url, {}, jQuery.extend({}, serviceCommonConfig, {
+		files: {
+			url: url + '/files',
+			method: 'GET',
+			isArray: true,
+			cache: false
+		},
+		download: {
+			url: apiBaseUrl + '/bro/files' + '/download',
+			method: 'POST',
+			isArray: false,
+			cache: false,
+			responseType: 'blob',
+			transformResponse: function (data, headers) {
+				const contentType = headers('Content-Type');
+				return {
+					value: data,
+					contentTypeFull: contentType,
+					contentType: contentType ? contentType.split(';')[0] : null,
+					filename: headers('X-Filename')
+				};
+			}
+		}
+	}));
 }]).
-controller('broHttpCtrl', ['$scope', 'broHttpService', 'uiGridConstants', 'gridHelper', '$stateParams', function ($scope, service, uiGridConstants, gridHelper, $stateParams) {
+controller('broHttpCtrl', ['$scope', 'broHttpService', 'uiGridConstants', 'gridHelper', '$stateParams', 'dialogs', 'toastr', 'principal', function ($scope, service, uiGridConstants, gridHelper, $stateParams, dialogs, toastr, principal) {
+	$scope.principal = principal;
+
+	$scope.actions = [
+		{
+			perRow: true,
+			permissions: ['task.view'],
+			icon: 'eye-open',
+			action: function (grid, row) {
+				service.get(row.entity,
+						function (success) {
+							dialogs.create('view/bro/http.detail.html', 'broHttpDetailCtrl', {entity: success}, {keyboard: true});
+						},
+						function (error) {
+							const msg = error.statusText ? error.statusText : error;
+							toastr.error(msg, 'Server error');
+						});
+			}
+		}
+	];
+
 	$scope.filterModel = {
 		taskId: $stateParams.id
 	};
@@ -24,11 +68,14 @@ controller('broHttpCtrl', ['$scope', 'broHttpService', 'uiGridConstants', 'gridH
 	gridHelper($scope, service, paginationOptions, {
 		columnDefs: [
 			{
+				field: '_actions'
+			},
+			{
 				field: 'ts',
 				sort: {direction: uiGridConstants.DESC, priority: 0},
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
-				filterTermMapper: function(value) {
+				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},
@@ -58,5 +105,61 @@ controller('broHttpCtrl', ['$scope', 'broHttpService', 'uiGridConstants', 'gridH
 	});
 
 	$scope.loadPage();
+}]).
+controller('broHttpDetailCtrl', ['$scope', 'broHttpService', 'toastr', function ($scope, service, toastr) {
+	$scope.model = $scope.$resolve.data.entity;
+
+	$scope.download = function(arg1) {
+		service.download(arg1, function(data) {
+			if (data.value.size > 0) {
+				saveAs(data.value, data.filename, true);
+			} else {
+				toastr.error('File not found on server', 'Error');
+			}
+		});
+	};
+
+	const tooltip = function (row, col) {
+		return row.entity[col.field];
+	};
+
+	$scope.gridOptions = {
+		enableFiltering: true,
+		columnDefs: [
+			{
+				field: '_download',
+				name: '',
+				enableFiltering: false,
+				enableSorting: false,
+				enableColumnMenu: false,
+				width: 34, maxWidth: 34, minWidth: 34,
+				cellTemplate: '<div class="ui-grid-cell-contents" ng-class="col.colIndex()">' +
+							  '  <button class="btn btn-xs btn-default" ng-click="grid.appScope.download(row.entity[\'extracted\'])">' +
+							  '    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>' +
+							  '  </button>' +
+							  '</div>'
+			},
+			{field: 'filename', cellTooltip: tooltip},
+			{field: 'mimeType'},
+			{field: 'totalBytes'},
+			{field: 'seenBytes'},
+			{field: 'overflowBytes'},
+			{field: 'missingBytes'},
+			{field: 'md5', cellTooltip: tooltip},
+			{field: 'sha1', cellTooltip: tooltip}
+		]
+	};
+	service.files($scope.model,
+			function (data) {
+				$scope.gridOptions.data = data;
+			},
+			function (error) {
+				const msg = error.statusText ? error.statusText : error;
+				toastr.error(msg, 'Server error');
+			});
+
+	$scope.cancel = function () {
+		$scope.$dismiss('Canceled');
+	};
 }])
 ;

@@ -3,6 +3,7 @@ package name.valery1707.megatel.sorm.api.bro.http;
 import javaslang.collection.Stream;
 import javaslang.control.Option;
 import name.valery1707.megatel.sorm.api.bro.files.BroFilesRepo;
+import name.valery1707.megatel.sorm.api.bro.files.BroFilesService;
 import name.valery1707.megatel.sorm.app.AccountService;
 import name.valery1707.megatel.sorm.db.MapSpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
@@ -11,6 +12,7 @@ import name.valery1707.megatel.sorm.domain.BroFiles;
 import name.valery1707.megatel.sorm.domain.BroHttp;
 import name.valery1707.megatel.sorm.domain.BroHttp_;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
@@ -70,14 +72,14 @@ public class BroHttpController {
 
 	private Option<BroHttp> findByExample(Map<String, String> filter) {
 		Specification<BroHttp> specification = MapSpecificationBuilder.buildSpecification(filter);
-		java.util.List<BroHttp> all = repo.findAll(specification);
-		if (all.isEmpty()) {
+		Page<BroHttp> all = repo.findAll(specification, new PageRequest(0, 1));
+		if (all.getContent().isEmpty()) {
 			return Option.none();
 		}
-		return Option.of(all.get(0));
+		return Option.of(all.getContent().get(0));
 	}
 
-	@RequestMapping(path = "temp", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public BroHttpDto get(@RequestParam Map<String, String> dtoFields) {
 		return findByExample(dtoFields)
 				.map(BroHttpDto::new)
@@ -87,7 +89,10 @@ public class BroHttpController {
 	@Inject
 	private BroFilesRepo filesRepo;
 
-	@RequestMapping(path = "", method = RequestMethod.GET)
+	@Inject
+	private BroFilesService filesService;
+
+	@RequestMapping(path = "files", method = RequestMethod.GET)
 	public List<BroFiles> files(@RequestParam Map<String, String> dtoFields) {
 		return findByExample(dtoFields)
 				.iterator()
@@ -95,7 +100,8 @@ public class BroHttpController {
 				.map(http -> Stream.of(http.getOrigFuids(), http.getRespFuids()).filter(Objects::nonNull).mkString(","))
 				.flatMap(s -> Arrays.asList(s.split(",")))
 				.distinct()
-				.map(filesRepo::getByFuid)
+				.flatMap(filesRepo::findByFuid)
+				.map(filesService::fixFilename)
 				.toJavaList();
 	}
 }

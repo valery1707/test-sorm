@@ -1,14 +1,10 @@
 package name.valery1707.megatel.sorm.api.bro.files;
 
-import name.valery1707.megatel.sorm.api.bro.http.BroHttpRepo;
 import name.valery1707.megatel.sorm.app.AccountService;
-import name.valery1707.megatel.sorm.configuration.MimeRepository;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.BroFiles;
 import name.valery1707.megatel.sorm.domain.BroFiles_;
-import name.valery1707.megatel.sorm.domain.BroHttp;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
@@ -22,18 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @RestController
 @RequestMapping("/api/bro/files")
@@ -75,7 +64,7 @@ public class BroFilesController {
 	private File extractDir;
 
 	@Inject
-	private BroHttpRepo httpRepo;
+	private BroFilesService filesService;
 
 	@RequestMapping(path = "download", method = RequestMethod.POST)
 	public HttpEntity<InputStreamResource> download(@RequestBody String extracted) {
@@ -89,35 +78,7 @@ public class BroFilesController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 		}
 
-		if (files.getFilename() == null) {
-			if (files.getSource().equalsIgnoreCase("HTTP")) {
-				String[] connUids = files.getConnUids().split(",");
-				for (int c = 0; c < connUids.length && files.getFilename() == null; c++) {
-					String connUid = connUids[c];
-					List<BroHttp> https = httpRepo.findByUidAndFuid(connUid, files.getFuid());
-					for (int h = 0; h < https.size() && files.getFilename() == null; h++) {
-						BroHttp http = https.get(h);
-						if (http.getUri() != null) {
-							try {
-								URI uri = new URI(http.getUri().replace(" ", "%20").replace("|", "%7C"));
-								files.setFilename(trimToNull(FilenameUtils.getName(uri.getPath())));
-							} catch (URISyntaxException ignored) {
-							}
-						}
-					}
-				}
-			}
-		}
-		if (files.getFilename() == null) {
-			files.setFilename(files.getConnUids());
-		}
-
-		if (files.getMimeType() == null) {
-			files.setMimeType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-		}
-		if (!files.getFilename().contains(".")) {
-			files.setFilename(files.getFilename() + "." + mimeToExt(files.getMimeType()));
-		}
+		files = filesService.fixFilename(files);
 
 		InputStreamResource isr;
 		try {
@@ -135,13 +96,5 @@ public class BroFilesController {
 				.status(HttpStatus.OK)
 				.headers(headers)
 				.body(isr);
-	}
-
-	@Inject
-	private MimeRepository mime;
-
-	@Nonnull
-	private String mimeToExt(@Nullable String mimeType) {
-		return mime.mimeToExt(mimeType, "bin");
 	}
 }
