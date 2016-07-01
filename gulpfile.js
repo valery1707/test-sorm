@@ -76,6 +76,8 @@ var paths = {
 		, 'node_modules/angular-sanitize/angular-sanitize.js'
 		, 'node_modules/angular-dialog-service/dist/dialogs.js'
 		, 'node_modules/angular-dialog-service/dist/dialogs-default-translations.js'
+
+		, 'node_modules/slick-carousel/slick/slick.js'
 	],
 	scriptsLibIE: [
 		'bower_components/html5shiv/dist/html5shiv.js'
@@ -97,6 +99,9 @@ var paths = {
 		, 'bower_components/jquery-datetimepicker/jquery.datetimepicker.css'
 
 		, 'node_modules/angular-dialog-service/dist/dialogs.css'
+
+		, 'node_modules/slick-carousel/slick/slick.css'
+		, 'node_modules/slick-carousel/slick/slick-theme.css'
 	],
 	stylesLibIE: [
 	],
@@ -104,6 +109,7 @@ var paths = {
 		'.': [
 			'node_modules/angular-ui-grid/ui-grid.woff',
 			'node_modules/angular-ui-grid/ui-grid.ttf'
+			, 'node_modules/slick-carousel/slick/ajax-loader.gif'
 		],
 		'../fonts': [
 			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.eot',
@@ -111,6 +117,7 @@ var paths = {
 			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf',
 			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff',
 			'node_modules/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2'
+			, 'node_modules/slick-carousel/slick/fonts/slick.*'
 		]
 	},
 	assetsLibCommon: {

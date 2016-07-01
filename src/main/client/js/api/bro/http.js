@@ -93,6 +93,7 @@ controller('broHttpCtrl', ['$scope', 'broHttpService', 'uiGridConstants', 'gridH
 			{field: 'statusCode'},
 			{
 				field: 'hasFiles',
+				enableSorting: false,
 				filter: {
 					type: uiGridConstants.filter.SELECT,
 					selectOptions: [
@@ -109,8 +110,8 @@ controller('broHttpCtrl', ['$scope', 'broHttpService', 'uiGridConstants', 'gridH
 controller('broHttpDetailCtrl', ['$scope', 'broHttpService', 'toastr', function ($scope, service, toastr) {
 	$scope.model = $scope.$resolve.data.entity;
 
-	$scope.download = function(arg1) {
-		service.download(arg1, function(data) {
+	$scope.download = function (arg1) {
+		service.download(arg1, function (data) {
 			if (data.value.size > 0) {
 				saveAs(data.value, data.filename, true);
 			} else {
@@ -149,9 +150,14 @@ controller('broHttpDetailCtrl', ['$scope', 'broHttpService', 'toastr', function 
 			{field: 'sha1', cellTooltip: tooltip}
 		]
 	};
+	$scope.images = [];
 	service.files($scope.model,
 			function (data) {
 				$scope.gridOptions.data = data;
+				const images = data.filter(function (file) {
+					return file.mimeType && file.mimeType.startsWith("image");
+				});
+				Array.prototype.push.apply($scope.images, images);
 			},
 			function (error) {
 				const msg = error.statusText ? error.statusText : error;

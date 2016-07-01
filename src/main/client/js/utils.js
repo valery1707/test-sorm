@@ -81,7 +81,8 @@ filter('formatBytes', function () {
 			return formatBytes_1000(bytes, decimals);
 		}
 	}
-}).filter('secondToPeriod', function () {
+}).
+filter('secondToPeriod', function () {
 	return function (seconds) {
 		if (seconds == null) {
 			return '';
@@ -144,5 +145,28 @@ directive('navDropdownHover', function () {
 			})
 		}
 	};
-})
+}).
+directive('carousel', ['$timeout', function ($timeout) {
+	return {
+		restrict: "A",
+		scope: {'data': '='},
+		link: function (scope, element, attrs) {
+			$(function () {
+				var isInitialized = false;
+				scope.$watch('data', function(newVal, oldVal) {
+					if (!isInitialized && newVal && newVal.length > 0) {
+						//console.log('Slick: before init');
+						$timeout(function(){
+							//console.log('Slick: init');
+							$(element).slick();
+						}, 200).then(function(){
+							//console.log('Slick: after init');
+						});
+						isInitialized = true;
+					}
+				});
+			});
+		}
+	};
+}])
 ;

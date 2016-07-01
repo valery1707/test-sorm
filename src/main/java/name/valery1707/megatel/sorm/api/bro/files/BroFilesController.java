@@ -13,10 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -66,8 +63,20 @@ public class BroFilesController {
 	@Inject
 	private BroFilesService filesService;
 
+	@RequestMapping(path = "download/{extracted:.+}")
+	public HttpEntity<InputStreamResource> downloadDirect(@PathVariable String extracted) {
+		if ("{{image.extracted}}".equalsIgnoreCase(extracted)) {
+			return ResponseEntity
+					.status(HttpStatus.PERMANENT_REDIRECT)
+					.header(HttpHeaders.LOCATION, "/images/no_image.png")
+					.body(null);
+		} else {
+			return downloadAjax(extracted);
+		}
+	}
+
 	@RequestMapping(path = "download", method = RequestMethod.POST)
-	public HttpEntity<InputStreamResource> download(@RequestBody String extracted) {
+	public HttpEntity<InputStreamResource> downloadAjax(@RequestBody String extracted) {
 		BroFiles files = repo.getByExtracted(extracted);
 		if (files == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
