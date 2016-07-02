@@ -171,10 +171,10 @@ controller('taskCtrlEdit', ['$scope', '$state', '$stateParams', 'taskService', '
 }]).
 controller('taskViewCtrl', ['$scope', '$state', function ($scope, $state) {
 	$scope.tabs = [
-		{active: false, route: 'task.view.conn', name: 'Conn'},
-		{active: false, route: 'task.view.http', name: 'Http'},
-		{active: false, route: 'task.view.files', name: 'Files'},
-		{active: false, route: 'task.view.smtp', name: 'SMTP'},
+		{active: false, route: 'task.view.conn', name: 'Conn', visible: true},
+		{active: false, route: 'task.view.http', name: 'Http', visible: true},
+		{active: false, route: 'task.view.files', name: 'Files', visible: false},
+		{active: false, route: 'task.view.smtp', name: 'SMTP', visible: true},
 	];
 
 	$scope.go = function (route) {

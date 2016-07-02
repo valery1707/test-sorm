@@ -2,6 +2,7 @@
 <ul class="nav nav-tabs">
     <li
             ng-repeat="tab in tabs"
+            ng-if="tab.visible"
             ng-class="{active:isActive(tab.route)}"
             ng-click="go(tab.route)"
             ui-sref-active="active"
