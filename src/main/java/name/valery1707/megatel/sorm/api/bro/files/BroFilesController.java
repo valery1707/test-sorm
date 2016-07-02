@@ -21,6 +21,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import static name.valery1707.megatel.sorm.EncodingUtils.rfc5987Encode;
+import static name.valery1707.megatel.sorm.EncodingUtils.safeEncode;
+
 @RestController
 @RequestMapping("/api/bro/files")
 public class BroFilesController {
@@ -96,11 +99,14 @@ public class BroFilesController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 		}
 
+		String filenameRFC5987 = rfc5987Encode(files.getFilename());
+		String filenameSafe = safeEncode(files.getFilename());
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.valueOf(files.getMimeType()));
 		headers.setContentLength(file.length());
-		headers.setContentDispositionFormData("attachment", files.getFilename());
-		headers.add("X-Filename", files.getFilename());
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filenameSafe + "\"; filename*=UTF-8''" + filenameRFC5987);
+		headers.add("X-Filename", filenameRFC5987);
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.headers(headers)

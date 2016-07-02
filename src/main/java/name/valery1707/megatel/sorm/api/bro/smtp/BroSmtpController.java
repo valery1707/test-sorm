@@ -1,22 +1,29 @@
 package name.valery1707.megatel.sorm.api.bro.smtp;
 
+import javaslang.control.Option;
+import name.valery1707.megatel.sorm.api.bro.files.BroFilesRepo;
+import name.valery1707.megatel.sorm.api.bro.files.BroFilesService;
 import name.valery1707.megatel.sorm.app.AccountService;
+import name.valery1707.megatel.sorm.db.MapSpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationMode;
+import name.valery1707.megatel.sorm.domain.BroFiles;
 import name.valery1707.megatel.sorm.domain.BroSmtp;
 import name.valery1707.megatel.sorm.domain.BroSmtp_;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bro/smtp")
@@ -52,8 +59,44 @@ public class BroSmtpController {
 	) {
 		accountService.requireAnyRight("task.view");
 		//todo Фильтрация по выбранной задаче
+		//todo Исправить сортировку по полю `isWebmail`
 		Specification<BroSmtp> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(BroSmtpDto::new);
+	}
+
+	private Option<BroSmtp> findByExample(Map<String, String> filter) {
+		Specification<BroSmtp> specification = MapSpecificationBuilder.buildSpecification(filter);
+		Page<BroSmtp> all = repo.findAll(specification, new PageRequest(0, 1));
+		if (all.getContent().isEmpty()) {
+			return Option.none();
+		}
+		return Option.of(all.getContent().get(0));
+	}
+
+	@RequestMapping(method = RequestMethod.GET)
+	public BroSmtpDto get(@RequestParam Map<String, String> dtoFields) {
+		return findByExample(dtoFields)
+				.map(BroSmtpDto::new)
+				.getOrElseThrow(() -> new AccessDeniedException(String.format("Entity '%s' not found", "BroSmtp")));
+	}
+
+	@Inject
+	private BroFilesRepo filesRepo;
+
+	@Inject
+	private BroFilesService filesService;
+
+	@RequestMapping(path = "files", method = RequestMethod.GET)
+	public List<BroFiles> files(@RequestParam Map<String, String> dtoFields) {
+		return findByExample(dtoFields)
+				.iterator()
+				.filter(smtp -> smtp.getFuids() != null)
+				.map(BroSmtp::getFuids)
+				.flatMap(s -> Arrays.asList(s.split(",")))
+				.distinct()
+				.flatMap(filesRepo::findByFuid)
+				.map(filesService::fixFilename)
+				.toJavaList();
 	}
 }

@@ -50,6 +50,9 @@ public class MapSpecificationBuilder {
 			if (BigDecimal.class.isAssignableFrom(javaType)) {
 				return DateUtils.zonedDateTime2BigDecimal(DateUtils.parseDateTime(value));
 			}
+			if (Boolean.class.isAssignableFrom(javaType)) {
+				return "true".equalsIgnoreCase(value);
+			}
 			return value;
 		} else {
 			return null;

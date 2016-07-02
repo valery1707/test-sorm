@@ -15,22 +15,6 @@ factory('broHttpService', ['$resource', function ($resource) {
 			method: 'GET',
 			isArray: true,
 			cache: false
-		},
-		download: {
-			url: apiBaseUrl + '/bro/files' + '/download',
-			method: 'POST',
-			isArray: false,
-			cache: false,
-			responseType: 'blob',
-			transformResponse: function (data, headers) {
-				const contentType = headers('Content-Type');
-				return {
-					value: data,
-					contentTypeFull: contentType,
-					contentType: contentType ? contentType.split(';')[0] : null,
-					filename: headers('X-Filename')
-				};
-			}
 		}
 	}));
 }]).
@@ -107,17 +91,21 @@ controller('broHttpCtrl', ['$scope', 'broHttpService', 'uiGridConstants', 'gridH
 
 	$scope.loadPage();
 }]).
-controller('broHttpDetailCtrl', ['$scope', 'broHttpService', 'toastr', function ($scope, service, toastr) {
+controller('broHttpDetailCtrl', ['$scope', 'broHttpService', 'broFilesService', 'toastr', function ($scope, service, broFilesService, toastr) {
 	$scope.model = $scope.$resolve.data.entity;
 
 	$scope.download = function (arg1) {
-		service.download(arg1, function (data) {
-			if (data.value.size > 0) {
-				saveAs(data.value, data.filename, true);
-			} else {
-				toastr.error('File not found on server', 'Error');
-			}
-		});
+		if (arg1) {
+			broFilesService.download(arg1, function (data) {
+				if (data.value.size > 0) {
+					saveAs(data.value, data.filename, true);
+				} else {
+					toastr.error('File not found on server', 'Error');
+				}
+			});
+		} else {
+			toastr.error('File not found on server', 'Error');
+		}
 	};
 
 	const tooltip = function (row, col) {
@@ -141,7 +129,7 @@ controller('broHttpDetailCtrl', ['$scope', 'broHttpService', 'toastr', function 
 							  '</div>'
 			},
 			{field: 'filename', cellTooltip: tooltip},
-			{field: 'mimeType'},
+			{field: 'mimeType', cellTooltip: tooltip},
 			{field: 'totalBytes'},
 			{field: 'seenBytes'},
 			{field: 'overflowBytes'},
@@ -150,12 +138,13 @@ controller('broHttpDetailCtrl', ['$scope', 'broHttpService', 'toastr', function 
 			{field: 'sha1', cellTooltip: tooltip}
 		]
 	};
+
 	$scope.images = [];
 	service.files($scope.model,
 			function (data) {
 				$scope.gridOptions.data = data;
 				const images = data.filter(function (file) {
-					return file.mimeType && file.mimeType.startsWith("image");
+					return file.mimeType && file.mimeType.startsWith("image/") && file.extracted;
 				});
 				Array.prototype.push.apply($scope.images, images);
 			},

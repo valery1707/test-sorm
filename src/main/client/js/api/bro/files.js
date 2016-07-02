@@ -24,7 +24,7 @@ factory('broFilesService', ['$resource', function ($resource) {
 					value: data,
 					contentTypeFull: contentType,
 					contentType: contentType ? contentType.split(';')[0] : null,
-					filename: headers('X-Filename')
+					filename: decodeURIComponent(headers('X-Filename'))
 				};
 			}
 		}
