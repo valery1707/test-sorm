@@ -44,6 +44,19 @@ controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gri
 	gridHelper($scope, service, paginationOptions, {
 		columnDefs: [
 			{
+				field: '_actions',
+				name: '',
+				enableFiltering: false,
+				enableSorting: false,
+				enableColumnMenu: false,
+				width: 34, maxWidth: 34, minWidth: 34,
+				cellTemplate: '<div class="ui-grid-cell-contents" ng-class="col.colIndex()">' +
+							  '  <button class="btn btn-xs btn-default" ng-click="grid.appScope.download(row.entity[\'extracted\'])">' +
+							  '    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>' +
+							  '  </button>' +
+							  '</div>'
+			},
+			{
 				field: 'ts',
 				sort: {direction: uiGridConstants.DESC, priority: 0},
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
@@ -59,23 +72,20 @@ controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gri
 			{field: 'totalBytes', cellFilter: 'formatBytes:1024:2'},
 			{field: 'missingBytes', cellFilter: 'formatBytes:1024:2'},
 			{field: 'extracted'},
-			{
-				field: '_download',
-				enableFiltering: false,
-				enableSorting: false,
-				cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><button class="btn primary" ng-click="grid.appScope.download(row.entity[\'extracted\'])">Download</button></div>'},
 		],
 	});
 	$scope.download = function(arg1) {
-		//console.log('Download request:', arg1);
-		service.download(arg1, function(data) {
-			//console.log('Download response:', data);
-			if (data.value.size > 0) {
-				saveAs(data.value, data.filename, true);
-			} else {
-				toastr.error('File not found on server', 'Error');
-			}
-		});
+		if (arg1) {
+			service.download(arg1, function(data) {
+				if (data.value.size > 0) {
+					saveAs(data.value, data.filename, true);
+				} else {
+					toastr.error('File not found on server', 'Error');
+				}
+			});
+		} else {
+			toastr.error('File not found on server', 'Error');
+		}
 	};
 
 	$scope.loadPage();
