@@ -42,6 +42,7 @@ public class BroFilesController {
 				.withNumber(BroFilesFilter::getSeenBytes, BroFiles_.seenBytes)
 				.withNumber(BroFilesFilter::getTotalBytes, BroFiles_.totalBytes)
 				.withNumber(BroFilesFilter::getMissingBytes, BroFiles_.missingBytes)
+				.withString(BroFilesFilter::getSource, BroFiles_.source)
 				.withString(BroFilesFilter::getMimeType, BroFiles_.mimeType)
 				.withString(BroFilesFilter::getFilename, BroFiles_.filename)
 				.withString(BroFilesFilter::getExtracted, BroFiles_.extracted)

@@ -52,6 +52,7 @@ controller('broFilesCtrl', ['$scope', 'broFilesService', 'uiGridConstants', 'gri
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},
+			{field: 'source'},
 			{field: 'mimeType'},
 			{field: 'filename'},
 			{field: 'seenBytes', cellFilter: 'formatBytes:1024:2'},

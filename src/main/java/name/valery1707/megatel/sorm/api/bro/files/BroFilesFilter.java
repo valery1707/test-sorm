@@ -5,6 +5,7 @@ import java.util.List;
 
 public class BroFilesFilter {
 	private List<ZonedDateTime> ts;
+	private String source;
 	private String mimeType;
 	private String filename;
 	private String seenBytes;
@@ -18,6 +19,14 @@ public class BroFilesFilter {
 
 	public void setTs(List<ZonedDateTime> ts) {
 		this.ts = ts;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	public String getMimeType() {

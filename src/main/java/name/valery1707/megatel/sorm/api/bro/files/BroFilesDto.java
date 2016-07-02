@@ -8,6 +8,7 @@ import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
 public class BroFilesDto {
 	private String ts;
 
+	private String source;
 	private String mimeType;
 	private String filename;
 	private Long seenBytes;
@@ -21,6 +22,7 @@ public class BroFilesDto {
 	public BroFilesDto(BroFiles src) {
 		this();
 		setTs(formatDateTime(bigDecimalToZonedDateTime(src.getTs())));
+		setSource(src.getSource());
 		setMimeType(src.getMimeType());
 		setFilename(src.getFilename());
 		setExtracted(src.getExtracted());
@@ -35,6 +37,14 @@ public class BroFilesDto {
 
 	public void setTs(String ts) {
 		this.ts = ts;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
 	}
 
 	public String getMimeType() {
