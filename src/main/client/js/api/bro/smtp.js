@@ -29,7 +29,7 @@ controller('broSmtpCtrl', ['$scope', 'broSmtpService', 'uiGridConstants', 'gridH
 			action: function (grid, row) {
 				service.get(row.entity,
 						function (success) {
-							dialogs.create('view/bro/smtp.detail.html', 'broSmtpDetailCtrl', {entity: success}, {keyboard: true});
+							dialogs.create('view/bro/smtp.detail.html', 'broCommonDetailCtrl', {entity: success, service: service}, {keyboard: true});
 						},
 						function (error) {
 							const msg = error.statusText ? error.statusText : error;
@@ -78,71 +78,5 @@ controller('broSmtpCtrl', ['$scope', 'broSmtpService', 'uiGridConstants', 'gridH
 	});
 
 	$scope.loadPage();
-}]).
-controller('broSmtpDetailCtrl', ['$scope', 'broSmtpService', 'broFilesService', 'toastr', function ($scope, service, broFilesService, toastr) {
-	$scope.model = $scope.$resolve.data.entity;
-
-	$scope.download = function (arg1) {
-		if (arg1) {
-			broFilesService.download(arg1, function (data) {
-				if (data.value.size > 0) {
-					saveAs(data.value, data.filename, true);
-				} else {
-					toastr.error('File not found on server', 'Error');
-				}
-			});
-		} else {
-			toastr.error('File not found on server', 'Error');
-		}
-	};
-
-	const tooltip = function (row, col) {
-		return row.entity[col.field];
-	};
-
-	$scope.gridOptions = {
-		enableFiltering: true,
-		columnDefs: [
-			{
-				field: '_download',
-				name: '',
-				enableFiltering: false,
-				enableSorting: false,
-				enableColumnMenu: false,
-				width: 34, maxWidth: 34, minWidth: 34,
-				cellTemplate: '<div class="ui-grid-cell-contents" ng-class="col.colIndex()">' +
-							  '  <button class="btn btn-xs btn-default" ng-click="grid.appScope.download(row.entity[\'extracted\'])">' +
-							  '    <span class="glyphicon glyphicon-download" aria-hidden="true"></span>' +
-							  '  </button>' +
-							  '</div>'
-			},
-			{field: 'filename', cellTooltip: tooltip},
-			{field: 'mimeType', cellTooltip: tooltip},
-			{field: 'totalBytes'},
-			{field: 'seenBytes'},
-			{field: 'overflowBytes'},
-			{field: 'missingBytes'},
-			{field: 'md5', cellTooltip: tooltip},
-			{field: 'sha1', cellTooltip: tooltip}
-		]
-	};
-
-	$scope.images = [];
-	service.files($scope.model,
-			function (data) {
-				$scope.gridOptions.data = data;
-				const images = data.filter(function (file) {
-					return file.mimeType && file.mimeType.startsWith("image/") && file.extracted;
-				});
-				Array.prototype.push.apply($scope.images, images);
-			},
-			function (error) {
-				const msg = error.statusText ? error.statusText : error;
-				toastr.error(msg, 'Server error');
-			});
-
-	$scope.cancel = function () {
-		$scope.$dismiss('Canceled');
-	};
 }])
 ;
