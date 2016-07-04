@@ -1,9 +1,12 @@
 package name.valery1707.megatel.sorm.api.bro.http;
 
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 public class BroHttpFilter {
+	@NotNull
+	private Long taskId;
 	private List<ZonedDateTime> ts;
 	private String idOrigHost;
 	private String idOrigPort;
@@ -18,6 +21,14 @@ public class BroHttpFilter {
 	private String responseBodyLen;
 	private String statusCode;
 	private Boolean hasFiles;
+
+	public Long getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Long taskId) {
+		this.taskId = taskId;
+	}
 
 	public List<ZonedDateTime> getTs() {
 		return ts;

@@ -4,6 +4,7 @@ import javaslang.collection.Stream;
 import javaslang.control.Option;
 import name.valery1707.megatel.sorm.api.bro.files.BroFilesRepo;
 import name.valery1707.megatel.sorm.api.bro.files.BroFilesService;
+import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
 import name.valery1707.megatel.sorm.app.AccountService;
 import name.valery1707.megatel.sorm.db.MapSpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,9 @@ public class BroHttpController {
 	private BroHttpRepo repo;
 
 	@Inject
+	private TaskPermitRepo taskPermitRepo;
+
+	@Inject
 	private AccountService accountService;
 
 	private SpecificationBuilder<BroHttp, BroHttpFilter> specificationBuilder;
@@ -41,6 +46,7 @@ public class BroHttpController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<BroHttp, BroHttpFilter>(SpecificationMode.AND)
+				.withCustom(BroHttpFilter::getTaskId, BroHttp_.amtTasksList, cb -> (field, id) -> cb.like(field, "%," + id + ",%"))
 				.withDateTimeDecimal(BroHttpFilter::getTs, BroHttp_.ts)
 				.withIp(BroHttpFilter::getIdOrigHost, BroHttp_.idOrigIp)
 				.withIp(BroHttpFilter::getIdRespHost, BroHttp_.idRespIp)
@@ -64,7 +70,9 @@ public class BroHttpController {
 			@RequestBody(required = false) BroHttpFilter filter
 	) {
 		accountService.requireAnyRight("task.view");
-		//todo Фильтрация по выбранной задаче
+		if (!taskPermitRepo.isAllowedTask(accountService.getCurrentAuditor(), ZonedDateTime.now(), filter.getTaskId())) {
+			filter.setTaskId(-1L);
+		}
 		Specification<BroHttp> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)
 				.map(BroHttpDto::new);

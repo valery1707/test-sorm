@@ -86,6 +86,8 @@ public class BroSmtp {
 
 	private Boolean isWebmail;
 
+	private String amtTasksList;
+
 	public BigDecimal getTs() {
 		return ts;
 	}
@@ -316,5 +318,13 @@ public class BroSmtp {
 
 	public void setWebmail(Boolean webmail) {
 		isWebmail = webmail;
+	}
+
+	public String getAmtTasksList() {
+		return amtTasksList;
+	}
+
+	public void setAmtTasksList(String amtTasksList) {
+		this.amtTasksList = amtTasksList;
 	}
 }

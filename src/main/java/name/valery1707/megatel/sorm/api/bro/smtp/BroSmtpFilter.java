@@ -1,9 +1,12 @@
 package name.valery1707.megatel.sorm.api.bro.smtp;
 
+import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 public class BroSmtpFilter {
+	@NotNull
+	private Long taskId;
 	private List<ZonedDateTime> ts;
 	private String idOrigHost;
 	private String idOrigPort;
@@ -14,6 +17,14 @@ public class BroSmtpFilter {
 	private String subject;
 	private String userAgent;
 	private String fuids;
+
+	public Long getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(Long taskId) {
+		this.taskId = taskId;
+	}
 
 	public List<ZonedDateTime> getTs() {
 		return ts;

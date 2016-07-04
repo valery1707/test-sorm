@@ -3,6 +3,7 @@ package name.valery1707.megatel.sorm.api.bro.smtp;
 import javaslang.control.Option;
 import name.valery1707.megatel.sorm.api.bro.files.BroFilesRepo;
 import name.valery1707.megatel.sorm.api.bro.files.BroFilesService;
+import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
 import name.valery1707.megatel.sorm.app.AccountService;
 import name.valery1707.megatel.sorm.db.MapSpecificationBuilder;
 import name.valery1707.megatel.sorm.db.SpecificationBuilder;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,9 @@ public class BroSmtpController {
 	private BroSmtpRepo repo;
 
 	@Inject
+	private TaskPermitRepo taskPermitRepo;
+
+	@Inject
 	private AccountService accountService;
 
 	private SpecificationBuilder<BroSmtp, BroSmtpFilter> specificationBuilder;
@@ -39,6 +44,7 @@ public class BroSmtpController {
 	@PostConstruct
 	public void init() {
 		specificationBuilder = new SpecificationBuilder<BroSmtp, BroSmtpFilter>(SpecificationMode.AND)
+				.withCustom(BroSmtpFilter::getTaskId, BroSmtp_.amtTasksList, cb -> (field, id) -> cb.like(field, "%," + id + ",%"))
 				.withDateTimeDecimal(BroSmtpFilter::getTs, BroSmtp_.ts)
 				.withIp(BroSmtpFilter::getIdOrigHost, BroSmtp_.idOrigIp)
 				.withIp(BroSmtpFilter::getIdRespHost, BroSmtp_.idRespIp)
@@ -58,7 +64,9 @@ public class BroSmtpController {
 			@RequestBody(required = false) BroSmtpFilter filter
 	) {
 		accountService.requireAnyRight("task.view");
-		//todo Фильтрация по выбранной задаче
+		if (!taskPermitRepo.isAllowedTask(accountService.getCurrentAuditor(), ZonedDateTime.now(), filter.getTaskId())) {
+			filter.setTaskId(-1L);
+		}
 		//todo Исправить сортировку по полю `isWebmail`
 		Specification<BroSmtp> spec = specificationBuilder.build(filter);
 		return repo.findAll(spec, pageable)

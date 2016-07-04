@@ -3,6 +3,10 @@
 ##! * Создание фильтров для записи данных в БД
 ##! * Обработка вложенных файлов
 
+##![Types](https://www.bro.org/sphinx/script-reference/types.html)
+##![Declarations and Statements](https://www.bro.org/sphinx/script-reference/statements.html)
+##![Functions](https://www.bro.org/sphinx/scripts/base/bif/bro.bif.bro.html)
+
 @load base/protocols/conn/main.bro
 
 #https://www.bro.org/sphinx/scripts/base/init-bare.bro.html#type-fa_file
@@ -27,6 +31,14 @@ module AMT;
 #--------------------------------------------------#
 #--------------------------------------------------#
 redef record Conn::Info += {
+	amt_tasks: set[count] &default=set();
+	amt_tasks_list: string &default="" &log;
+};
+redef record SMTP::Info += {
+	amt_tasks: set[count] &default=set();
+	amt_tasks_list: string &default="" &log;
+};
+redef record HTTP::Info += {
 	amt_tasks: set[count] &default=set();
 	amt_tasks_list: string &default="" &log;
 };
@@ -86,22 +98,44 @@ function is_catched_conn_table(conn: table[conn_id] of connection): bool {
 #--------------------------------------------------#
 # Функции для фильтрации логов
 #--------------------------------------------------#
+function cat_set(src: set[count], prefix: string, delimiter: string, suffix: string): string {
+	local res = prefix;
+	local cnt: count = |src|;
+	local first = T;
+	for (item in src) {
+		if (first) {
+			res = cat(res, item);
+			first = F;
+		} else {
+			res = cat(res, delimiter, item);
+		}
+	}
+	if (cnt > 0) {
+		res = res + suffix;
+	}
+	return res;
+}
+
 function filter_conn(rec: Conn::Info): bool {
 	if (rec$uid in catched_conn_uid) {
-		local tasks_list = "";
-		for (taskId in catched_conn_uid[rec$uid]) {
-			tasks_list = cat(tasks_list, ",", taskId);
-		}
-		rec$amt_tasks_list = tasks_list + ",";
+		rec$amt_tasks_list = cat_set(catched_conn_uid[rec$uid], ",", ",", ",");
 		return T;
 	}
 	return F;
 }
 function filter_smtp(rec: SMTP::Info): bool {
-	return is_catched_conn_single(rec$uid);
+	if (rec$uid in catched_conn_uid) {
+		rec$amt_tasks_list = cat_set(catched_conn_uid[rec$uid], ",", ",", ",");
+		return T;
+	}
+	return F;
 }
 function filter_http(rec: HTTP::Info): bool {
-	return is_catched_conn_single(rec$uid);
+	if (rec$uid in catched_conn_uid) {
+		rec$amt_tasks_list = cat_set(catched_conn_uid[rec$uid], ",", ",", ",");
+		return T;
+	}
+	return F;
 }
 function filter_files(rec: Files::Info): bool {
 	return is_catched_conn_set(rec$conn_uids);

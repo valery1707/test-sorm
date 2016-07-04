@@ -90,6 +90,8 @@ public class BroHttp {
 	@Lob
 	private String respMimeTypes;
 
+	private String amtTasksList;
+
 	public BigDecimal getTs() {
 		return ts;
 	}
@@ -320,5 +322,13 @@ public class BroHttp {
 
 	public void setRespMimeTypes(String respMimeTypes) {
 		this.respMimeTypes = respMimeTypes;
+	}
+
+	public String getAmtTasksList() {
+		return amtTasksList;
+	}
+
+	public void setAmtTasksList(String amtTasksList) {
+		this.amtTasksList = amtTasksList;
 	}
 }
