@@ -50,6 +50,9 @@ public class Server extends ABaseEntity {
 	@NotNull
 	private String confPath;
 
+	@NotNull
+	private String dbName;
+
 	public Account getCreatedBy() {
 		return createdBy;
 	}
@@ -128,5 +131,13 @@ public class Server extends ABaseEntity {
 
 	public void setConfPath(String confPath) {
 		this.confPath = confPath;
+	}
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
 	}
 }
