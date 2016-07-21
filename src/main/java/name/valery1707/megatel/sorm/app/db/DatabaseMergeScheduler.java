@@ -21,6 +21,7 @@ import javax.inject.Singleton;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.concurrent.*;
 
 import static java.lang.String.format;
@@ -81,6 +82,10 @@ public class DatabaseMergeScheduler {
 		serverRepo.findAll().forEach(server -> {
 			long id = server.getId();
 			String dbName = server.getDbName();
+			if (catalog.equals(dbName)) {
+				//Если сервер работает на той же БД что и Центр, то копировать от туда нам не нужно
+				return;
+			}
 
 			PoolProperties poolProperties = new PoolProperties();
 			poolProperties.setName(format("replica-for-server-%d", id));
@@ -93,6 +98,8 @@ public class DatabaseMergeScheduler {
 			connectionPool = connectionPool.put(server, new DataSource(poolProperties));
 		});
 
+		//todo Период запуска сделать настраиваемым?
+		Duration delay = Duration.ofSeconds(10);
 		mergerInfo = connectionPool
 				//(server, dataSource) -> (server, dataSource, tableName)
 				.flatMap(t -> tableNames.map(name -> Tuple.of(t._1, t._2, name)))
@@ -104,8 +111,7 @@ public class DatabaseMergeScheduler {
 								.onFailure(Throwable::printStackTrace)
 								.onSuccess(merger -> mergerFuture.put(
 										merger,
-										//todo Период запуска сделать настраиваемым?
-										executor.scheduleWithFixedDelay(merger, 100, 1500, TimeUnit.MILLISECONDS)
+										executor.scheduleWithFixedDelay(merger, TimeUnit.SECONDS.toMillis(1), delay.toMillis(), TimeUnit.MILLISECONDS)
 								))
 				))
 		;
