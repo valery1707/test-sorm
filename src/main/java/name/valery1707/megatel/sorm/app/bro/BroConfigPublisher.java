@@ -136,6 +136,9 @@ public class BroConfigPublisher {
 				LOG.info("Include AMT configuration into Bro");
 				helper.includeIntoBro(new File(bro, "share/bro/site/local.bro"), new File(conf, "amt.bro"));//todo Configure `broConfPath`?
 				LOG.info("Bro deploy...");
+				//todo Update without restart
+				//deploy - Check, install, and restart
+				//update - Update configuration of nodes on the fly
 				List<String> broCtlDeploy = helper.execute(String.format("sudo %s/bin/broctl deploy", server.getBroPath()));
 				LOG.info("Bro deploy: {}", broCtlDeploy.mkString(" "));
 				boolean success = broCtlDeploy.exists(s -> s.contains("starting bro ..."));
