@@ -140,7 +140,7 @@ public class BroConfigPublisher {
 				//deploy - Check, install, and restart
 				//update - Update configuration of nodes on the fly
 				List<String> broCtlDeploy = helper.execute(String.format("sudo %s/bin/broctl deploy", server.getBroPath()));
-				LOG.info("Bro deploy: {}", broCtlDeploy.mkString(" "));
+				LOG.info("Bro deploy: {}", broCtlDeploy.mkString("\n"));
 				boolean success = broCtlDeploy.exists(s -> s.contains("starting bro ..."));
 				if (!success) {
 					LOG.warn("Bro deploy failed, remove hash for redeploy");

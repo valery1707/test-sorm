@@ -1,4 +1,4 @@
-##! Скрипт с глобальными настройками: 
+##! Скрипт с глобальными настройками:
 ##! * Добавление полей в логи
 ##! * Создание фильтров для записи данных в БД
 ##! * Обработка вложенных файлов
@@ -23,6 +23,10 @@
 
 #https://www.bro.org/sphinx/scripts/base/protocols/smtp/main.bro.html#type-SMTP::Info
 @load policy/protocols/smtp/software.bro
+
+##!Обработка бинарных протоколов
+@load base/protocols/crypted/main.bro
+@load-sigs ./amt_binary.sig
 
 module AMT;
 
@@ -286,4 +290,19 @@ event file_sniff(f: fa_file, meta: fa_metadata) {
 #	if (f?$info) {
 #		print fmt("  Info! ts: %s; mime: %s; filename: %s; md5: %s", f$info$ts, f$info?$mime_type ? f$info$mime_type : "NONE", f$info?$filename ? f$info$filename : "???", f$info?$md5 ? f$info$md5 : "000");
 #	}
+}
+
+# Обработка событий совпадения сигнатур для генерации сообщений CRYPTED для связи коннекта с протоколом
+event signature_match(state: signature_state, msg: string, data: string) {
+	print fmt("Signature: (sig:%s, msg: %s)", state$sig_id, msg);
+	# todo Генерация события CRYPTED если msg начинается с "sig-bin-"
+	if (/^sig-bin-/ in msg) {
+		local info: Crypted::Info;
+		info$ts  = network_time();
+		info$uid = state$conn$uid;
+		info$id  = state$conn$id;
+		info$protocol = str_split(msg, vector(8))[1];
+
+		Log::write(Crypted::LOG, info);
+	}
 }
