@@ -65,6 +65,7 @@ public class BroConfigWriter {
 			//todo Template для полного отключения логирования
 		}
 		files.put("amt.bro", drawRunnerTemplate(files.keySet()));
+		files.keySet().forEach(name -> files.put(name, files.get(name).replace("\r\n", "\n")));
 		return files;
 	}
 
@@ -102,6 +103,6 @@ public class BroConfigWriter {
 	}
 
 	private String drawSigTemplate() {
-		return templateSig.execute(SIG_CONTEXT).replace("\r\n", "\n");
+		return templateSig.execute(SIG_CONTEXT);
 	}
 }
