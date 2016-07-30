@@ -295,13 +295,13 @@ event file_sniff(f: fa_file, meta: fa_metadata) {
 # Обработка событий совпадения сигнатур для генерации сообщений CRYPTED для связи коннекта с протоколом
 event signature_match(state: signature_state, msg: string, data: string) {
 	print fmt("Signature: (sig:%s, msg: %s)", state$sig_id, msg);
-	# todo Генерация события CRYPTED если msg начинается с "sig-bin-"
+	# Генерация события CRYPTED если msg начинается с "sig-bin-"
 	if (/^sig-bin-/ in msg) {
 		local info: Crypted::Info;
 		info$ts  = network_time();
 		info$uid = state$conn$uid;
 		info$id  = state$conn$id;
-		info$protocol = str_split(msg, vector(8))[1];
+		info$protocol = str_split(msg, vector(8))[2];
 
 		Log::write(Crypted::LOG, info);
 	}
