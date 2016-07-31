@@ -15,16 +15,34 @@ import static org.mockito.Mockito.when;
 public class BroConfigWriterTest {
 
 	@Test
-	public void testLoadIp() throws Exception {
+	public void testLoadIp_127() throws Exception {
 		assertThat(loadIp("127.0.0.1")).containsExactly("127.0.0.1");
+	}
+
+	@Test
+	public void testLoadIp_localhost() throws Exception {
 		assertThat(loadIp("localhost")).contains("127.0.0.1");
+	}
+
+	@Test
+	public void testLoadIp_ya_ru() throws Exception {
 		List<String> ipYaRu = loadIp("ya.ru");
 		assertThat(ipYaRu).contains("213.180.204.3");
+		assertThat(loadIp("ya.ru, ya.ru")).containsOnlyElementsOf(ipYaRu).hasSameSizeAs(ipYaRu);
+	}
+
+	@Test
+	public void testLoadIp_google_com() throws Exception {
 		List<String> ipGoogleCom = loadIp("google.com");
 		assertThat(ipGoogleCom).contains("178.88.163.148", "178.88.163.152", "178.88.163.168", "178.88.163.172", "178.88.163.183");
+	}
+
+	@Test
+	public void testLoadIp_google_com_and_ya_ru() throws Exception {
+		List<String> ipYaRu = loadIp("ya.ru");
+		List<String> ipGoogleCom = loadIp("google.com");
 		List<String> ip = ipYaRu.appendAll(ipGoogleCom);
 		assertThat(loadIp("ya.ru, google.com")).containsOnlyElementsOf(ip);
-		assertThat(loadIp("ya.ru, ya.ru")).containsOnlyElementsOf(ipYaRu).hasSameSizeAs(ipYaRu);
 	}
 
 	private List<String> loadIp(String src) throws IOException {
