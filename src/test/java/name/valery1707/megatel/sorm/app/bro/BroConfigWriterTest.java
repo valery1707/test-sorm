@@ -34,7 +34,7 @@ public class BroConfigWriterTest {
 	@Test
 	public void testLoadIp_google_com() throws Exception {
 		List<String> ipGoogleCom = loadIp("google.com");
-		assertThat(ipGoogleCom).contains("178.88.163.148", "178.88.163.152", "178.88.163.168", "178.88.163.172", "178.88.163.183");
+		assertThat(ipGoogleCom).isNotEmpty();
 	}
 
 	@Test
