@@ -1,11 +1,8 @@
 package name.valery1707.megatel.sorm.app;
 
-import javaslang.Tuple;
-import javaslang.collection.List;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 
 @SuppressWarnings("unused")
 public class AccountSessionDetails extends WebAuthenticationDetails {
@@ -18,7 +15,6 @@ public class AccountSessionDetails extends WebAuthenticationDetails {
 
 	public AccountSessionDetails(HttpServletRequest request) {
 		super(request);
-		List.ofAll(Collections.list(request.getHeaderNames())).toMap(name -> Tuple.of(name, request.getHeader(name))).stdout();
 		scheme = request.getScheme();
 		protocol = request.getProtocol();
 		userAgent = request.getHeader("User-Agent");
