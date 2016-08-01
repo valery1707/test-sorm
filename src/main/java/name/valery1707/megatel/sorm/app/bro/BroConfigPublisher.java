@@ -129,7 +129,7 @@ public class BroConfigPublisher {
 				fileWithPath.put(hashPath, hashValue);
 				LOG.info("Clean tmp files");
 				helper.cleanTmp(conf);
-				LOG.info("Upload {} new configurations", fileWithPath.size() - 3);
+				LOG.info("Upload {} new configurations", calcConfCount(files));
 				helper.upload(fileWithPath);
 				LOG.info("Remove old configuration");
 				helper.clean(conf, file -> file.isRegularFile() && !fileWithPath.containsKey(new File(file.getPath())));
@@ -160,6 +160,25 @@ public class BroConfigPublisher {
 			helper.disconnect();
 			MDC.clear();
 		}
+	}
+
+	/**
+	 * Мапа с файлами всегда содержит:
+	 * <ul>
+	 * <li>Загрузчик заданий (amt.bro)</li>
+	 * </ul>
+	 * Если задания присутствуют, то мапа так же содержит:
+	 * <ul>
+	 * <li>Инициализатор Bro (amt_init.bro)</li>
+	 * <li>Сигнатуры бинарных протоколов (amt_binary.sig)</li>
+	 * <li>По одному файлу для каждого задания</li>
+	 * </ul>
+	 *
+	 * @param fileWithPath Набор файлов для записи
+	 * @return Количество именно конфигураций для отбора трафика
+	 */
+	private long calcConfCount(Map<String, String> fileWithPath) {
+		return fileWithPath.keySet().stream().filter(s -> s.startsWith("amt_task_")).count();
 	}
 
 	private Map<Long, ZonedDateTime> calcHash() {
