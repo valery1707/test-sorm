@@ -114,20 +114,22 @@ controller('taskPermitCtrl', ['$scope', 'taskPermitService', 'uiGridConstants', 
 	$scope.loadPage();
 }]).
 controller('taskPermitCtrlEdit', ['$scope', '$state', '$stateParams', 'taskPermitService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, service, toastr, formBuilder) {
+	$scope.optSelect = function (item, field) {
+		$scope.model[field] = item.id;
+	};
 	service.comboTask(
 			function (data) {
-				$scope.optTask = data.map(function (task) {
-					return {value: task.id, name: '{id: ' + task.id + ', clientAlias: ' + task.clientAlias + ', agency: ' + task.agency + '}'};
-				});
+				$scope.optTask = data;
 			},
 			function (error) {
 				toastr.error(error.statusText, 'Error');
 			});
+	$scope.optTaskGroup = function (item) {
+		return 'Agency: ' + item.agency;
+	};
 	service.comboAccount(
 			function (data) {
-				$scope.optAccount = data.map(function (account) {
-					return {value: account.id, name: '{username:' + account.username + ', agency:' + account.agency + '}'};
-				});
+				$scope.optAccount = data;
 			},
 			function (error) {
 				toastr.error(error.statusText, 'Error');

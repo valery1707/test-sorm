@@ -60,13 +60,27 @@
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></div>
-                    <select class="form-control"
-                            name="taskId" id="taskId" ng-model="model.taskId"
-                            ng-options="option.name for option in optTask track by option.value"
-                            convert-option-to-value
-                            friendly-name="Task"
-                            validation="custom:serverErrorValidator('taskId')|required"
-                    ></select>
+                    <ui-select class="form-control"
+                               name="taskId" id="taskId" ng-model="model.task"
+                               on-select="optSelect($item, 'taskId')"
+                               sortable="true"
+                               placeholder="Task" friendly-name="Task"
+                               title="Select task"
+                    >
+                        <ui-select-match placeholder="Select a task in the list or search his">{{$select.selected.id || $select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="item in optTask track by item.id" group-by="optTaskGroup">
+                            <!-- | filter: {id: $select.search, clientAlias: $select.search, agency: $select.search}-->
+                            <div ng-bind-html="item.id | highlight: $select.search"></div>
+                            <small>
+                                Client: <span ng-bind-html="''+item.clientAlias | highlight: $select.search"></span>.
+                                Agency: <span ng-bind-html="''+item.agency | highlight: $select.search"></span>
+                            </small>
+                        </ui-select-choices>
+                    </ui-select>
+                    <input type="hidden"
+                           name="taskId" ng-model="model.taskId"
+                           validation="custom:serverErrorValidator('taskId')|required"
+                    >
                 </div>
             </div>
 
@@ -76,13 +90,26 @@
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></div>
-                    <select class="form-control"
-                            name="accountId" id="accountId" ng-model="model.accountId"
-                            ng-options="option.name for option in optAccount track by option.value"
-                            convert-option-to-value
-                            friendly-name="Account"
-                            validation="custom:serverErrorValidator('accountId')|required"
-                    ></select>
+                    <ui-select class="form-control"
+                               name="accountId" id="accountId" ng-model="model.accountId"
+                               on-select="optSelect($item, 'accountId')"
+                               sortable="true"
+                               tagging="selectTagSimple" tagging-label="" tagging-tokens="SPACE|ENTER|,"
+                               placeholder="Account" friendly-name="Account"
+                               title="Select account"
+                    >
+                        <ui-select-match placeholder="Select a account in the list or search his">{{$select.selected.id || $select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="item in optAccount">
+                            <div ng-bind-html="item.id | highlight: $select.search"></div>
+                            <small>
+                                Username: <span ng-bind-html="''+item.username | highlight: $select.search"></span>.
+                            </small>
+                        </ui-select-choices>
+                    </ui-select>
+                    <input type="hidden"
+                           name="accountId" ng-model="model.accountId"
+                           validation="custom:serverErrorValidator('accountId')|required"
+                    >
                 </div>
             </div>
 
