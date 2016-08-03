@@ -9,7 +9,7 @@ import javax.inject.Singleton;
 
 @Service
 @Singleton
-public class BroConfigWatcher {
+public class BroConfigPublishScheduler {
 	@Inject
 	private BroConfigPublisher publisher;
 

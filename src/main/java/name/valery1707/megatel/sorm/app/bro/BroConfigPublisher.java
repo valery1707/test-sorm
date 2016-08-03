@@ -7,8 +7,6 @@ import name.valery1707.megatel.sorm.app.ssh.SshClientHelper;
 import name.valery1707.megatel.sorm.domain.IBaseEntity;
 import name.valery1707.megatel.sorm.domain.Server;
 import name.valery1707.megatel.sorm.domain.Task;
-import net.schmizz.sshj.Config;
-import net.schmizz.sshj.DefaultConfig;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,24 +38,29 @@ public class BroConfigPublisher {
 	private static final Logger LOG = LoggerFactory.getLogger(BroConfigPublisher.class);
 
 	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
 	private ServerRepo serverRepo;
 
 	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
 	private TaskRepo taskRepo;
+
+	@Inject
+	private SshConfigurer sshConfigurer;
+
+	@Inject
+	private BroLocker locker;
 
 	@Inject
 	private BroConfigWriter configWriter;
 
 	private final ReentrantLock lock = new ReentrantLock();
 
-	private Config sshConfig;
 	private ExecutorService executor;
 	private final Map<Long, String> hashByServer = new HashMap<>();
 
 	@PostConstruct
 	public void init() {
-		sshConfig = new DefaultConfig();
-
 		//todo Информация о количестве серверов Bro собирается только при запуске - это не совсем корректно
 		serverRepo.findAll().forEach(server -> hashByServer.put(server.getId(), ""));
 
@@ -113,7 +116,8 @@ public class BroConfigPublisher {
 
 	private boolean publish(Server server, Map<String, String> files, String hashValue) {
 		MDC.put("server", String.format("[%s@%s:%d] ", server.getUsername(), server.getHost(), server.getPort()));
-		SshClientHelper helper = new SshClientHelper(server, sshConfig);
+		locker.lock(server).lock();
+		SshClientHelper helper = new SshClientHelper(server, sshConfigurer.getConfig());
 		try {
 			helper.connect();
 			File bro = new File(server.getBroPath());
@@ -158,6 +162,7 @@ public class BroConfigPublisher {
 			return false;
 		} finally {
 			helper.disconnect();
+			locker.lock(server).unlock();
 			MDC.clear();
 		}
 	}
