@@ -48,8 +48,10 @@ public class BroWatchdog {
 		futures.forEach(Future::await);
 	}
 
-	private static final Pattern STATUS_OK = Pattern.compile("(standalone)\\s+(localhost)\\s+(running)\\s+(\\d+)");
-	private static final Predicate<String> STATUS_OK_MATCHER = STATUS_OK.asPredicate();
+	private static final Pattern BRO_RUNNING = Pattern.compile("(standalone)\\s+(localhost)\\s+(running)\\s+(\\d+)");
+	private static final Predicate<String> BRO_RUNNING_MATCHER = BRO_RUNNING.asPredicate();
+	private static final Pattern BRO_CONNECT_LOST = Pattern.compile("(cannot connect to bro)");
+	private static final Predicate<String> BRO_CONNECT_LOST_MATCHER = BRO_CONNECT_LOST.asPredicate();
 
 	private Status checkStatus(Server server) {
 		MDC.put("server", String.format("[%s@%s:%d] ", server.getUsername(), server.getHost(), server.getPort()));
@@ -62,10 +64,12 @@ public class BroWatchdog {
 			LOG.debug("Check status");
 			helper.connect();
 			List<String> status = helper.execute(String.format("sudo %s/bin/broctl status", server.getBroPath()));
-			boolean isRunning = status.exists(STATUS_OK_MATCHER);
-			if (isRunning) {
+			if (status.exists(BRO_RUNNING_MATCHER)) {
 				LOG.debug("Bro already running");
 				return Status.ALREADY_OK;
+			} else if (status.exists(BRO_CONNECT_LOST_MATCHER)) {
+				LOG.warn("Cannot connect to bro, retry later");
+				return Status.DELAY;
 			} else {
 				LOG.info("Bro server not running: {}", status.mkString("\n"));
 				List<String> deploy = helper.execute(String.format("sudo %s/bin/broctl deploy", server.getBroPath()));
