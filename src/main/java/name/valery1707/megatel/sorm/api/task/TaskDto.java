@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import javaslang.Tuple;
 import javaslang.collection.HashMap;
 import javaslang.collection.Stream;
-import name.valery1707.megatel.sorm.DateUtils;
-import name.valery1707.megatel.sorm.api.BaseDto;
+import name.valery1707.core.api.BaseDto;
+import name.valery1707.core.utils.DateUtils;
 import name.valery1707.megatel.sorm.domain.Task;
 import name.valery1707.megatel.sorm.domain.TaskFilter;
 import name.valery1707.megatel.sorm.domain.TaskFilterValue;
@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
+import static name.valery1707.core.utils.DateUtils.formatDateTime;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)

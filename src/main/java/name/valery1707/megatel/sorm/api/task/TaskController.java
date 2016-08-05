@@ -4,12 +4,12 @@ import javaslang.Tuple;
 import javaslang.collection.HashMap;
 import javaslang.collection.Stream;
 import javaslang.control.Option;
-import name.valery1707.megatel.sorm.api.BaseEntityController;
+import name.valery1707.core.api.BaseEntityController;
+import name.valery1707.core.app.AccountService;
+import name.valery1707.core.db.SpecificationBuilder;
+import name.valery1707.core.db.SpecificationMode;
+import name.valery1707.core.domain.Account;
 import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
-import name.valery1707.megatel.sorm.app.AccountService;
-import name.valery1707.megatel.sorm.db.SpecificationBuilder;
-import name.valery1707.megatel.sorm.db.SpecificationMode;
-import name.valery1707.megatel.sorm.domain.Account;
 import name.valery1707.megatel.sorm.domain.Task;
 import name.valery1707.megatel.sorm.domain.TaskFilter.TaskFilterType;
 import name.valery1707.megatel.sorm.domain.TaskFilterValue;
@@ -34,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static name.valery1707.megatel.sorm.DateUtils.parseDateTime;
+import static name.valery1707.core.utils.DateUtils.parseDateTime;
 import static name.valery1707.megatel.sorm.domain.TaskFilter.TaskFilterBuilder.aTaskFilter;
 import static name.valery1707.megatel.sorm.domain.TaskFilterValue.TaskFilterValueBuilder.aTaskFilterValue;
 

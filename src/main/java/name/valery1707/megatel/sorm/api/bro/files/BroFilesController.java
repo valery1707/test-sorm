@@ -1,8 +1,8 @@
 package name.valery1707.megatel.sorm.api.bro.files;
 
-import name.valery1707.megatel.sorm.app.AccountService;
-import name.valery1707.megatel.sorm.db.SpecificationBuilder;
-import name.valery1707.megatel.sorm.db.SpecificationMode;
+import name.valery1707.core.app.AccountService;
+import name.valery1707.core.db.SpecificationBuilder;
+import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.BroFiles;
 import name.valery1707.megatel.sorm.domain.BroFiles_;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,8 +21,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import static name.valery1707.megatel.sorm.EncodingUtils.rfc5987Encode;
-import static name.valery1707.megatel.sorm.EncodingUtils.safeEncode;
+import static name.valery1707.core.utils.EncodingUtils.rfc5987Encode;
+import static name.valery1707.core.utils.EncodingUtils.safeEncode;
 
 @RestController
 @RequestMapping("/api/bro/files")

@@ -1,9 +1,9 @@
 package name.valery1707.megatel.sorm.api.bro.conn;
 
+import name.valery1707.core.app.AccountService;
+import name.valery1707.core.db.SpecificationBuilder;
+import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
-import name.valery1707.megatel.sorm.app.AccountService;
-import name.valery1707.megatel.sorm.db.SpecificationBuilder;
-import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.BroConn;
 import name.valery1707.megatel.sorm.domain.BroConn_;
 import org.springframework.data.domain.Page;

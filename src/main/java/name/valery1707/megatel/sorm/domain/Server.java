@@ -1,5 +1,7 @@
 package name.valery1707.megatel.sorm.domain;
 
+import name.valery1707.core.domain.ABaseEntity;
+import name.valery1707.core.domain.Account;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;

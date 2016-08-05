@@ -2,9 +2,9 @@ package name.valery1707.megatel.sorm.app.bro;
 
 import javaslang.collection.List;
 import javaslang.concurrent.Future;
+import name.valery1707.core.domain.IBaseEntity;
 import name.valery1707.megatel.sorm.api.task.TaskRepo;
 import name.valery1707.megatel.sorm.app.ssh.SshClientHelper;
-import name.valery1707.megatel.sorm.domain.IBaseEntity;
 import name.valery1707.megatel.sorm.domain.Server;
 import name.valery1707.megatel.sorm.domain.Task;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;

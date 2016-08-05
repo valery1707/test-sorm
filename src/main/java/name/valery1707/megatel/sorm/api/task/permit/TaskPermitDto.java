@@ -1,8 +1,8 @@
 package name.valery1707.megatel.sorm.api.task.permit;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import name.valery1707.megatel.sorm.DateUtils;
-import name.valery1707.megatel.sorm.api.BaseDto;
+import name.valery1707.core.api.BaseDto;
+import name.valery1707.core.utils.DateUtils;
 import name.valery1707.megatel.sorm.domain.TaskPermit;
 
 import javax.validation.constraints.Min;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
+import static name.valery1707.core.utils.DateUtils.formatDateTime;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)

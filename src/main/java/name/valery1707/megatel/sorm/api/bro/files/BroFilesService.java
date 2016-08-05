@@ -1,7 +1,7 @@
 package name.valery1707.megatel.sorm.api.bro.files;
 
+import name.valery1707.core.configuration.MimeRepository;
 import name.valery1707.megatel.sorm.api.bro.http.BroHttpRepo;
-import name.valery1707.megatel.sorm.configuration.MimeRepository;
 import name.valery1707.megatel.sorm.domain.BroFiles;
 import name.valery1707.megatel.sorm.domain.BroHttp;
 import org.apache.commons.io.FilenameUtils;

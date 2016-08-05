@@ -1,5 +1,7 @@
 package name.valery1707.megatel.sorm.domain;
 
+import name.valery1707.core.domain.ABaseEntity;
+
 import javax.persistence.Entity;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;

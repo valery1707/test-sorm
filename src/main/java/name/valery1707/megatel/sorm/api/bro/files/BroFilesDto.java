@@ -2,8 +2,8 @@ package name.valery1707.megatel.sorm.api.bro.files;
 
 import name.valery1707.megatel.sorm.domain.BroFiles;
 
-import static name.valery1707.megatel.sorm.DateUtils.bigDecimalToZonedDateTime;
-import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
+import static name.valery1707.core.utils.DateUtils.bigDecimalToZonedDateTime;
+import static name.valery1707.core.utils.DateUtils.formatDateTime;
 
 public class BroFilesDto {
 	private String ts;

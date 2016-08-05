@@ -1,13 +1,18 @@
 package name.valery1707.megatel.sorm.api.task.permit;
 
-import name.valery1707.megatel.sorm.api.BaseEntityController;
-import name.valery1707.megatel.sorm.api.account.AccountDto;
-import name.valery1707.megatel.sorm.api.auth.AccountRepo;
+import name.valery1707.core.api.BaseEntityController;
+import name.valery1707.core.api.account.AccountDto;
+import name.valery1707.core.api.auth.AccountRepo;
+import name.valery1707.core.db.SpecificationBuilder;
+import name.valery1707.core.db.SpecificationMode;
+import name.valery1707.core.domain.Account;
+import name.valery1707.core.domain.Account_;
 import name.valery1707.megatel.sorm.api.task.TaskDto;
 import name.valery1707.megatel.sorm.api.task.TaskRepo;
-import name.valery1707.megatel.sorm.db.SpecificationBuilder;
-import name.valery1707.megatel.sorm.db.SpecificationMode;
-import name.valery1707.megatel.sorm.domain.*;
+import name.valery1707.megatel.sorm.domain.Task;
+import name.valery1707.megatel.sorm.domain.TaskPermit;
+import name.valery1707.megatel.sorm.domain.TaskPermit_;
+import name.valery1707.megatel.sorm.domain.Task_;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -27,8 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
-import static name.valery1707.megatel.sorm.DateUtils.parseDateTime;
-import static name.valery1707.megatel.sorm.db.SingularAttributeGetter.field;
+import static name.valery1707.core.db.SingularAttributeGetter.field;
+import static name.valery1707.core.utils.DateUtils.parseDateTime;
 
 @RestController
 @RequestMapping("/api/task/permit")

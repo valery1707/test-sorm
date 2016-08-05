@@ -3,8 +3,8 @@ package name.valery1707.megatel.sorm.api.bro.smtp;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import name.valery1707.megatel.sorm.domain.BroSmtp;
 
-import static name.valery1707.megatel.sorm.DateUtils.bigDecimalToZonedDateTime;
-import static name.valery1707.megatel.sorm.DateUtils.formatDateTime;
+import static name.valery1707.core.utils.DateUtils.bigDecimalToZonedDateTime;
+import static name.valery1707.core.utils.DateUtils.formatDateTime;
 
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)

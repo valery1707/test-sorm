@@ -1,5 +1,6 @@
 package name.valery1707.megatel.sorm.domain;
 
+import name.valery1707.core.domain.ABaseEntity;
 import org.apache.commons.validator.routines.InetAddressValidator;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 

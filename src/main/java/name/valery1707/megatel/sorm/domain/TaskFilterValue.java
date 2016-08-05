@@ -1,5 +1,7 @@
 package name.valery1707.megatel.sorm.domain;
 
+import name.valery1707.core.domain.ABaseEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;

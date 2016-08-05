@@ -2,13 +2,13 @@ package name.valery1707.megatel.sorm.api.bro.http;
 
 import javaslang.collection.Stream;
 import javaslang.control.Option;
+import name.valery1707.core.app.AccountService;
+import name.valery1707.core.db.MapSpecificationBuilder;
+import name.valery1707.core.db.SpecificationBuilder;
+import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.megatel.sorm.api.bro.files.BroFilesRepo;
 import name.valery1707.megatel.sorm.api.bro.files.BroFilesService;
 import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
-import name.valery1707.megatel.sorm.app.AccountService;
-import name.valery1707.megatel.sorm.db.MapSpecificationBuilder;
-import name.valery1707.megatel.sorm.db.SpecificationBuilder;
-import name.valery1707.megatel.sorm.db.SpecificationMode;
 import name.valery1707.megatel.sorm.domain.BroFiles;
 import name.valery1707.megatel.sorm.domain.BroHttp;
 import name.valery1707.megatel.sorm.domain.BroHttp_;

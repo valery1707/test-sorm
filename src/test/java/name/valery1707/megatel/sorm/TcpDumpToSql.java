@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static name.valery1707.megatel.sorm.IpUtils.ipToNumber;
+import static name.valery1707.core.utils.IpUtils.ipToNumber;
 
 public class TcpDumpToSql {
 	private static final Pattern CSV = Pattern.compile("\",\"");
