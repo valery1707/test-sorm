@@ -9,11 +9,10 @@ import name.valery1707.core.app.AccountService;
 import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.core.domain.Account;
+import name.valery1707.megatel.sorm.api.agency.AgencyRepo;
 import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
-import name.valery1707.megatel.sorm.domain.Task;
+import name.valery1707.megatel.sorm.domain.*;
 import name.valery1707.megatel.sorm.domain.TaskFilter.TaskFilterType;
-import name.valery1707.megatel.sorm.domain.TaskFilterValue;
-import name.valery1707.megatel.sorm.domain.Task_;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,10 +41,12 @@ import static name.valery1707.megatel.sorm.domain.TaskFilterValue.TaskFilterValu
 @RequestMapping("/api/task")
 public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFilter, TaskDto> {
 	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
 	private TaskPermitRepo taskPermitRepo;
 
 	@Inject
-	private AccountService accountService;
+	@SuppressWarnings("SpringJavaAutowiringInspection")
+	private AgencyRepo agencyRepo;
 
 	public TaskController() {
 		super("task");
@@ -57,23 +58,26 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 				.withNumber(TaskFilter::getId, Task_.id)
 				.withDateTime(TaskFilter::getPeriodStart, Task_.periodStart)
 				.withDateTime(TaskFilter::getPeriodFinish, Task_.periodFinish)
-				.withString(TaskFilter::getAgency, Task_.agency)
+				.withString(TaskFilter::getAgencyName, Task_.agency, Agency_.name)
 				.withString(TaskFilter::getClientAlias, Task_.clientAlias)
 				.withString(TaskFilter::getNote, Task_.note)
 				.withEquals(TaskFilter::getShowOnlyActive, Task_.isActive)
 				.withCustom(TaskFilter::getAllowedIds, Task_.id, cb -> (field, filter) -> filter.isEmpty() ? cb.isNull(field) : field.in(filter))
+				.withEquals(TaskFilter::getAgency, Task_.agency)
 				;
 	}
 
 	@Override
 	protected void applyPermanentFilter(TaskFilter filter) {
 		super.applyPermanentFilter(filter);
+		AccountService accountService = accountService();
 		filter.setShowOnlyActive(accountService.hasAnyRole(Account.Role.SUPERVISOR) ? null : true);
 		if (accountService.hasAnyRole(Account.Role.OPERATOR)) {
 			//todo Optimize
 			filter.setAllowedIds(taskPermitRepo
 					.findAllowedTaskAtTime(accountService.getCurrentAuditor(), ZonedDateTime.now()));
 		}
+		filter.setAgency(accountService.getAccount().get().getAgency());
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -129,7 +133,7 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 
 	@Override
 	protected void dto2domain(TaskDto dto, Task entity) {
-		entity.setAgency(dto.getAgency());
+		entity.setAgency(agencyRepo.getOne(dto.getAgencyId()));
 		entity.setClientAlias(dto.getClientAlias());
 		entity.setPeriodStart(parseDateTime(dto.getPeriodStart()));
 		entity.setPeriodFinish(parseDateTime(dto.getPeriodFinish()));

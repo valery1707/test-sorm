@@ -32,8 +32,8 @@ public class TaskDto implements BaseDto {
 	private String createdBy;
 	private String createdAt;
 	@NotNull
-	@Size(min = 3)
-	private String agency;
+	private Long agencyId;
+	private String agencyName;
 	@NotNull
 	@Size(min = 3)
 	private String clientAlias;
@@ -57,7 +57,8 @@ public class TaskDto implements BaseDto {
 		setId(src.getId());
 		setCreatedBy(src.getCreatedBy().getUsername());
 		setCreatedAt(formatDateTime(src.getCreatedAt()));
-		setAgency(src.getAgency());
+		setAgencyId(src.getAgency().getId());
+		setAgencyName(src.getAgency().getName());
 		setClientAlias(src.getClientAlias());
 		setPeriodStart(formatDateTime(src.getPeriodStart()));
 		setPeriodFinish(formatDateTime(src.getPeriodFinish()));
@@ -95,12 +96,20 @@ public class TaskDto implements BaseDto {
 		this.createdAt = createdAt;
 	}
 
-	public String getAgency() {
-		return agency;
+	public Long getAgencyId() {
+		return agencyId;
 	}
 
-	public void setAgency(String agency) {
-		this.agency = agency;
+	public void setAgencyId(Long agencyId) {
+		this.agencyId = agencyId;
+	}
+
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 
 	public String getClientAlias() {

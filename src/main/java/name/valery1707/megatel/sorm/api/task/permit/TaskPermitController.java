@@ -7,12 +7,10 @@ import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.core.domain.Account;
 import name.valery1707.core.domain.Account_;
+import name.valery1707.megatel.sorm.api.agency.AgencyRepo;
 import name.valery1707.megatel.sorm.api.task.TaskDto;
 import name.valery1707.megatel.sorm.api.task.TaskRepo;
-import name.valery1707.megatel.sorm.domain.Task;
-import name.valery1707.megatel.sorm.domain.TaskPermit;
-import name.valery1707.megatel.sorm.domain.TaskPermit_;
-import name.valery1707.megatel.sorm.domain.Task_;
+import name.valery1707.megatel.sorm.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -40,9 +38,15 @@ import static name.valery1707.core.utils.DateUtils.parseDateTime;
 public class TaskPermitController extends BaseEntityController<TaskPermit, TaskPermitRepo, TaskPermitFilter, TaskPermitDto> {
 
 	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
 	private TaskRepo taskRepo;
 
 	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
+	private AgencyRepo agencyRepo;
+
+	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
 	private AccountRepo accountRepo;
 
 	public TaskPermitController() {
@@ -53,7 +57,7 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 	protected SpecificationBuilder<TaskPermit, TaskPermitFilter> buildUserFilter() {
 		return new SpecificationBuilder<TaskPermit, TaskPermitFilter>(SpecificationMode.AND)
 				.withNumber(TaskPermitFilter::getId, TaskPermit_.id)
-				.withString(TaskPermitFilter::getAgency, TaskPermit_.agency)
+				.withString(TaskPermitFilter::getAgencyName, TaskPermit_.agency, Agency_.name)
 				.withNumber(TaskPermitFilter::getTaskId, field(TaskPermit_.task).nest(Task_.id))
 				.withNumber(TaskPermitFilter::getAccountId, field(TaskPermit_.account).nest(Account_.id))
 				.withDateTime(TaskPermitFilter::getPeriodStart, TaskPermit_.periodStart)
@@ -97,7 +101,7 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 
 	@Override
 	protected void dto2domain(TaskPermitDto dto, TaskPermit entity) {
-		entity.setAgency(dto.getAgency());
+		entity.setAgency(agencyRepo.getOne(dto.getAgencyId()));
 		entity.setTask(taskRepo.getOne(dto.getTaskId()));
 		entity.setAccount(accountRepo.getOne(dto.getAccountId()));
 		entity.setPeriodStart(parseDateTime(dto.getPeriodStart()));

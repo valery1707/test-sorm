@@ -38,7 +38,8 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 	private ZonedDateTime modifiedAt;
 
 	@NotNull
-	private String agency;
+	@ManyToOne
+	private Agency agency;
 
 	@NotNull
 	private String clientAlias;
@@ -95,11 +96,11 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 		this.modifiedAt = modifiedAt;
 	}
 
-	public String getAgency() {
+	public Agency getAgency() {
 		return agency;
 	}
 
-	public void setAgency(String agency) {
+	public void setAgency(Agency agency) {
 		this.agency = agency;
 	}
 
@@ -157,7 +158,7 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 		private ZonedDateTime createdAt;
 		private Account modifiedBy;
 		private ZonedDateTime modifiedAt;
-		private String agency;
+		private Agency agency;
 		private String clientAlias;
 		private ZonedDateTime periodStart;
 		private ZonedDateTime periodFinish;
@@ -192,7 +193,7 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 			return this;
 		}
 
-		public TaskBuilder withAgency(String agency) {
+		public TaskBuilder withAgency(Agency agency) {
 			this.agency = agency;
 			return this;
 		}

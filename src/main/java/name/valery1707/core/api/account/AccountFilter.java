@@ -11,7 +11,7 @@ public class AccountFilter {
 	private Boolean isActive;
 	private Account.Role role;
 	private List<LocalDate> activeUntil;
-	private String agency;
+	private String agencyName;
 
 	public String getId() {
 		return id;
@@ -53,11 +53,11 @@ public class AccountFilter {
 		this.activeUntil = activeUntil;
 	}
 
-	public String getAgency() {
-		return agency;
+	public String getAgencyName() {
+		return agencyName;
 	}
 
-	public void setAgency(String agency) {
-		this.agency = agency;
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 }

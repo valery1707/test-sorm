@@ -34,7 +34,14 @@ config(['$stateProvider', function ($stateProvider) {
 	;
 }]).
 factory('accountService', ['$resource', function ($resource) {
-	return $resource(apiBaseUrl + '/account', {}, serviceCommonConfig);
+	const url = apiBaseUrl + '/account';
+	return $resource(url, {}, jQuery.extend({}, serviceCommonConfig, {
+		comboAgency: {
+			url: url + '/comboAgency',
+			method: 'GET',
+			isArray: true
+		}
+	}));
 }]).
 controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridHelper', '$state', 'dialogs', 'toastr', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, dialogs, toastr, principal) {
 	$scope.principal = principal;
@@ -127,13 +134,23 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 					return moment(value).format('YYYY-MM-DD');
 				}
 			},
-			{field: 'agency'},
+			{field: 'agencyName'},
 		],
 	});
 
 	$scope.loadPage();
 }]).
 controller('accountCtrlEdit', ['$scope', '$state', '$stateParams', 'accountService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, service, toastr, formBuilder) {
+	$scope.optSelect = function (item, field) {
+		$scope.model[field] = item.id;
+	};
+	service.comboAgency(
+			function (data) {
+				$scope.optAgency = data;
+			},
+			function (error) {
+				toastr.error(error.statusText, 'Error');
+			});
 	formBuilder($scope, $state, $stateParams, service, toastr, 'account');
 }])
 ;

@@ -36,7 +36,8 @@ public class TaskPermit extends ABaseEntity implements LogicRemovableEntity {
 	 * Наименование органа, осуществляющего проведение ОРМ или надзор
 	 */
 	@NotNull
-	private String agency;
+	@ManyToOne
+	private Agency agency;
 
 	/**
 	 * Задание на перехват сообщений, на которую выдана санкция
@@ -86,11 +87,11 @@ public class TaskPermit extends ABaseEntity implements LogicRemovableEntity {
 		this.createdAt = createdAt;
 	}
 
-	public String getAgency() {
+	public Agency getAgency() {
 		return agency;
 	}
 
-	public void setAgency(String agency) {
+	public void setAgency(Agency agency) {
 		this.agency = agency;
 	}
 

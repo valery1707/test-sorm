@@ -2,7 +2,7 @@
 ##! Содержит только необходимые обработки, генерируется автоматически на основе задания
 ## Client alias: {{clientAlias}}
 ## Note: {{note}}
-## Agency: {{agency}}
+## Agency: {{agency.name}}
 
 module AMT_TASK_{{id}};
 

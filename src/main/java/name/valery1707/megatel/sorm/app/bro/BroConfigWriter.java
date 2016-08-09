@@ -37,10 +37,17 @@ public class BroConfigWriter {
 
 	@PostConstruct
 	public void init() {
-		Mustache.Compiler compiler = Mustache.compiler();
+		Mustache.Compiler compiler = buildCompiler();
 		templateInit = compiler.compile(new InputStreamReader(this.getClass().getResourceAsStream("/bro/amt_init.bro"), StandardCharsets.UTF_8));
 		templateTask = compiler.compile(new InputStreamReader(this.getClass().getResourceAsStream("/bro/amt_task_00.bro"), StandardCharsets.UTF_8));
 		templateSig = compiler.compile(new InputStreamReader(this.getClass().getResourceAsStream("/bro/amt_binary.sig.cfg"), StandardCharsets.UTF_8));
+	}
+
+	static Mustache.Compiler buildCompiler() {
+		return Mustache.compiler()
+				.escapeHTML(false)
+				.nullValue("")
+				.defaultValue("");
 	}
 
 	/**

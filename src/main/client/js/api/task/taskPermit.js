@@ -89,7 +89,7 @@ controller('taskPermitCtrl', ['$scope', 'taskPermitService', 'uiGridConstants', 
 				field: 'id',
 				sort: {direction: uiGridConstants.ASC, priority: 0}
 			},
-			{field: 'agency'},
+			{field: 'agencyName'},
 			{field: 'taskId'},
 			{field: 'accountName'},
 			{

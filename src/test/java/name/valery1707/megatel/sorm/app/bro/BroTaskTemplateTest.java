@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
+import static name.valery1707.megatel.sorm.domain.Agency.AgencyBuilder.anAgency;
 import static name.valery1707.megatel.sorm.domain.Task.TaskBuilder.aTask;
 import static name.valery1707.megatel.sorm.domain.TaskFilter.TaskFilterBuilder.aTaskFilter;
 import static name.valery1707.megatel.sorm.domain.TaskFilterValue.TaskFilterValueBuilder.aTaskFilterValue;
@@ -22,9 +23,7 @@ public class BroTaskTemplateTest {
 
 	@Before
 	public void setUp() throws Exception {
-		Mustache.Compiler compiler = Mustache.compiler()
-				.nullValue("")
-				.defaultValue("");
+		Mustache.Compiler compiler = BroConfigWriter.buildCompiler();
 		templateTask = compiler.compile(new InputStreamReader(this.getClass().getResourceAsStream("/bro/amt_task_00.bro"), StandardCharsets.UTF_8));
 	}
 
@@ -78,6 +77,22 @@ public class BroTaskTemplateTest {
 				.contains("module AMT_TASK_1;")
 				.contains("AMT::watch_ip_addr(127.0.0.1, taskId);")
 				.contains("AMT::watch_ip_addr(192.168.1.1, taskId);")
+		;
+	}
+
+	@Test
+	public void testAgency() throws Exception {
+		Task task = aTask()
+				.withId(1L)
+				.withAgency(anAgency()
+						.withId(1L)
+						.withName("Test agency 'ТОО Рога и Копыта'")
+						.build())
+				.build();
+		String execute = templateTask.execute(task);
+		assertThat(execute)
+				.isNotEmpty()
+				.contains("Agency: " + task.getAgency().getName())
 		;
 	}
 }

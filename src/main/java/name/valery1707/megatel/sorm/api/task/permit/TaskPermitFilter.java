@@ -5,7 +5,7 @@ import java.util.List;
 
 public class TaskPermitFilter {
 	private String id;
-	private String agency;
+	private String agencyName;
 	private String taskId;
 	private String accountId;
 	private List<ZonedDateTime> periodStart;
@@ -20,12 +20,12 @@ public class TaskPermitFilter {
 		this.id = id;
 	}
 
-	public String getAgency() {
-		return agency;
+	public String getAgencyName() {
+		return agencyName;
 	}
 
-	public void setAgency(String agency) {
-		this.agency = agency;
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 
 	public String getTaskId() {

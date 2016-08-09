@@ -1,12 +1,17 @@
 package name.valery1707.megatel.sorm.api.task;
 
+import name.valery1707.megatel.sorm.domain.Agency;
+
+import javax.validation.constraints.Null;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 
 public class TaskFilter {
 	private String id;
-	private String agency;
+	@Null
+	private Agency agency;
+	private String agencyName;
 	private String clientAlias;
 	private List<ZonedDateTime> periodStart;
 	private List<ZonedDateTime> periodFinish;
@@ -22,12 +27,20 @@ public class TaskFilter {
 		this.id = id;
 	}
 
-	public String getAgency() {
+	public Agency getAgency() {
 		return agency;
 	}
 
-	public void setAgency(String agency) {
+	public void setAgency(Agency agency) {
 		this.agency = agency;
+	}
+
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 
 	public String getClientAlias() {

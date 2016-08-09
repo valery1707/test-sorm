@@ -2,10 +2,12 @@ package name.valery1707.core.domain;
 
 import javaslang.collection.List;
 import javaslang.collection.Seq;
+import name.valery1707.megatel.sorm.domain.Agency;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -26,6 +28,11 @@ public class Account extends ABaseEntity implements LogicRemovableEntity {
 				, "account.delete"
 				//Сессии пользователей
 				, "accountSession.list"
+				//Наименование органа, осуществляющего проведение ОРМ или надзор
+				, "agency.list"
+				, "agency.create"
+				, "agency.update"
+				, "agency.delete"
 		)),
 		//Администратор
 		ADMIN(Arrays.asList(null
@@ -89,8 +96,8 @@ public class Account extends ABaseEntity implements LogicRemovableEntity {
 
 	private LocalDate activeUntil;
 
-	@NotNull
-	private String agency;
+	@ManyToOne
+	private Agency agency;
 
 	public String getUsername() {
 		return username;
@@ -134,11 +141,11 @@ public class Account extends ABaseEntity implements LogicRemovableEntity {
 		this.activeUntil = activeUntil;
 	}
 
-	public String getAgency() {
+	public Agency getAgency() {
 		return agency;
 	}
 
-	public void setAgency(String agency) {
+	public void setAgency(Agency agency) {
 		this.agency = agency;
 	}
 }

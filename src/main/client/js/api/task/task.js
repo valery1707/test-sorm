@@ -133,7 +133,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 				field: 'id',
 				sort: {direction: uiGridConstants.ASC, priority: 0}
 			},
-			{field: 'agency'},
+			{field: 'agencyName'},
 			{field: 'clientAlias'},
 			{
 				field: 'periodStart',

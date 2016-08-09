@@ -8,7 +8,6 @@ import name.valery1707.megatel.sorm.domain.TaskPermit;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import static name.valery1707.core.utils.DateUtils.formatDateTime;
 
@@ -19,8 +18,8 @@ public class TaskPermitDto implements BaseDto {
 	private String createdBy;
 	private String createdAt;
 	@NotNull
-	@Size(min = 3)
-	private String agency;
+	private Long agencyId;
+	private String agencyName;
 	@NotNull
 	@Min(0)
 	private Long taskId;
@@ -44,7 +43,8 @@ public class TaskPermitDto implements BaseDto {
 		setId(src.getId());
 		setCreatedBy(src.getCreatedBy().getUsername());
 		setCreatedAt(formatDateTime(src.getCreatedAt()));
-		setAgency(src.getAgency());
+		setAgencyId(src.getAgency().getId());
+		setAgencyName(src.getAgency().getName());
 		setTaskId(src.getTask().getId());
 		setAccountId(src.getAccount().getId());
 		setAccountName(src.getAccount().getUsername());
@@ -77,12 +77,20 @@ public class TaskPermitDto implements BaseDto {
 		this.createdAt = createdAt;
 	}
 
-	public String getAgency() {
-		return agency;
+	public Long getAgencyId() {
+		return agencyId;
 	}
 
-	public void setAgency(String agency) {
-		this.agency = agency;
+	public void setAgencyId(Long agencyId) {
+		this.agencyId = agencyId;
+	}
+
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 
 	public Long getTaskId() {

@@ -53,11 +53,11 @@ public class SpecificationBuilder<D, F> {
 		return withCustomSimple(value, field(field), criteriaBuilder);
 	}
 
-	public <X> SpecificationBuilder<D, F> withEquals(Function<F, X> value, SingularExpressionGetter<D, X> fieldGetter) {
+	public <X> SpecificationBuilder<D, F> withEquals(Function<F, X> value, SingularExpressionGetter<? super D, X> fieldGetter) {
 		return with(new EqualsFilter<>(fieldGetter, value));
 	}
 
-	public <X> SpecificationBuilder<D, F> withEquals(Function<F, X> value, SingularAttribute<D, X> field) {
+	public <X> SpecificationBuilder<D, F> withEquals(Function<F, X> value, SingularAttribute<? super D, X> field) {
 		return withEquals(value, field(field));
 	}
 

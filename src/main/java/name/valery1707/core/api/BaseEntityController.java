@@ -89,6 +89,10 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 		return repo;
 	}
 
+	protected AccountService accountService() {
+		return accountService;
+	}
+
 	protected abstract SpecificationBuilder<D, F> buildUserFilter();
 
 	protected void canCreate() {

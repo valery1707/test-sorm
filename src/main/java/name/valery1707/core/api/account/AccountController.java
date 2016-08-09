@@ -6,6 +6,10 @@ import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.core.domain.Account;
 import name.valery1707.core.domain.Account_;
+import name.valery1707.megatel.sorm.api.agency.AgencyController;
+import name.valery1707.megatel.sorm.api.agency.AgencyDto;
+import name.valery1707.megatel.sorm.api.agency.AgencyRepo;
+import name.valery1707.megatel.sorm.domain.Agency_;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 import static name.valery1707.core.utils.DateUtils.parseDate;
@@ -31,7 +36,15 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 @RequestMapping("/api/account")
 public class AccountController extends BaseEntityController<Account, AccountRepo, AccountFilter, AccountDto> {
 	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
 	private AccountRepo repo;
+
+	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
+	private AgencyRepo agencyRepo;
+
+	@Inject
+	private AgencyController agencyController;
 
 	/**
 	 * (username = :username) AND (id != :id) AND (isActive IS TRUE)
@@ -50,7 +63,7 @@ public class AccountController extends BaseEntityController<Account, AccountRepo
 				.withEquals(AccountFilter::isActive, Account_.isActive)
 				.withEquals(AccountFilter::getRole, Account_.role)
 				.withDate(AccountFilter::getActiveUntil, Account_.activeUntil)
-				.withString(AccountFilter::getAgency, Account_.agency)
+				.withString(AccountFilter::getAgencyName, Account_.agency, Agency_.name)
 				;
 	}
 
@@ -102,6 +115,13 @@ public class AccountController extends BaseEntityController<Account, AccountRepo
 		entity.setActive(dto.isActive());
 		entity.setRole(dto.getRole());
 		entity.setActiveUntil(parseDate(dto.getActiveUntil()));
-		entity.setAgency(dto.getAgency());
+		if (dto.getAgency() != null) {
+			entity.setAgency(agencyRepo.findOne(dto.getAgency().getId()));
+		}
+	}
+
+	@RequestMapping(path = "comboAgency")
+	public List<AgencyDto> comboAgency() {
+		return agencyController.comboAgency();
 	}
 }

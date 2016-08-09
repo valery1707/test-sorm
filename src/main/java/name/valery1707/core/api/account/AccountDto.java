@@ -3,11 +3,11 @@ package name.valery1707.core.api.account;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import name.valery1707.core.api.BaseDto;
 import name.valery1707.core.domain.Account;
+import name.valery1707.megatel.sorm.api.agency.AgencyDto;
 import org.hibernate.validator.constraints.ScriptAssert;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import static name.valery1707.core.utils.DateUtils.LOCAL_DATE_PATTERN;
 import static name.valery1707.core.utils.DateUtils.formatDate;
@@ -33,9 +33,10 @@ public class AccountDto implements BaseDto {
 	private Account.Role role;
 	@Pattern(regexp = LOCAL_DATE_PATTERN)
 	private String activeUntil;
-	@NotNull
-	@Size(min = 3)
-	private String agency;
+
+	private AgencyDto agency;
+	private Long agencyId;
+	private String agencyName;
 
 	public AccountDto() {
 	}
@@ -47,7 +48,11 @@ public class AccountDto implements BaseDto {
 		setActive(src.isActive());
 		setRole(src.getRole());
 		setActiveUntil(formatDate(src.getActiveUntil()));
-		setAgency(src.getAgency());
+		if (src.getAgency() != null) {
+			setAgency(new AgencyDto(src.getAgency()));
+			setAgencyId(src.getAgency().getId());
+			setAgencyName(src.getAgency().getName());
+		}
 	}
 
 	public long getId() {
@@ -106,11 +111,27 @@ public class AccountDto implements BaseDto {
 		this.activeUntil = activeUntil;
 	}
 
-	public String getAgency() {
+	public AgencyDto getAgency() {
 		return agency;
 	}
 
-	public void setAgency(String agency) {
+	public void setAgency(AgencyDto agency) {
 		this.agency = agency;
+	}
+
+	public Long getAgencyId() {
+		return agencyId;
+	}
+
+	public void setAgencyId(Long agencyId) {
+		this.agencyId = agencyId;
+	}
+
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
 	}
 }
