@@ -63,6 +63,7 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 				.withDateTime(TaskPermitFilter::getPeriodStart, TaskPermit_.periodStart)
 				.withDateTime(TaskPermitFilter::getPeriodFinish, TaskPermit_.periodFinish)
 				.withEquals(TaskPermitFilter::getShowOnlyActive, TaskPermit_.isActive)
+				.withEquals(TaskPermitFilter::getAgency, TaskPermit_.agency)
 				;
 	}
 
@@ -70,6 +71,7 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 	protected void applyPermanentFilter(TaskPermitFilter filter) {
 		super.applyPermanentFilter(filter);
 		filter.setShowOnlyActive(true);
+		filter.setAgency(accountService().getAccount().get().getAgency());
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

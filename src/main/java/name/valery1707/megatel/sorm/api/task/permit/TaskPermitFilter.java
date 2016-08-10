@@ -1,10 +1,15 @@
 package name.valery1707.megatel.sorm.api.task.permit;
 
+import name.valery1707.megatel.sorm.domain.Agency;
+
+import javax.validation.constraints.Null;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 public class TaskPermitFilter {
 	private String id;
+	@Null
+	private Agency agency;
 	private String agencyName;
 	private String taskId;
 	private String accountId;
@@ -18,6 +23,14 @@ public class TaskPermitFilter {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public Agency getAgency() {
+		return agency;
+	}
+
+	public void setAgency(Agency agency) {
+		this.agency = agency;
 	}
 
 	public String getAgencyName() {
