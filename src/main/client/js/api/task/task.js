@@ -63,7 +63,14 @@ config(['$stateProvider', function ($stateProvider) {
 			});
 }]).
 factory('taskService', ['$resource', function ($resource) {
-	return $resource(apiBaseUrl + '/task', {}, serviceCommonConfig);
+	const url = apiBaseUrl + '/task';
+	return $resource(url, {}, jQuery.extend({}, serviceCommonConfig, {
+		comboAgency: {
+			url: url + '/comboAgency',
+			method: 'GET',
+			isArray: true
+		}
+	}));
 }]).
 controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper', '$state', 'dialogs', 'toastr', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, dialogs, toastr, principal) {
 	$scope.principal = principal;
@@ -162,6 +169,16 @@ controller('taskCtrlEdit', ['$scope', '$state', '$stateParams', 'taskService', '
 	$scope.selectTagSimple = function (tag) {
 		return tag.replace(',', '').trim();
 	};
+	$scope.optSelect = function (item, field) {
+		$scope.model[field] = item.id;
+	};
+	service.comboAgency(
+			function (data) {
+				$scope.optAgency = data;
+			},
+			function (error) {
+				toastr.error(error.statusText, 'Error');
+			});
 	formBuilder($scope, $state, $stateParams, service, toastr, 'task', {
 		filter: {
 			email: [],

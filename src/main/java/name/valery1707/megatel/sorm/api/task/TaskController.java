@@ -9,10 +9,15 @@ import name.valery1707.core.app.AccountService;
 import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.core.domain.Account;
+import name.valery1707.megatel.sorm.api.agency.AgencyController;
+import name.valery1707.megatel.sorm.api.agency.AgencyDto;
 import name.valery1707.megatel.sorm.api.agency.AgencyRepo;
 import name.valery1707.megatel.sorm.api.task.permit.TaskPermitRepo;
-import name.valery1707.megatel.sorm.domain.*;
+import name.valery1707.megatel.sorm.domain.Agency_;
+import name.valery1707.megatel.sorm.domain.Task;
 import name.valery1707.megatel.sorm.domain.TaskFilter.TaskFilterType;
+import name.valery1707.megatel.sorm.domain.TaskFilterValue;
+import name.valery1707.megatel.sorm.domain.Task_;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,6 +52,9 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 	@Inject
 	@SuppressWarnings("SpringJavaAutowiringInspection")
 	private AgencyRepo agencyRepo;
+
+	@Inject
+	private AgencyController agencyController;
 
 	public TaskController() {
 		super("task");
@@ -103,6 +111,14 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 		//todo Валидация периодов активности
 
 		validateFilter(dto.getFilter() != null ? dto.getFilter() : Collections.emptyMap(), validation);
+		//Если у пользователя есть привязка к агенству, то при создании он может выбрать только доступные ему агенства
+		if (
+				dto.getAgency() != null &&
+				accountService().getAccount().get().getAgency() != null &&
+				dto.getAgency().getId() != accountService().getAccount().get().getAgency().getId()
+				) {
+			validation.rejectValue("agency", "{Task.agency.constraint.inaccessible}", "Agency must be accessible for current Account");
+		}
 	}
 
 	private void validateFilter(Map<String, List<String>> filter, BindingResult validation) {
@@ -133,7 +149,7 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 
 	@Override
 	protected void dto2domain(TaskDto dto, Task entity) {
-		entity.setAgency(agencyRepo.getOne(dto.getAgencyId()));
+		entity.setAgency(agencyRepo.getOne(dto.getAgency().getId()));
 		entity.setClientAlias(dto.getClientAlias());
 		entity.setPeriodStart(parseDateTime(dto.getPeriodStart()));
 		entity.setPeriodFinish(parseDateTime(dto.getPeriodFinish()));
@@ -180,5 +196,10 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 				.toJavaMap()
 		);
 		//endregion
+	}
+
+	@RequestMapping(path = "comboAgency")
+	public List<AgencyDto> comboAgency() {
+		return agencyController.comboAgency();
 	}
 }

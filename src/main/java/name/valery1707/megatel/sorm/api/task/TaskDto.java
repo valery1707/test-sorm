@@ -6,6 +6,7 @@ import javaslang.collection.HashMap;
 import javaslang.collection.Stream;
 import name.valery1707.core.api.BaseDto;
 import name.valery1707.core.utils.DateUtils;
+import name.valery1707.megatel.sorm.api.agency.AgencyDto;
 import name.valery1707.megatel.sorm.domain.Task;
 import name.valery1707.megatel.sorm.domain.TaskFilter;
 import name.valery1707.megatel.sorm.domain.TaskFilterValue;
@@ -31,9 +32,12 @@ public class TaskDto implements BaseDto {
 	private long id;
 	private String createdBy;
 	private String createdAt;
+
 	@NotNull
+	private AgencyDto agency;
 	private Long agencyId;
 	private String agencyName;
+
 	@NotNull
 	@Size(min = 3)
 	private String clientAlias;
@@ -57,6 +61,7 @@ public class TaskDto implements BaseDto {
 		setId(src.getId());
 		setCreatedBy(src.getCreatedBy().getUsername());
 		setCreatedAt(formatDateTime(src.getCreatedAt()));
+		setAgency(new AgencyDto(src.getAgency()));
 		setAgencyId(src.getAgency().getId());
 		setAgencyName(src.getAgency().getName());
 		setClientAlias(src.getClientAlias());
@@ -94,6 +99,14 @@ public class TaskDto implements BaseDto {
 
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public AgencyDto getAgency() {
+		return agency;
+	}
+
+	public void setAgency(AgencyDto agency) {
+		this.agency = agency;
 	}
 
 	public Long getAgencyId() {
