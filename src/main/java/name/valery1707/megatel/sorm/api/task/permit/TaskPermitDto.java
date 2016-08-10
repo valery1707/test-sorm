@@ -3,6 +3,7 @@ package name.valery1707.megatel.sorm.api.task.permit;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import name.valery1707.core.api.BaseDto;
 import name.valery1707.core.utils.DateUtils;
+import name.valery1707.megatel.sorm.api.agency.AgencyDto;
 import name.valery1707.megatel.sorm.domain.TaskPermit;
 
 import javax.validation.constraints.Min;
@@ -17,9 +18,12 @@ public class TaskPermitDto implements BaseDto {
 	private long id;
 	private String createdBy;
 	private String createdAt;
+
 	@NotNull
+	private AgencyDto agency;
 	private Long agencyId;
 	private String agencyName;
+
 	@NotNull
 	@Min(0)
 	private Long taskId;
@@ -43,6 +47,7 @@ public class TaskPermitDto implements BaseDto {
 		setId(src.getId());
 		setCreatedBy(src.getCreatedBy().getUsername());
 		setCreatedAt(formatDateTime(src.getCreatedAt()));
+		setAgency(new AgencyDto(src.getAgency()));
 		setAgencyId(src.getAgency().getId());
 		setAgencyName(src.getAgency().getName());
 		setTaskId(src.getTask().getId());
@@ -75,6 +80,14 @@ public class TaskPermitDto implements BaseDto {
 
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public AgencyDto getAgency() {
+		return agency;
+	}
+
+	public void setAgency(AgencyDto agency) {
+		this.agency = agency;
 	}
 
 	public Long getAgencyId() {

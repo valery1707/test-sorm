@@ -34,6 +34,11 @@ factory('taskPermitService', ['$resource', function ($resource) {
 			url: url + '/comboAccount',
 			method: 'GET',
 			isArray: true
+		},
+		comboAgency: {
+			url: url + '/comboAgency',
+			method: 'GET',
+			isArray: true
 		}
 	}));
 }]).
@@ -130,6 +135,13 @@ controller('taskPermitCtrlEdit', ['$scope', '$state', '$stateParams', 'taskPermi
 	service.comboAccount(
 			function (data) {
 				$scope.optAccount = data;
+			},
+			function (error) {
+				toastr.error(error.statusText, 'Error');
+			});
+	service.comboAgency(
+			function (data) {
+				$scope.optAgency = data;
 			},
 			function (error) {
 				toastr.error(error.statusText, 'Error');

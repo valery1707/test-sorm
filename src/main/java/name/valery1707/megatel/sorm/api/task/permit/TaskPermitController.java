@@ -7,6 +7,9 @@ import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.core.domain.Account;
 import name.valery1707.core.domain.Account_;
+import name.valery1707.core.domain.IBaseEntity;
+import name.valery1707.megatel.sorm.api.agency.AgencyController;
+import name.valery1707.megatel.sorm.api.agency.AgencyDto;
 import name.valery1707.megatel.sorm.api.agency.AgencyRepo;
 import name.valery1707.megatel.sorm.api.task.TaskDto;
 import name.valery1707.megatel.sorm.api.task.TaskRepo;
@@ -48,6 +51,9 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 	@Inject
 	@SuppressWarnings("SpringJavaAutowiringInspection")
 	private AccountRepo accountRepo;
+
+	@Inject
+	private AgencyController agencyController;
 
 	public TaskPermitController() {
 		super("taskPermit");
@@ -91,7 +97,36 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 
 		Account account = accountRepo.findOne(dto.getAccountId());
 		if (account == null || !Account.Role.OPERATOR.equals(account.getRole())) {
-			validation.rejectValue("taskId", "{TaskPermit.accountId.constraint.exists}", "Operator account must exists");
+			validation.rejectValue("accountId", "{TaskPermit.accountId.constraint.exists}", "Operator account must exists");
+		}
+
+		//Если у пользователя есть привязка к агенству, то при создании он может выбрать только доступные ему агенства
+		if (
+				dto.getAgency() != null &&
+				accountService().getAccount().get().getAgency() != null &&
+				dto.getAgency().getId() != accountService().getAccount().get().getAgency().getId()
+				) {
+			validation.rejectValue("agency", "{TaskPermit.agency.constraint.inaccessible}", "Agency must be accessible for current Account");
+		}
+
+		//Агенство у Санкции и у Задания должно быть одинаковым
+		if (
+				dto.getAgency() != null &&
+				dto.getTaskId() != null &&
+				task != null &&
+				task.getAgency().getId() != dto.getAgency().getId()
+				) {
+			validation.rejectValue("taskId", "{TaskPermit.taskId.constraint.invalidAgency}", "Agency must be same as agency in separate field");
+		}
+
+		//Агенство у Санкции и у Оператора должно быть одинаковым
+		if (
+				dto.getAgency() != null &&
+				dto.getAccountId() != null &&
+				account != null &&
+				account.getAgency().getId() != dto.getAgency().getId()
+				) {
+			validation.rejectValue("accountId", "{TaskPermit.accountId.constraint.invalidAgency}", "Agency must be same as agency in separate field");
 		}
 	}
 
@@ -103,16 +138,23 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 
 	@Override
 	protected void dto2domain(TaskPermitDto dto, TaskPermit entity) {
-		entity.setAgency(agencyRepo.getOne(dto.getAgencyId()));
+		entity.setAgency(agencyRepo.getOne(dto.getAgency().getId()));
 		entity.setTask(taskRepo.getOne(dto.getTaskId()));
 		entity.setAccount(accountRepo.getOne(dto.getAccountId()));
 		entity.setPeriodStart(parseDateTime(dto.getPeriodStart()));
 		entity.setPeriodFinish(parseDateTime(dto.getPeriodFinish()));
 	}
 
+	private static final SpecificationBuilder<Task, TaskDto> comboTaskFilter = new SpecificationBuilder<Task, TaskDto>(SpecificationMode.AND)
+			.withEquals(TaskDto::getActive, Task_.isActive)
+			.withEquals(TaskDto::getAgencyId, field(Task_.agency).nest(Agency_.id));
+
 	@RequestMapping(path = "comboTask")
 	public List<TaskDto> comboTask() {
-		return taskRepo.findActive()
+		TaskDto filter = new TaskDto();
+		filter.setActive(true);
+		filter.setAgencyId(accountService().getAccount().map(Account::getAgency).map(IBaseEntity::getId).orElse(null));
+		return taskRepo.findAll(comboTaskFilter.build(filter))
 				.stream().map(TaskDto::new)
 				.collect(toList());
 	}
@@ -123,6 +165,7 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 	private static final SpecificationBuilder<Account, AccountDto> comboAccountFilter = new SpecificationBuilder<Account, AccountDto>(SpecificationMode.AND)
 			.withEquals(AccountDto::isActive, Account_.isActive)
 			.withCustom(AccountDto::getActiveUntil, Account_.activeUntil, cb -> (field, filter) -> cb.or(cb.isNull(field), cb.lessThanOrEqualTo(field, LocalDate.now())))
+			.withEquals(AccountDto::getAgencyId, field(Account_.agency).nest(Agency_.id))
 			.withEquals(AccountDto::getRole, Account_.role);
 
 	@RequestMapping(path = "comboAccount")
@@ -130,9 +173,15 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 		AccountDto filter = new AccountDto();
 		filter.setActive(true);
 		filter.setActiveUntil("now");
+		filter.setAgencyId(accountService().getAccount().map(Account::getAgency).map(IBaseEntity::getId).orElse(null));
 		filter.setRole(Account.Role.OPERATOR);
 		return accountRepo.findAll(comboAccountFilter.build(filter))
 				.stream().map(AccountDto::new)
 				.collect(toList());
+	}
+
+	@RequestMapping(path = "comboAgency")
+	public List<AgencyDto> comboAgency() {
+		return agencyController.comboAgency();
 	}
 }
