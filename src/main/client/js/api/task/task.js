@@ -60,6 +60,11 @@ config(['$stateProvider', function ($stateProvider) {
 				url: '/smtp',
 				templateUrl: 'view/common/grid/grid.html',
 				controller: 'broSmtpCtrl'
+			})
+			.state('task.view.binary', {
+				url: '/binary',
+				templateUrl: 'view/common/grid/grid.html',
+				controller: 'broBinaryCtrl'
 			});
 }]).
 factory('taskService', ['$resource', function ($resource) {
@@ -192,6 +197,7 @@ controller('taskViewCtrl', ['$scope', '$state', function ($scope, $state) {
 		{active: false, route: 'task.view.http', name: 'Http', visible: true},
 		{active: false, route: 'task.view.files', name: 'Files', visible: false},
 		{active: false, route: 'task.view.smtp', name: 'SMTP', visible: true},
+		{active: false, route: 'task.view.binary', name: 'Binary', visible: true},
 	];
 
 	$scope.go = function (route) {

@@ -46,6 +46,10 @@ redef record HTTP::Info += {
 	amt_tasks: set[count] &default=set();
 	amt_tasks_list: string &default="" &log;
 };
+redef record Crypted::Info += {
+	amt_tasks: set[count] &default=set();
+	amt_tasks_list: string &default="" &log;
+};
 
 export {
 	## Сохранение данных о коннекте
@@ -141,6 +145,13 @@ function filter_http(rec: HTTP::Info): bool {
 	}
 	return F;
 }
+function filter_crypted(rec: Crypted::Info): bool {
+	if (rec$uid in catched_conn_uid) {
+		rec$amt_tasks_list = cat_set(catched_conn_uid[rec$uid], ",", ",", ",");
+		return T;
+	}
+	return F;
+}
 function filter_files(rec: Files::Info): bool {
 	return is_catched_conn_set(rec$conn_uids);
 }
@@ -166,6 +177,11 @@ event bro_init() {
 	filter = Log::get_filter(HTTP::LOG, "default");
 	filter$pred = filter_http;
 	Log::add_filter(HTTP::LOG, filter);
+
+	# Crypted
+	filter = Log::get_filter(Crypted::LOG, "default");
+	filter$pred = filter_crypted;
+	Log::add_filter(Crypted::LOG, filter);
 
 	# Files
 	filter = Log::get_filter(Files::LOG, "default");
