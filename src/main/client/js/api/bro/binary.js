@@ -8,9 +8,37 @@ config(['$stateProvider', function ($stateProvider) {
 			});
 }]).
 factory('broBinaryService', ['$resource', function ($resource) {
-	return $resource(apiBaseUrl + '/bro/binary', {}, serviceCommonConfig);
+	const url = apiBaseUrl + '/bro/binary';
+	return $resource(url, {}, jQuery.extend({}, serviceCommonConfig, {
+		files: {
+			url: url + '/files',
+			method: 'GET',
+			isArray: true,
+			cache: false
+		}
+	}));
 }]).
-controller('broBinaryCtrl', ['$scope', 'broBinaryService', 'uiGridConstants', 'gridHelper', '$stateParams', function ($scope, service, uiGridConstants, gridHelper, $stateParams) {
+controller('broBinaryCtrl', ['$scope', 'broBinaryService', 'uiGridConstants', 'gridHelper', '$stateParams', 'dialogs', 'toastr', 'principal', function ($scope, service, uiGridConstants, gridHelper, $stateParams, dialogs, toastr, principal) {
+	$scope.principal = principal;
+
+	$scope.actions = [
+		{
+			perRow: true,
+			permissions: ['task.view'],
+			icon: 'eye-open',
+			action: function (grid, row) {
+				service.get(row.entity,
+						function (success) {
+							dialogs.create('view/bro/binary.detail.html', 'broCommonDetailCtrl', {entity: success, service: service}, {keyboard: true});
+						},
+						function (error) {
+							const msg = error.statusText ? error.statusText : error;
+							toastr.error(msg, 'Server error');
+						});
+			}
+		}
+	];
+
 	$scope.filterModel = {
 		taskId: $stateParams.id
 	};
@@ -23,6 +51,9 @@ controller('broBinaryCtrl', ['$scope', 'broBinaryService', 'uiGridConstants', 'g
 
 	gridHelper($scope, service, paginationOptions, {
 		columnDefs: [
+			{
+				field: '_actions'
+			},
 			{
 				field: 'ts',
 				sort: {direction: uiGridConstants.DESC, priority: 0},
