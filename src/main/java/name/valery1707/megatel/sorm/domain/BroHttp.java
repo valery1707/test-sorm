@@ -68,7 +68,7 @@ public class BroHttp {
 	private String infoMsg;
 
 	@Lob
-	private String filename;
+	private String origFilenames;
 
 	private String tags;
 
@@ -252,12 +252,12 @@ public class BroHttp {
 		this.infoMsg = infoMsg;
 	}
 
-	public String getFilename() {
-		return filename;
+	public String getOrigFilenames() {
+		return origFilenames;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setOrigFilenames(String origFilenames) {
+		this.origFilenames = origFilenames;
 	}
 
 	public String getTags() {
