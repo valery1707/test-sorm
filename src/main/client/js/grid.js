@@ -189,7 +189,7 @@ service('formBuilder', [function () {
 								}
 							}
 						} else {
-							toastr.error('Unknown server error', 'Error');
+							toastr.error('Не известная ошибка сервера', 'Ошибка');
 						}
 					});
 		};

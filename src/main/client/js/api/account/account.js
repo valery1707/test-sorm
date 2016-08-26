@@ -59,16 +59,16 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 			permissions: ['account.delete'],
 			icon: 'minus',
 			action: function (grid, row) {
-				dialogs.confirm('Remove account?', 'Remove account?').result.then(
+				dialogs.confirm('Удалить аккаунт?', 'Подтверждение').result.then(
 						function (yes) {
 							service.delete({id: row.entity.id},
 									function (success) {
-										toastr.info('Account deleted', 'Success');
+										toastr.info('Аккаунт удалён', 'Успех');
 										$scope.loadPage();
 									},
 									function (error) {
 										const msg = error.statusText ? error.statusText : error;
-										toastr.error(msg, 'Server error');
+										toastr.error(msg, 'Ошибка сервера');
 									});
 						},
 						function (no) {
@@ -103,38 +103,49 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 				field: 'id',
 				sort: {direction: uiGridConstants.DESC, priority: 0}
 			},
-			{field: 'username'},
+			{
+				field: 'username',
+				name: 'Имя пользователя'
+			},
 			{
 				field: 'active',
+				name: 'Активен',
+				cellFilter: 'booleanToString',
 				filter: {
 					type: uiGridConstants.filter.SELECT,
 					selectOptions: [
-						{value: true, label: 'True'},
-						{value: false, label: 'False'}
+						{value: true, label: 'ДА'},
+						{value: false, label: 'нет'}
 					]
 				}
 			},
 			{
 				field: 'role',
+				name: 'Роль',
+				cellFilter: 'Account_Role',
 				filter: {
 					type: uiGridConstants.filter.SELECT,
 					selectOptions: [
-						{value: 'SUPER', label: 'SUPER'},
-						{value: 'ADMIN', label: 'ADMIN'},
-						{value: 'OPERATOR', label: 'OPERATOR'},
-						{value: 'SUPERVISOR', label: 'SUPERVISOR'}
+						{value: 'SUPER', label: 'Сисадмин'},
+						{value: 'ADMIN', label: 'Администратор'},
+						{value: 'OPERATOR', label: 'Обработчик'},
+						{value: 'SUPERVISOR', label: 'Надзорщик'}
 					]
 				}
 			},
 			{
 				field: 'activeUntil',
+				name: 'Дата деактивации',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from', picker: {onlyDate: true}}, {placeholder: 'to', picker: {onlyDate: true}}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD');
 				}
 			},
-			{field: 'agencyName'},
+			{
+				field: 'agencyName',
+				name: 'Орган, осуществляющий проведение ОРМ или надзор'
+			},
 		],
 	});
 
@@ -152,5 +163,16 @@ controller('accountCtrlEdit', ['$scope', '$state', '$stateParams', 'accountServi
 				toastr.error(error.statusText, 'Error');
 			});
 	formBuilder($scope, $state, $stateParams, service, toastr, 'account');
-}])
+}]).
+filter('Account_Role', function () {
+	return function (val) {
+		switch (val) {
+			case 'SUPER': return 'Сисадмин';
+			case 'ADMIN': return 'Администратор';
+			case 'OPERATOR': return 'Обработчик';
+			case 'SUPERVISOR': return 'Надзорщик';
+			default: return val;
+		}
+	}
+})
 ;

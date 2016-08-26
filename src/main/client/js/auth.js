@@ -244,11 +244,11 @@ controller('authController', ['$scope', '$state', 'principal', 'toastr', 'dialog
 					$state.go('home');
 				}, function (error) {
 					if (error && error.status && error.status == 401) {
-						toastr.error('Invalid username or password', 'Authorization error');
+						toastr.error('Не правильный логин или пароль', 'Ошибка авторизации');
 					} else if (error && error.status) {
-						toastr.error('Error ' + error.status + ': ' + error.statusText, 'Unknown error');
+						toastr.error('Ошибка ' + error.status + ': ' + error.statusText, 'Не известная ошибка');
 					} else {
-						toastr.error('Error: ' + error, 'Unknown error');
+						toastr.error('Ошибка: ' + error, 'Не известная ошибка');
 					}
 				});
 	};
@@ -265,9 +265,9 @@ controller('changePasswordController', ['$scope', 'principal', 'toastr', functio
 		principal.changePassword($scope.model.oldPassword, $scope.model.newPassword)
 				.then(function () {
 					$scope.$close();
-					toastr.success('Password changed', 'Change password');
+					toastr.success('Пароль изменён', 'Изменение пароля');
 				}, function (error) {
-					toastr.error(error.statusText, 'Error');
+					toastr.error(error.statusText, 'Ошибка');
 				});
 	};
 	$scope.hitEnter = function (evt) {

@@ -13,13 +13,13 @@
 
             <!--username-->
             <div class="form-group" title="Username">
-                <label for="username" class="sr-only">Username</label>
+                <label for="username" class="sr-only">Имя пользователя</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></div>
                     <input type="text" class="form-control"
                            name="username" id="username" ng-model="model.username"
-                           placeholder="Username" friendly-name="Username"
+                           placeholder="Имя пользователя" friendly-name="Имя пользователя"
                            validation="custom:serverErrorValidator('username')|min_len:3"
                     >
                 </div>
@@ -27,13 +27,13 @@
 
             <!--password-->
             <div class="form-group" title="Password" ng-if="!model.id">
-                <label for="password" class="sr-only">Password</label>
+                <label for="password" class="sr-only">Пароль</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
                     <input type="password" class="form-control"
                            name="password" id="password" ng-model="model.password"
-                           placeholder="Password" friendly-name="Password"
+                           placeholder="Пароль" friendly-name="Пароль"
                            validation="custom:serverErrorValidator('password')|required|min_len:3"
                     >
                 </div>
@@ -41,13 +41,13 @@
 
             <!--newPassword-->
             <div class="form-group" title="New password" ng-if="model.id">
-                <label for="newPassword" class="sr-only">New password</label>
+                <label for="newPassword" class="sr-only">Новый пароль</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
                     <input type="password" class="form-control"
                            name="newPassword" id="newPassword" ng-model="model.newPassword"
-                           placeholder="New password" friendly-name="New password"
+                           placeholder="Новый пароль" friendly-name="Новый пароль"
                            validation="custom:serverErrorValidator('newPassword')|min_len:3"
                     >
                 </div>
@@ -55,13 +55,13 @@
 
             <!--newPasswordConfirm-->
             <div class="form-group" title="Confirm new password" ng-if="model.id">
-                <label for="newPasswordConfirm" class="sr-only">Confirm new password</label>
+                <label for="newPasswordConfirm" class="sr-only">Подтверждение пароля</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></div>
                     <input type="password" class="form-control"
                            name="newPasswordConfirm" id="newPasswordConfirm" ng-model="model.newPasswordConfirm"
-                           placeholder="Confirm new password" friendly-name="Confirm new password"
+                           placeholder="Подтверждение пароля" friendly-name="Подтверждение пароля"
                            validation="custom:serverErrorValidator('newPasswordConfirm')|min_len:3|match:model.newPassword,New password"
                     >
                 </div>
@@ -74,14 +74,14 @@
                         <input type="checkbox"
                                name="active" id="active" ng-model="model.active"
                                friendly-name="Active"
-                        > Active
+                        > Активен
                     </label>
                 </div>
             </div>
 
             <!--role-->
             <div class="form-group" title="Role">
-                <label for="role" class="sr-only">Role</label>
+                <label for="role" class="sr-only">Роль</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></div>
@@ -92,16 +92,16 @@
                             friendly-name="Role"
                             validation="custom:serverErrorValidator('role')|required"
                     >
-                        <option value="ADMIN">ADMIN</option>
-                        <option value="OPERATOR">OPERATOR</option>
-                        <option value="SUPERVISOR">SUPERVISOR</option>
+                        <option value="ADMIN">Администратор</option>
+                        <option value="OPERATOR">Обработчик</option>
+                        <option value="SUPERVISOR">Надзорщик</option>
                     </select>
                 </div>
             </div>
 
             <!--activeUntil-->
             <div class="form-group" title="Active until">
-                <label for="activeUntil" class="sr-only">Active until</label>
+                <label for="activeUntil" class="sr-only">Дата деактивации</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
@@ -109,7 +109,7 @@
                            date-time-picker='{"onlyDate": true}'
                            convert-to-date
                            name="activeUntil" id="activeUntil" ng-model="model.activeUntil"
-                           placeholder="Active until" friendly-name="Active until"
+                           placeholder="Дата деактивации" friendly-name="Дата деактивации"
                            validation="custom:serverErrorValidator('activeUntil')"
                     >
                 </div>
@@ -117,7 +117,7 @@
 
             <!--agency-->
             <div class="form-group" title="Agency">
-                <label for="agency" class="sr-only">Agency</label>
+                <label for="agency" class="sr-only">Орган, осуществляющий проведение ОРМ или надзор</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></div>
@@ -127,7 +127,7 @@
                                placeholder="Agency" friendly-name="Agency"
                                title="Select task"
                     >
-                        <ui-select-match placeholder="Select a agency in the list or search his">{{$select.selected.name || $select.selected}}</ui-select-match>
+                        <ui-select-match placeholder="Выберите из списка">{{$select.selected.name || $select.selected}}</ui-select-match>
                         <ui-select-choices repeat="item in optAgency track by item.id">
                             <div ng-bind-html="item.name | highlight: $select.search"></div>
                         </ui-select-choices>
@@ -143,10 +143,10 @@
     </div>
     <div class="panel-footer">
         <button type="button" class="btn btn-default" ng-click="cancel()">
-            Cancel
+            Отмена
         </button>
         <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(entityForm.$dirty && entityForm.$invalid) || entityForm.$pristine">
-            Save
+            Сохранить
         </button>
     </div>
 </div>

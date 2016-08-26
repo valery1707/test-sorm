@@ -1,19 +1,19 @@
 <div class="modal-header"><h4 class="modal-title">
     <!--todo-->
     <span class="glyphicon glyphicon-eye-open"></span>
-    SMTP details
+    SMTP-данные
 </h4></div>
 <div class="modal-body">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active">
-            <a data-target="#details" aria-controls="details" role="tab" data-toggle="tab">Details</a>
+            <a data-target="#details" aria-controls="details" role="tab" data-toggle="tab">Детали</a>
         </li>
         <li role="presentation">
-            <a data-target="#files" aria-controls="files" role="tab" data-toggle="tab">Files</a>
+            <a data-target="#files" aria-controls="files" role="tab" data-toggle="tab">Файлы</a>
         </li>
         <li role="presentation" ng-show="images.length > 0">
-            <a data-target="#images" aria-controls="images" role="tab" data-toggle="tab">Images</a>
+            <a data-target="#images" aria-controls="images" role="tab" data-toggle="tab">Изображения</a>
         </li>
     </ul>
 
@@ -23,7 +23,7 @@
             <ng-form name="detail" novalidate role="form" class="form-horizontal">
                 <!--ts-->
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Time</label>
+                    <label class="col-sm-2 control-label">Время</label>
 
                     <div class="col-sm-10">
                         <p class="form-control-static">{{model.ts}}</p>
@@ -32,7 +32,7 @@
 
                 <!--idOrigHost-->
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Source IP</label>
+                    <label class="col-sm-2 control-label">Исходный IP</label>
 
                     <div class="col-sm-10">
                         <p class="form-control-static">{{model.idOrigHost}}</p>
@@ -41,7 +41,7 @@
 
                 <!--idOrigPort-->
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Source port</label>
+                    <label class="col-sm-2 control-label">Исходный порт</label>
 
                     <div class="col-sm-10">
                         <p class="form-control-static">{{model.idOrigPort}}</p>
@@ -50,7 +50,7 @@
 
                 <!--idRespHost-->
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Target IP</label>
+                    <label class="col-sm-2 control-label">Целевой IP</label>
 
                     <div class="col-sm-10">
                         <p class="form-control-static">{{model.idRespHost}}</p>
@@ -59,7 +59,7 @@
 
                 <!--idRespPort-->
                 <div class="form-group form-group-sm">
-                    <label class="col-sm-2 control-label">Target port</label>
+                    <label class="col-sm-2 control-label">Целевой порт</label>
 
                     <div class="col-sm-10">
                         <p class="form-control-static">{{model.idRespPort}}</p>
@@ -141,5 +141,5 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="cancel()">Close</button>
+    <button type="button" class="btn btn-default" ng-click="cancel()">Закрыть</button>
 </div>

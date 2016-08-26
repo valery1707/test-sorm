@@ -58,16 +58,16 @@ controller('taskPermitCtrl', ['$scope', 'taskPermitService', 'uiGridConstants', 
 			permissions: ['taskPermit.delete'],
 			icon: 'minus',
 			action: function (grid, row) {
-				dialogs.confirm('Remove task permit?', 'Confirm').result.then(
+				dialogs.confirm('Удалить санкцию?', 'Подтверждение').result.then(
 						function (yes) {
 							service.delete({id: row.entity.id},
 									function (success) {
-										toastr.info('Task permit deleted', 'Success');
+										toastr.info('Санкция удалена', 'Успех');
 										$scope.loadPage();
 									},
 									function (error) {
 										const msg = error.statusText ? error.statusText : error;
-										toastr.error(msg, 'Server error');
+										toastr.error(msg, 'Ошибка сервера');
 									});
 						},
 						function (no) {
@@ -94,11 +94,21 @@ controller('taskPermitCtrl', ['$scope', 'taskPermitService', 'uiGridConstants', 
 				field: 'id',
 				sort: {direction: uiGridConstants.ASC, priority: 0}
 			},
-			{field: 'agencyName'},
-			{field: 'taskId'},
-			{field: 'accountName'},
+			{
+				field: 'agencyName',
+				name: 'Орган, осуществляющий проведение ОРМ или надзор'
+			},
+			{
+				field: 'taskId',
+				name: 'Номер задания'
+			},
+			{
+				field: 'accountName',
+				name: 'Оператор'
+			},
 			{
 				field: 'periodStart',
+				name: 'Период действия санции. Начало',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function (value) {
@@ -107,6 +117,7 @@ controller('taskPermitCtrl', ['$scope', 'taskPermitService', 'uiGridConstants', 
 			},
 			{
 				field: 'periodFinish',
+				name: 'Период действия санции. Конец',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function (value) {

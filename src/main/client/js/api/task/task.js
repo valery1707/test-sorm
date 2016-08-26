@@ -93,16 +93,16 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 			permissions: ['task.delete'],
 			icon: 'minus',
 			action: function (grid, row) {
-				dialogs.confirm('Remove task?', 'Remove task?').result.then(
+				dialogs.confirm('Удалить задание?', 'Подтверждение').result.then(
 						function (yes) {
 							service.delete({id: row.entity.id},
 									function (success) {
-										toastr.info('Task deleted', 'Success');
+										toastr.info('Задание удалено', 'Успех');
 										$scope.loadPage();
 									},
 									function (error) {
 										const msg = error.statusText ? error.statusText : error;
-										toastr.error(msg, 'Server error');
+										toastr.error(msg, 'Ошибка сервера');
 									});
 						},
 						function (no) {
@@ -145,10 +145,17 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 				field: 'id',
 				sort: {direction: uiGridConstants.ASC, priority: 0}
 			},
-			{field: 'agencyName'},
-			{field: 'clientAlias'},
+			{
+				field: 'agencyName',
+				name: 'Орган, осуществляющий проведение ОРМ или надзор'
+			},
+			{
+				field: 'clientAlias',
+				name: 'Псевдоним абонента'
+			},
 			{
 				field: 'periodStart',
+				name: 'Период перехвата. Начало',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function (value) {
@@ -157,14 +164,23 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 			},
 			{
 				field: 'periodFinish',
+				name: 'Период перехвата. Конец',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
 			},
-			{field: 'active', permissions: ['task.list.active']},
-			{field: 'note'},
+			{
+				field: 'active',
+				name: 'Активен',
+				cellFilter: 'booleanToString',
+				permissions: ['task.list.active']
+			},
+			{
+				field: 'note',
+				name: 'Примечание'
+			},
 		],
 	});
 

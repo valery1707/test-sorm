@@ -23,7 +23,7 @@ function formatBytes(bytes, decimals, k, sizes) {
  * @see https://stackoverflow.com/a/18650828
  */
 function formatBytes_1024(bytes, decimals) {
-	return formatBytes(bytes, decimals, 1024, ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']);
+	return formatBytes(bytes, decimals, 1024, ['байт', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']);
 }
 /**
  * Format bytes to string in 1000 mode
@@ -33,7 +33,7 @@ function formatBytes_1024(bytes, decimals) {
  * @see https://stackoverflow.com/a/18650828
  */
 function formatBytes_1000(bytes, decimals) {
-	return formatBytes(bytes, decimals, 1000, ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']);
+	return formatBytes(bytes, decimals, 1000, ['байт', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']);
 }
 
 /**
@@ -87,7 +87,22 @@ filter('secondToPeriod', function () {
 		if (seconds == null) {
 			return '';
 		}
-		return moment.duration(seconds, 'seconds').humanize();
+		const duration = moment.duration(seconds, 'seconds');
+		const min = duration.minutes();
+		const sec = duration.seconds();
+		const hours = duration.subtract(min, 'm').subtract(sec, 's').asHours();
+		return hours + ":" + min + ":" + sec;
+	}
+}).
+filter('booleanToString', function () {
+	return function (val) {
+		if (val == null) {
+			return '';
+		} else if (val) {
+			return 'ДА';
+		} else {
+			return 'нет';
+		}
 	}
 }).
 //@see https://docs.angularjs.org/api/ng/directive/select#binding-select-to-a-non-string-value-via-ngmodel-parsing-formatting
@@ -153,13 +168,13 @@ directive('carousel', ['$timeout', function ($timeout) {
 		link: function (scope, element, attrs) {
 			$(function () {
 				var isInitialized = false;
-				scope.$watch('data', function(newVal, oldVal) {
+				scope.$watch('data', function (newVal, oldVal) {
 					if (!isInitialized && newVal && newVal.length > 0) {
 						//console.log('Slick: before init');
-						$timeout(function(){
+						$timeout(function () {
 							//console.log('Slick: init');
 							$(element).slick();
-						}, 200).then(function(){
+						}, 200).then(function () {
 							//console.log('Slick: after init');
 						});
 						isInitialized = true;

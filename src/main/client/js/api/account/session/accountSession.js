@@ -34,9 +34,13 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 			{
 				field: 'id',
 			},
-			{field: 'accountUsername', enableFiltering: true},
+			{
+				field: 'accountUsername',
+				name: 'Имя пользователя'
+			},
 			{
 				field: 'loginAt',
+				name: 'Время входа',
 				sort: {direction: uiGridConstants.DESC, priority: 0},
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
@@ -46,19 +50,22 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 			},
 			{
 				field: 'loginAs',
+				name: 'Тип входа',
+				cellFilter: 'AccountSession_Login',
 				filter: {
 					type: uiGridConstants.filter.SELECT,
 					selectOptions: [
-						{value: 'MANUAL', label: 'MANUAL'},
-						{value: 'INTERACTIVE', label: 'INTERACTIVE'},
-						{value: 'REMEMBER_ME', label: 'REMEMBER_ME'}
+						{value: 'MANUAL', label: 'Ручной'},
+						//{value: 'INTERACTIVE', label: 'Интерактивный'},
+						{value: 'REMEMBER_ME', label: 'Запомнить меня'}
 					]
 				}
 			},
-			{field: 'sessionId'},
+			{field: 'sessionId', visible: false},
 			{field: 'details', visible: false},
 			{
 				field: 'logoutAt',
+				name: 'Время выхода',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
 				filterTermMapper: function (value) {
@@ -67,22 +74,45 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 			},
 			{
 				field: 'logoutAs',
+				name: 'Тип выхода',
+				cellFilter: 'AccountSession_Logout',
 				filter: {
 					type: uiGridConstants.filter.SELECT,
 					selectOptions: [
-						{value: 'MANUAL', label: 'MANUAL'},
-						{value: 'TIMEOUT', label: 'TIMEOUT'},
-						{value: 'SERVER_RESTART', label: 'SERVER_RESTART'}
+						{value: 'MANUAL', label: 'Ручной'},
+						{value: 'TIMEOUT', label: 'Таймаут'},
+						{value: 'SERVER_RESTART', label: 'Перезапуск сервера'}
 					]
 				}
 			},
 			{
 				field: 'duration',
+				name: 'Продолжительность',
 				cellFilter: 'secondToPeriod'
 			},
 		],
 	});
 
 	$scope.loadPage();
-}])
+}]).
+filter('AccountSession_Login', function () {
+	return function (val) {
+		switch (val) {
+			case 'MANUAL': return 'Ручной';
+			case 'INTERACTIVE': return 'Интерактивный';
+			case 'REMEMBER_ME': return 'Запомнить меня';
+			default: return val;
+		}
+	}
+}).
+filter('AccountSession_Logout', function () {
+	return function (val) {
+		switch (val) {
+			case 'MANUAL': return 'Ручной';
+			case 'TIMEOUT': return 'Таймаут';
+			case 'SERVER_RESTART': return 'Перезапуск сервера';
+			default: return val;
+		}
+	}
+})
 ;
