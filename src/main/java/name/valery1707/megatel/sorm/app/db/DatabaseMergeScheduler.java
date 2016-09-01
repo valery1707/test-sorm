@@ -6,6 +6,7 @@ import javaslang.collection.HashMap;
 import javaslang.collection.List;
 import javaslang.collection.Map;
 import javaslang.concurrent.Future;
+import javaslang.control.Option;
 import name.valery1707.megatel.sorm.app.bro.ServerRepo;
 import name.valery1707.megatel.sorm.domain.Server;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
@@ -82,10 +83,6 @@ public class DatabaseMergeScheduler {
 		serverRepo.findAll().forEach(server -> {
 			long id = server.getId();
 			String dbName = server.getDbName();
-			if (catalog.equals(dbName)) {
-				//Если сервер работает на той же БД что и Центр, то копировать от туда нам не нужно
-				return;
-			}
 
 			PoolProperties poolProperties = new PoolProperties();
 			poolProperties.setName(format("replica-for-server-%d", id));
@@ -101,6 +98,8 @@ public class DatabaseMergeScheduler {
 		//todo Период запуска сделать настраиваемым?
 		Duration delay = Duration.ofSeconds(10);
 		mergerInfo = connectionPool
+				//Если сервер работает на той же БД что и Центр, то копировать от туда нам не нужно
+				.filter(t -> !t._1.getDbName().equals(catalog))
 				//(server, dataSource) -> (server, dataSource, tableName)
 				.flatMap(t -> tableNames.map(name -> Tuple.of(t._1, t._2, name)))
 				//(server, dataSource, tableName) -> (server, tableName) / Future(merger)
@@ -115,5 +114,9 @@ public class DatabaseMergeScheduler {
 								))
 				))
 		;
+	}
+
+	public Option<DataSource> getConnection(Server server) {
+		return connectionPool.get(server);
 	}
 }
