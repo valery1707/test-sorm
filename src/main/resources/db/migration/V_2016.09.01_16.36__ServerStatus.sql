@@ -14,10 +14,10 @@ CREATE TABLE server_status (
 )
 		COMMENT = 'Актуальный статус мониторинга оборудования';
 
-# Пульт управления/Веб-сервер
+-- Пульт управления/Веб-сервер
 INSERT INTO server_status (server_id, modified_at, host_status, db_status) VALUES (NULL, NOW(), FALSE, FALSE);
 
-# Отдельные сервера
+-- Отдельные сервера
 INSERT INTO server_status (server_id, modified_at, host_status, db_status)
 		SELECT
 				id,
