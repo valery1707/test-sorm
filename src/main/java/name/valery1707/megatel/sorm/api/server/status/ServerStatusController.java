@@ -3,6 +3,7 @@ package name.valery1707.megatel.sorm.api.server.status;
 import name.valery1707.core.api.BaseEntityController;
 import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
+import name.valery1707.megatel.sorm.app.monitor.ServerMonitoring;
 import name.valery1707.megatel.sorm.app.monitor.ServerStatusRepo;
 import name.valery1707.megatel.sorm.domain.ServerStatus;
 import name.valery1707.megatel.sorm.domain.ServerStatus_;
@@ -16,9 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/server/status")
 public class ServerStatusController extends BaseEntityController<ServerStatus, ServerStatusRepo, ServerStatusFilter, ServerStatusDto> {
+
+	@Inject
+	private ServerMonitoring monitoring;
 
 	public ServerStatusController() {
 		super("serverStatus");
@@ -47,5 +55,11 @@ public class ServerStatusController extends BaseEntityController<ServerStatus, S
 	@Override
 	protected void dto2domain(ServerStatusDto dto, ServerStatus entity) {
 		throw new UnsupportedOperationException();
+	}
+
+	@RequestMapping(path = "refresh", method = RequestMethod.GET)
+	public Map<String, Object> refresh() {
+		monitoring.checkStatuses();
+		return Collections.singletonMap("status", "OK");
 	}
 }

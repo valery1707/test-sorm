@@ -21,6 +21,11 @@ config(['$stateProvider', function ($stateProvider) {
 factory('serverStatusService', ['$resource', function ($resource) {
 	const url = apiBaseUrl + '/server/status';
 	return $resource(url, {}, jQuery.extend({}, serviceCommonConfig, {
+		refresh: {
+			url: url + '/refresh',
+			method: 'GET',
+			isArray: false
+		}
 	}));
 }]).
 controller('serverStatusCtrl', ['$scope', 'serverStatusService', 'uiGridConstants', 'gridHelper', '$state', 'dialogs', 'toastr', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, dialogs, toastr, principal) {
@@ -29,9 +34,15 @@ controller('serverStatusCtrl', ['$scope', 'serverStatusService', 'uiGridConstant
 	$scope.actions = [
 		{
 			permissions: ['serverStatus.refresh'],
-			icon: 'repeat',
+			icon: 'flash',
 			action: function (grid, row) {
-				//todo Implement Refresh
+				service.refresh(
+						function (data) {
+							$scope.loadPage();
+						},
+						function (error) {
+							toastr.error(error.statusText, 'Error');
+						});
 			}
 		}
 	];
@@ -51,7 +62,7 @@ controller('serverStatusCtrl', ['$scope', 'serverStatusService', 'uiGridConstant
 			},
 			{
 				field: 'id',
-				visible: false,//todo Check
+				visible: false,
 				sort: {direction: uiGridConstants.DESC, priority: 0}
 			},
 			{
