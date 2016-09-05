@@ -21,6 +21,13 @@ factory('accountSessionService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/account/session', {}, serviceCommonConfig);
 }]).
 controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridConstants', 'gridHelper', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, principal) {
+	$scope.actions = [
+		{
+			type: 'refresh',
+			permissions: ['accountSession.list']
+		}
+	];
+
 	$scope.filterModel = {};
 
 	var paginationOptions = {

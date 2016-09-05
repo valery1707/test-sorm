@@ -35,6 +35,18 @@ service('gridHelper', [function () {
 		}
 		//endregion
 
+		//region Default table actions
+		const actionReload = function(grid, row) {
+			$scope.loadPage();
+		};
+		$scope.actions.filter(function (action) {
+			return action != undefined && action.type == 'refresh' && !action.action
+		}).forEach(function (action) {
+			action.action = actionReload;
+			action.icon = 'repeat';
+		});
+		//endregion
+
 		//region Filter columns by permission
 		if ($scope.principal) {
 			gridExt.columnDefs

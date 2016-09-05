@@ -54,6 +54,10 @@ controller('taskPermitCtrl', ['$scope', 'taskPermitService', 'uiGridConstants', 
 			}
 		},
 		{
+			type: 'refresh',
+			permissions: ['taskPermit.list']
+		},
+		{
 			perRow: true,
 			permissions: ['taskPermit.delete'],
 			icon: 'minus',

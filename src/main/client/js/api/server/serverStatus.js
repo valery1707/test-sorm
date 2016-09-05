@@ -44,6 +44,10 @@ controller('serverStatusCtrl', ['$scope', 'serverStatusService', 'uiGridConstant
 							toastr.error(error.statusText, 'Error');
 						});
 			}
+		},
+		{
+			type: 'refresh',
+			permissions: ['serverStatus.list']
 		}
 	];
 

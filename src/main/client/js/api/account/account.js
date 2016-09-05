@@ -55,6 +55,10 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 			}
 		},
 		{
+			type: 'refresh',
+			permissions: ['account.list']
+		},
+		{
 			perRow: true,
 			permissions: ['account.delete'],
 			icon: 'minus',

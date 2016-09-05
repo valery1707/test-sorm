@@ -89,6 +89,10 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 			}
 		},
 		{
+			type: 'refresh',
+			permissions: ['task.list']
+		},
+		{
 			perRow: true,
 			permissions: ['task.delete'],
 			icon: 'minus',
