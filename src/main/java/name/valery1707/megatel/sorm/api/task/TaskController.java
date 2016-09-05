@@ -89,6 +89,7 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
+	@Override
 	public Page<TaskDto> findByFilter(
 			@PageableDefault(size = 20) @SortDefault("id") Pageable pageable,
 			@RequestBody(required = false) TaskFilter filter
@@ -98,6 +99,7 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 
 	@RequestMapping(method = RequestMethod.PUT)
 	@Transactional
+	@Override
 	public ResponseEntity<Map<String, ?>> save(@RequestBody @Valid TaskDto dto, BindingResult validation) {
 		return super.save(dto, validation);
 	}

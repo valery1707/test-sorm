@@ -1,4 +1,4 @@
-ALTER TABLE server ADD COLUMN name TEXT
+ALTER TABLE server ADD COLUMN name VARCHAR(256)
 AFTER modified_at;
 
 UPDATE server

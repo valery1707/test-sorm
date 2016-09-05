@@ -19,6 +19,7 @@
             <ul class="nav navbar-nav">
                 <li ng-class="{active: $state.includes('account')}" ng-if="principal.hasPermission('account.list')"><a ui-sref="account.list">Пользователи</a></li>
                 <li ng-class="{active: $state.includes('accountSession')}" ng-if="principal.hasPermission('accountSession.list')"><a ui-sref="accountSession.list">Сеансы работы пользователей</a></li>
+                <li ng-class="{active: $state.includes('serverStatus')}" ng-if="principal.hasPermission('serverStatus.list')"><a ui-sref="serverStatus.list">Тех.состояние оборудования</a></li>
                 <li class="dropdown" ng-class="{active: $state.includes('task') || $state.includes('taskPermit')}" ng-if="principal.hasAnyPermission(['task.list', 'taskPermit.list'])">
                     <a data-target="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" nav-dropdown-hover>
                         Задания <span class="caret"></span>

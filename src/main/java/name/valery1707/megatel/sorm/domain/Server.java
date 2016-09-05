@@ -8,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -33,6 +34,9 @@ public class Server extends ABaseEntity {
 	@NotNull
 	@LastModifiedDate
 	private ZonedDateTime modifiedAt;
+
+	@NotNull
+	private String name;
 
 	@NotNull
 	private String host;
@@ -85,6 +89,14 @@ public class Server extends ABaseEntity {
 
 	public void setModifiedAt(ZonedDateTime modifiedAt) {
 		this.modifiedAt = modifiedAt;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getHost() {

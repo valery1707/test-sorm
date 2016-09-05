@@ -71,6 +71,7 @@ public class ServerMonitoring {
 		try {
 			ssh.connect();
 			List<String> df = ssh.execute("LANG=C df -h | grep -v -e 'udev ' -e 'tmpfs ' -e 'none '");
+			//Так же тут можно мониторить доступное место на диске
 			status.setHostStatus(df.size() > 1);
 		} catch (Throwable e) {
 			status.setHostStatus(false);
@@ -89,6 +90,9 @@ public class ServerMonitoring {
 			} catch (Throwable e) {
 				status.setDbStatus(false);
 			}
+		} else {
+			//Нет доступа к Хосту, значит нет и БД
+			status.setDbStatus(false);
 		}
 		return status;
 	}

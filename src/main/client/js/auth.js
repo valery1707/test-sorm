@@ -44,6 +44,8 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 		],
 		//Администратор
 		ADMIN: [
+			//Тех. состояние оборудования
+			, "serverStatus.list"
 			//Задание на перехват
 			, "task.list"
 			, "task.create"
