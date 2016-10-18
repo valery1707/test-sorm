@@ -27,11 +27,11 @@ public class AppUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		loginAttemptService.preventBruteForce(username, getClientIP(request));
-		Account IAccount = repo.getByUsernameAndIsActiveTrue(username);
-		if (IAccount == null) {
+		Account account = repo.getByUsernameAndIsActiveTrue(username);
+		if (account == null) {
 			throw new UsernameNotFoundException(String.format("Username '%s' not found", username));
 		}
-		return new AppUserDetails(IAccount);
+		return new AppUserDetails(account);
 	}
 
 	private String getClientIP(HttpServletRequest request) {
