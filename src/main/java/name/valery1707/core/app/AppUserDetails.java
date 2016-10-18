@@ -10,21 +10,21 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class AppUserDetails extends User {
-	private final Account IAccount;
+	private final Account account;
 
-	public AppUserDetails(Account IAccount) {
-		super(IAccount.getUsername(), IAccount.getPassword(), true, isActual(IAccount.getActiveUntil()), true, true, toAuthority(IAccount.getRole()));
-		this.IAccount = IAccount;
+	public AppUserDetails(Account account) {
+		super(account.getUsername(), account.getPassword(), true, isActual(account.getActiveUntil()), true, true, toAuthority(account.getRole()));
+		this.account = account;
 	}
 
 	public Account getAccount() {
-		return IAccount;
+		return account;
 	}
 
 	@Override
 	public void eraseCredentials() {
 		super.eraseCredentials();
-		IAccount.setPassword(null);
+		account.setPassword(null);
 	}
 
 	private static Collection<? extends GrantedAuthority> toAuthority(Account.Role role) {

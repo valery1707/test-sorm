@@ -58,11 +58,11 @@ public class AuthController {
 		if (user == null) {
 			throw new AccessDeniedException("User is not logged in");
 		}
-		Account IAccount = accountRepo.getOne(AccountUtils.toUserDetails(user).getAccount().getId());
-		if (!passwordEncoder.matches(pass.getOldPassword(), IAccount.getPassword())) {
+		Account account = accountRepo.getOne(AccountUtils.toUserDetails(user).getAccount().getId());
+		if (!passwordEncoder.matches(pass.getOldPassword(), account.getPassword())) {
 			throw new AccessDeniedException("Old password is invalid");
 		}
-		accountRepo.setPasswordById(passwordEncoder.encode(pass.getNewPassword()), IAccount.getId());
+		accountRepo.setPasswordById(passwordEncoder.encode(pass.getNewPassword()), account.getId());
 		return toAccount(user);
 	}
 
