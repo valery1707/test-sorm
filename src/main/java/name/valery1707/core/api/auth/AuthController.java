@@ -1,10 +1,12 @@
 package name.valery1707.core.api.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import name.valery1707.core.app.AccountService;
 import name.valery1707.core.app.AccountUtils;
 import name.valery1707.core.app.AppUserDetails;
 import name.valery1707.core.app.AppUserDetailsService;
 import name.valery1707.core.domain.Account;
+import name.valery1707.core.domain.Event.EventType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -47,23 +49,45 @@ public class AuthController {
 	}
 
 	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
 	private AccountRepo accountRepo;
+
+	@Inject
+	private AccountService accountService;
 
 	@Inject
 	private PasswordEncoder passwordEncoder;
 
 	@RequestMapping(method = RequestMethod.PATCH)
-	@Transactional
+	@Transactional(noRollbackFor = {AccessDeniedException.class})
 	public Map<String, Object> changePassword(Authentication user, @RequestBody @Valid ChangePassword pass) {
 		if (user == null) {
 			throw new AccessDeniedException("User is not logged in");
 		}
+		EventType eventType = detectEventType((AppUserDetails) user.getPrincipal());
 		Account account = accountRepo.getOne(AccountUtils.toUserDetails(user).getAccount().getId());
 		if (!passwordEncoder.matches(pass.getOldPassword(), account.getPassword())) {
+			accountService.logEventFail(eventType, "Old password is invalid");
 			throw new AccessDeniedException("Old password is invalid");
 		}
 		accountRepo.setPasswordById(passwordEncoder.encode(pass.getNewPassword()), account.getId());
+		accountService.logEventSuccess(eventType);
 		return toAccount(user);
+	}
+
+	private EventType detectEventType(AppUserDetails user) {
+		switch (user.getAccount().getRole()) {
+			case ADMIN:
+				return EventType.ADMIN_CHANGE_PASSWORD;
+			case OPERATOR:
+				return EventType.OPERATOR_CHANGE_PASSWORD;
+			case SUPER:
+				return null;
+			case SUPERVISOR:
+				return EventType.SUPERVISOR_CHANGE_PASSWORD;
+			default:
+				return null;
+		}
 	}
 
 	public static class ChangePassword {

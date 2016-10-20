@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 public class Event extends ABaseEntity {
 	public enum EventType {
 		//todo Стоит реализовать логирование полезных событий
-//		LOGIN(0.0), name.valery1707.core.app.AppUserDetailsService.loadUserByUsername()
+//		LOGIN(0.0), name.valery1707.core.app.AppUserDetailsService.loadUserByUsername() + name.valery1707.core.app.AccountSessionListener
 
 		//todo Работа с сессиями никак не логируется: name.valery1707.core.api.account.session.AccountSessionController
 		//todo Работа со статусами серверов никак не логируется: name.valery1707.megatel.sorm.api.server.status.ServerStatusController
@@ -28,17 +28,17 @@ public class Event extends ABaseEntity {
 		ADMIN_TASK_PERMIT_DELETE(1.10),
 		ADMIN_TASK_PERMIT_LIST(1.9),
 		SERVER_STATUS(1.14),//todo
-		ADMIN_CHANGE_PASSWORD(1.15),//todo
+		ADMIN_CHANGE_PASSWORD(1.15),
 
 		OPERATOR_TASK_LIST(2.1),
 		OPERATOR_TASK_VIEW(2.3),
 		//(2.4),//Просмотр списка реализованных запросов на получение служебной информации
 		//(2.5),//Получение служебной информации
-		OPERATOR_CHANGE_PASSWORD(2.6),//todo
+		OPERATOR_CHANGE_PASSWORD(2.6),
 
 		SUPERVISOR_ACCOUNT_LIST(3.1),
 		SUPERVISOR_TASK_LIST(3.2),
-		SUPERVISOR_CHANGE_PASSWORD(3.4),//todo
+		SUPERVISOR_CHANGE_PASSWORD(3.4),
 		//End
 		;
 
