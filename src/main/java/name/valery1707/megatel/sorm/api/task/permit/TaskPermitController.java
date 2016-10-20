@@ -7,6 +7,7 @@ import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.core.domain.Account;
 import name.valery1707.core.domain.Account_;
+import name.valery1707.core.domain.Event.EventType;
 import name.valery1707.core.domain.IBaseEntity;
 import name.valery1707.megatel.sorm.api.agency.AgencyController;
 import name.valery1707.megatel.sorm.api.agency.AgencyDto;
@@ -71,6 +72,31 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 				.withEquals(TaskPermitFilter::getShowOnlyActive, TaskPermit_.isActive)
 				.withEquals(TaskPermitFilter::getAgency, TaskPermit_.agency)
 				;
+	}
+
+	@Override
+	protected EventType eventCreate() {
+		return EventType.ADMIN_TASK_PERMIT_CREATE;
+	}
+
+	@Override
+	protected EventType eventRead() {
+		return null;
+	}
+
+	@Override
+	protected EventType eventUpdate() {
+		return null;
+	}
+
+	@Override
+	protected EventType eventDelete() {
+		return EventType.ADMIN_TASK_PERMIT_DELETE;
+	}
+
+	@Override
+	protected EventType eventFind() {
+		return EventType.ADMIN_TASK_PERMIT_LIST;
 	}
 
 	@Override

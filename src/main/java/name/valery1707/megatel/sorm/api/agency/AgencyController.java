@@ -3,8 +3,8 @@ package name.valery1707.megatel.sorm.api.agency;
 import name.valery1707.core.api.BaseEntityController;
 import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
-import name.valery1707.core.domain.ABaseEntity;
 import name.valery1707.core.domain.Account;
+import name.valery1707.core.domain.Event;
 import name.valery1707.megatel.sorm.domain.Agency;
 import name.valery1707.megatel.sorm.domain.Agency_;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static name.valery1707.megatel.sorm.domain.Agency.AgencyBuilder.anAgency;
 
 @RestController
 @RequestMapping("/api/agency")
@@ -28,6 +27,31 @@ public class AgencyController extends BaseEntityController<Agency, AgencyRepo, A
 				.withNumber(AgencyFilter::getId, Agency_.id)
 				.withString(AgencyFilter::getName, Agency_.name)
 				;
+	}
+
+	@Override
+	protected Event.EventType eventCreate() {
+		return null;
+	}
+
+	@Override
+	protected Event.EventType eventRead() {
+		return null;
+	}
+
+	@Override
+	protected Event.EventType eventUpdate() {
+		return null;
+	}
+
+	@Override
+	protected Event.EventType eventDelete() {
+		return null;
+	}
+
+	@Override
+	protected Event.EventType eventFind() {
+		return null;
 	}
 
 	@Override

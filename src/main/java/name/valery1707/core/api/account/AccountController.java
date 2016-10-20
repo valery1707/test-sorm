@@ -6,6 +6,7 @@ import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.core.domain.Account;
 import name.valery1707.core.domain.Account_;
+import name.valery1707.core.domain.Event.EventType;
 import name.valery1707.megatel.sorm.api.agency.AgencyController;
 import name.valery1707.megatel.sorm.api.agency.AgencyDto;
 import name.valery1707.megatel.sorm.api.agency.AgencyRepo;
@@ -65,6 +66,33 @@ public class AccountController extends BaseEntityController<Account, AccountRepo
 				.withDate(AccountFilter::getActiveUntil, Account_.activeUntil)
 				.withString(AccountFilter::getAgencyName, Account_.agency, Agency_.name)
 				;
+	}
+
+	@Override
+	protected EventType eventCreate() {
+		return EventType.ADMIN_ACCOUNT_CREATE;
+	}
+
+	@Override
+	protected EventType eventRead() {
+		return null;
+	}
+
+	@Override
+	protected EventType eventUpdate() {
+		return EventType.ADMIN_ACCOUNT_UPDATE;
+	}
+
+	@Override
+	protected EventType eventDelete() {
+		return EventType.ADMIN_ACCOUNT_DELETE;
+	}
+
+	@Override
+	protected EventType eventFind() {
+		return accountService().getCurrentAuditor().getRole().equals(Account.Role.ADMIN)
+				? EventType.ADMIN_ACCOUNT_LIST
+				: EventType.SUPERVISOR_ACCOUNT_LIST;
 	}
 
 	@PostConstruct

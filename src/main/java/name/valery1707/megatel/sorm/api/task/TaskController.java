@@ -9,6 +9,7 @@ import name.valery1707.core.app.AccountService;
 import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.core.domain.Account;
+import name.valery1707.core.domain.Event.EventType;
 import name.valery1707.megatel.sorm.api.agency.AgencyController;
 import name.valery1707.megatel.sorm.api.agency.AgencyDto;
 import name.valery1707.megatel.sorm.api.agency.AgencyRepo;
@@ -73,6 +74,41 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 				.withCustom(TaskFilter::getAllowedIds, Task_.id, cb -> (field, filter) -> filter.isEmpty() ? cb.isNull(field) : field.in(filter))
 				.withEquals(TaskFilter::getAgency, Task_.agency)
 				;
+	}
+
+	@Override
+	protected EventType eventCreate() {
+		return EventType.ADMIN_TASK_CREATE;
+	}
+
+	@Override
+	protected EventType eventRead() {
+		return EventType.OPERATOR_TASK_VIEW;
+	}
+
+	@Override
+	protected EventType eventUpdate() {
+		//todo Редактирование Заданий не доступно
+		return null;
+	}
+
+	@Override
+	protected EventType eventDelete() {
+		return EventType.ADMIN_TASK_DELETE;
+	}
+
+	@Override
+	protected EventType eventFind() {
+		switch (accountService().getCurrentAuditor().getRole()) {
+			case ADMIN:
+				return EventType.ADMIN_TASK_LIST;
+			case OPERATOR:
+				return EventType.OPERATOR_TASK_LIST;
+			case SUPERVISOR:
+				return EventType.SUPERVISOR_TASK_LIST;
+			default:
+				return EventType.ADMIN_TASK_LIST;
+		}
 	}
 
 	@Override

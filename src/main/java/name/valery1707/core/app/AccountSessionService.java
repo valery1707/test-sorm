@@ -46,6 +46,9 @@ public class AccountSessionService {
 		WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
 		AccountSession session = new AccountSession(mode, details.getSessionId(), toJSON(details));
 		AccountSession save = sessionRepo.save(session);
+		if (authentication.getPrincipal() instanceof AppUserDetails) {
+			((AppUserDetails) authentication.getPrincipal()).setSession(save);
+		}
 		LOG.debug("login(mode: {}, user: {}, sessionId: {}) => {}", mode, authentication.getName(), details.getSessionId(), save.getId());
 	}
 

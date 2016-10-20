@@ -7,6 +7,7 @@ import name.valery1707.core.db.SpecificationMode;
 import name.valery1707.core.domain.AccountSession;
 import name.valery1707.core.domain.AccountSession_;
 import name.valery1707.core.domain.Account_;
+import name.valery1707.core.domain.Event.EventType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,6 +39,31 @@ public class AccountSessionController extends BaseEntityController<AccountSessio
 				.withString(AccountSessionFilter::getDetails, AccountSession_.details)
 				.withNumber(AccountSessionFilter::getDuration, AccountSession_.duration)
 				;
+	}
+
+	@Override
+	protected EventType eventCreate() {
+		return null;
+	}
+
+	@Override
+	protected EventType eventRead() {
+		return null;
+	}
+
+	@Override
+	protected EventType eventUpdate() {
+		return null;
+	}
+
+	@Override
+	protected EventType eventDelete() {
+		return null;
+	}
+
+	@Override
+	protected EventType eventFind() {
+		return null;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

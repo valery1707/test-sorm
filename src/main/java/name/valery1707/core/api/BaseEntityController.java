@@ -5,6 +5,7 @@ import javaslang.collection.Seq;
 import name.valery1707.core.app.AccountService;
 import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.domain.Account;
+import name.valery1707.core.domain.Event.EventType;
 import name.valery1707.core.domain.LogicRemovableEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -95,24 +96,34 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 
 	protected abstract SpecificationBuilder<D, F> buildUserFilter();
 
+	protected abstract EventType eventCreate();
+
+	protected abstract EventType eventRead();
+
+	protected abstract EventType eventUpdate();
+
+	protected abstract EventType eventDelete();
+
+	protected abstract EventType eventFind();
+
 	protected void canCreate() {
-		accountService.requireAnyRole(canCreate);
+		accountService.requireAnyRole(eventCreate(), canCreate);
 	}
 
 	protected void canFind() {
-		accountService.requireAnyRole(canFind);
+		accountService.requireAnyRole(eventFind(), canFind);
 	}
 
 	protected void canRead() {
-		accountService.requireAnyRole(canRead);
+		accountService.requireAnyRole(eventRead(), canRead);
 	}
 
 	protected void canUpdate() {
-		accountService.requireAnyRole(canUpdate);
+		accountService.requireAnyRole(eventUpdate(), canUpdate);
 	}
 
 	protected void canDelete() {
-		accountService.requireAnyRole(canDelete);
+		accountService.requireAnyRole(eventDelete(), canDelete);
 	}
 
 	protected DTO domain2dto(D src) {
@@ -143,6 +154,7 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 			@RequestBody(required = false) F filter
 	) {
 		canFind();
+		accountService.logEventSuccess(eventFind());
 		applyPermanentFilter(filter);
 		Specification<D> spec = userFilter.build(filter);
 		return repo.findAll(spec, pageable)
@@ -154,8 +166,10 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 		canRead();
 		D entity = repo.findOne(id);
 		if (entity == null) {
+			accountService.logEventFail(eventRead(), String.format("Entity '%s' with id %d not found", domainClass.getName(), id));
 			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", domainClass.getName(), id));
 		}
+		accountService.logEventSuccess(eventRead());
 		return domain2dto(entity);
 	}
 
@@ -173,6 +187,7 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 		} else {
 			repo.delete(entity);
 		}
+		accountService.logEventSuccess(eventDelete());
 	}
 
 	protected void validate(DTO dto, BindingResult validation) {
@@ -182,12 +197,14 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 	@Transactional
 	public ResponseEntity<Map<String, ?>> save(@RequestBody @Valid DTO dto, BindingResult validation) {
 		validate(dto, validation);
+		boolean isCreate = dto.getId() == 0;
 
 		if (validation.getErrorCount() > 0) {
 			javaslang.collection.Map<String, List<FieldError>> fieldErrorMap = javaslang.collection.List
 					.ofAll(validation.getFieldErrors())
 					.groupBy(FieldError::getField)
 					.mapValues(Value::toJavaList);
+			accountService.logEventFail(isCreate ? eventCreate() : eventUpdate());
 			return ResponseEntity.badRequest().body(fieldErrorMap.toJavaMap());
 		}
 
@@ -203,6 +220,7 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 
 		dto2domain(dto, entity);
 		repo.save(entity);
+		accountService.logEventSuccess(isCreate ? eventCreate() : eventUpdate());
 
 		return ResponseEntity.ok(Collections.emptyMap());
 	}

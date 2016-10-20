@@ -3,6 +3,7 @@ package name.valery1707.megatel.sorm.api.server.status;
 import name.valery1707.core.api.BaseEntityController;
 import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
+import name.valery1707.core.domain.Event;
 import name.valery1707.megatel.sorm.app.monitor.ServerMonitoring;
 import name.valery1707.megatel.sorm.app.monitor.ServerStatusRepo;
 import name.valery1707.megatel.sorm.domain.ServerStatus;
@@ -41,6 +42,31 @@ public class ServerStatusController extends BaseEntityController<ServerStatus, S
 				.withEquals(ServerStatusFilter::getHostStatus, ServerStatus_.hostStatus)
 				.withEquals(ServerStatusFilter::getDbStatus, ServerStatus_.dbStatus)
 				;
+	}
+
+	@Override
+	protected Event.EventType eventCreate() {
+		return null;
+	}
+
+	@Override
+	protected Event.EventType eventRead() {
+		return null;
+	}
+
+	@Override
+	protected Event.EventType eventUpdate() {
+		return null;
+	}
+
+	@Override
+	protected Event.EventType eventDelete() {
+		return null;
+	}
+
+	@Override
+	protected Event.EventType eventFind() {
+		return null;
 	}
 
 	@Override

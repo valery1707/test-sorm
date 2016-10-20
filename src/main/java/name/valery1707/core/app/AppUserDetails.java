@@ -1,6 +1,7 @@
 package name.valery1707.core.app;
 
 import name.valery1707.core.domain.Account;
+import name.valery1707.core.domain.AccountSession;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -11,6 +12,7 @@ import java.util.Collections;
 
 public class AppUserDetails extends User {
 	private final Account account;
+	private AccountSession session;
 
 	public AppUserDetails(Account account) {
 		super(account.getUsername(), account.getPassword(), true, isActual(account.getActiveUntil()), true, true, toAuthority(account.getRole()));
@@ -19,6 +21,14 @@ public class AppUserDetails extends User {
 
 	public Account getAccount() {
 		return account;
+	}
+
+	public AccountSession getSession() {
+		return session;
+	}
+
+	public void setSession(AccountSession session) {
+		this.session = session;
 	}
 
 	@Override

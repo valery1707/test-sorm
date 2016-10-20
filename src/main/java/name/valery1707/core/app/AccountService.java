@@ -2,24 +2,37 @@ package name.valery1707.core.app;
 
 import javaslang.collection.List;
 import javaslang.collection.Seq;
+import name.valery1707.core.api.EventRepo;
 import name.valery1707.core.domain.Account;
+import name.valery1707.core.domain.Event;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+
 @Service
 @Scope(scopeName = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class AccountService implements AuditorAware<Account> {
+
+	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
+	private EventRepo eventRepo;
 
 	private Optional<AppUserDetails> userDetails;
 	private Optional<Account> account;
@@ -63,18 +76,19 @@ public class AccountService implements AuditorAware<Account> {
 		return account.isPresent();
 	}
 
-	public void requireAnyRole(Account.Role... roles) {
-		requireAnyRole(Arrays.asList(roles));
+	public void requireAnyRole(Event.EventType type, Account.Role... roles) {
+		requireAnyRole(type, Arrays.asList(roles));
 	}
 
-	public void requireAnyRole(Collection<Account.Role> roles) {
-		requireAnyRole(List.ofAll(roles));
+	public void requireAnyRole(Event.EventType type, Collection<Account.Role> roles) {
+		requireAnyRole(type, List.ofAll(roles));
 	}
 
-	public void requireAnyRole(Seq<Account.Role> roles) {
+	public void requireAnyRole(Event.EventType type, Seq<Account.Role> roles) {
 		requireAuthorized();
-		//todo Нужно ли логировать заблокированные обращения к API?
 		if (!hasAnyRole(roles)) {
+			//todo Не будет ли откачена транзакция?
+			logEventFail(type);
 			throw new AccessDeniedException(String.format(
 					"User '%s' does not have roles %s"
 					, account.get().getUsername()
@@ -111,5 +125,40 @@ public class AccountService implements AuditorAware<Account> {
 					, notFound.mkString("'", "', '", "'")
 			));
 		}
+	}
+
+	@Transactional
+	public void logEventSuccess(Event.EventType type) {
+		logEvent(type, true);
+	}
+
+	@Transactional
+	public void logEventFail(Event.EventType type) {
+		logEventFail(type, null);
+	}
+
+	@Transactional
+	public void logEventFail(Event.EventType type, @Nullable String ext) {
+		logEvent(type, false, ext);
+	}
+
+	@Transactional
+	public void logEvent(Event.EventType type, boolean success) {
+		logEvent(type, success, null);
+	}
+
+	@Transactional
+	public void logEvent(@Nullable Event.EventType type, boolean success, @Nullable String ext) {
+		if (type == null) {
+			return;
+		}
+		WebAuthenticationDetails details = (WebAuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+		Event event = new Event(getCurrentAuditor());
+		event.setType(type);
+		event.setSession(getUserDetails().map(AppUserDetails::getSession).orElse(null));
+		event.setSuccess(success);
+		event.setIp(details.getRemoteAddress());
+		event.setExt(trimToEmpty(ext));
+		eventRepo.save(event);
 	}
 }
