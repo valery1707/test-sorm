@@ -5,7 +5,7 @@ AFTER created_at;
 ALTER TABLE task ADD CONSTRAINT fk$task$account$modified_by FOREIGN KEY (modified_by_id) REFERENCES account (id);
 
 ALTER TABLE task
-ADD COLUMN modified_at TIMESTAMP
+ADD COLUMN modified_at DATETIME
 COMMENT 'Время последнего изменения'
 AFTER modified_by_id;
 
@@ -17,5 +17,5 @@ MODIFY COLUMN modified_by_id BIGINT NOT NULL
 COMMENT 'Автор последнего изменения';
 
 ALTER TABLE task
-MODIFY COLUMN modified_at TIMESTAMP NOT NULL
+MODIFY COLUMN modified_at DATETIME NOT NULL
 COMMENT 'Время последнего изменения';

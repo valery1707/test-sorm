@@ -2,11 +2,11 @@ CREATE TABLE agency (
 	id             BIGINT        NOT NULL AUTO_INCREMENT,
 	created_by_id  BIGINT        NOT NULL
 	COMMENT 'Пользователь, создавший запись',
-	created_at     TIMESTAMP     NOT NULL
+	created_at     DATETIME      NOT NULL
 	COMMENT 'Время создания записи',
 	modified_by_id BIGINT        NOT NULL
 	COMMENT 'Пользователь, изменивший запись',
-	modified_at    TIMESTAMP     NOT NULL
+	modified_at    DATETIME      NOT NULL
 	COMMENT 'Время изменения записи',
 	name           VARCHAR(1024) NOT NULL
 	COMMENT 'Наименование',

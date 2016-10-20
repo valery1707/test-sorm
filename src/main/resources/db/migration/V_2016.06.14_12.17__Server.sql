@@ -2,11 +2,11 @@ CREATE TABLE server (
 		id             BIGINT        NOT NULL  AUTO_INCREMENT,
 		created_by_id  BIGINT        NOT NULL
 		COMMENT 'Пользователь, создавший запись',
-		created_at     TIMESTAMP     NOT NULL
+		created_at     DATETIME      NOT NULL
 		COMMENT 'Время создания записи',
 		modified_by_id BIGINT        NOT NULL
 		COMMENT 'Пользователь, создавший запись',
-		modified_at    TIMESTAMP     NOT NULL
+		modified_at    DATETIME      NOT NULL
 		COMMENT 'Время создания записи',
 		host           VARCHAR(512)  NOT NULL
 		COMMENT 'Host name or IP address',

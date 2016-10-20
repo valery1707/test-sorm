@@ -1,12 +1,12 @@
 CREATE TABLE server_status (
-		id          BIGINT    NOT NULL AUTO_INCREMENT,
+		id          BIGINT   NOT NULL AUTO_INCREMENT,
 		server_id   BIGINT
 		COMMENT 'Сервер',
-		modified_at TIMESTAMP NOT NULL
+		modified_at DATETIME NOT NULL
 		COMMENT 'Время изменения записи',
-		host_status BOOLEAN   NOT NULL
+		host_status BOOLEAN  NOT NULL
 		COMMENT 'Статус хоста',
-		db_status   BOOLEAN   NOT NULL
+		db_status   BOOLEAN  NOT NULL
 		COMMENT 'Статус БД',
 
 		CONSTRAINT pk$server_status PRIMARY KEY (id),

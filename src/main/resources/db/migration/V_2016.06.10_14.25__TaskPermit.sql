@@ -2,7 +2,7 @@ CREATE TABLE task_permit (
 		id            BIGINT        NOT NULL AUTO_INCREMENT,
 		created_by_id BIGINT        NOT NULL
 		COMMENT 'Пользователь, создавший запись',
-		created_at    TIMESTAMP     NOT NULL
+		created_at    DATETIME      NOT NULL
 		COMMENT 'Время создания записи',
 		agency        VARCHAR(1024) NOT NULL
 		COMMENT 'Наименование органа, осуществляющего проведение ОРМ или надзор',
@@ -10,9 +10,9 @@ CREATE TABLE task_permit (
 		COMMENT 'Задание на перехват сообщений, на которую выдана санкция',
 		account_id    BIGINT        NOT NULL
 		COMMENT 'Пользователь, которому выдана санкция',
-		period_start  TIMESTAMP     NOT NULL
+		period_start  DATETIME      NOT NULL
 		COMMENT 'Время действия санции, начало',
-		period_finish TIMESTAMP     NOT NULL
+		period_finish DATETIME      NOT NULL
 		COMMENT 'Время действия санции, конец',
 		is_active     BOOLEAN       NOT NULL DEFAULT TRUE
 		COMMENT 'Признак активности записи',

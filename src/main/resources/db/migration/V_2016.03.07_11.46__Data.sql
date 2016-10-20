@@ -1,6 +1,6 @@
 CREATE TABLE data (
 		id        BIGINT      NOT NULL AUTO_INCREMENT,
-		date_time TIMESTAMP   NOT NULL,
+		date_time DATETIME    NOT NULL,
 		src_ip    BIGINT      NOT NULL,
 		src_port  INTEGER     NOT NULL,
 		dst_ip    BIGINT      NOT NULL,
