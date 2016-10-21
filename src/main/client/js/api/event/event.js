@@ -71,7 +71,7 @@ controller('eventCtrl', ['$scope', 'eventService', 'uiGridConstants', 'gridHelpe
 			},
 			{
 				field: 'createdAt',
-				name: 'Время собятия',
+				name: 'Время события',
 				sort: {direction: uiGridConstants.DESC, priority: 0},
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
 				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
