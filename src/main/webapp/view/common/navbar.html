@@ -29,6 +29,7 @@
                         <li ng-class="{active: $state.includes('taskPermit')}" ng-if="principal.hasPermission('taskPermit.list')"><a ui-sref="taskPermit.list">Санкции на обработку</a></li>
                     </ul>
                 </li>
+                <li ng-class="{active: $state.includes('event')}" ng-if="principal.hasPermission('event.list')"><a ui-sref="event.list">События</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">

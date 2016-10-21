@@ -16,36 +16,40 @@ public class Event extends ABaseEntity {
 		//todo Работа с сессиями никак не логируется: name.valery1707.core.api.account.session.AccountSessionController
 		//todo Работа со статусами серверов никак не логируется: name.valery1707.megatel.sorm.api.server.status.ServerStatusController
 		//todo Работа с Органами контроля никак не логируется: name.valery1707.megatel.sorm.api.agency.AgencyController
+		//todo Работа с журналом событий не логируется: name.valery1707.core.api.event.EventController
 
-		ADMIN_ACCOUNT_CREATE(1.1),
-		ADMIN_ACCOUNT_UPDATE(1.2),
-		ADMIN_ACCOUNT_DELETE(1.3),
-		ADMIN_ACCOUNT_LIST(1.4),
-		ADMIN_TASK_CREATE(1.5),
-		ADMIN_TASK_DELETE(1.7),
-		ADMIN_TASK_LIST(1.6),
-		ADMIN_TASK_PERMIT_CREATE(1.8),
-		ADMIN_TASK_PERMIT_DELETE(1.10),
-		ADMIN_TASK_PERMIT_LIST(1.9),
-		SERVER_STATUS(1.14),//todo
-		ADMIN_CHANGE_PASSWORD(1.15),
+		ADMIN_ACCOUNT_CREATE(1.1, "Добавление учётной записи"),
+		ADMIN_ACCOUNT_UPDATE(1.2, "Модификация параметров учётной записи"),
+		ADMIN_ACCOUNT_DELETE(1.3, "Удаление учётной записи"),
+		ADMIN_ACCOUNT_LIST(1.4, "Просмотр списка учётных записей"),
+		ADMIN_TASK_CREATE(1.5, "Задание на перехват сообщений абонента"),
+		ADMIN_TASK_DELETE(1.7, "Удаление заданий на перехват сообщений абонента"),
+		ADMIN_TASK_LIST(1.6, "Просмотр списка заданий на перехват сообщений абонента"),
+		ADMIN_TASK_PERMIT_CREATE(1.8, "Выдача санкий на обработку перехваченных сообщений абонента"),
+		ADMIN_TASK_PERMIT_DELETE(1.10, "Удаление санкции на обработку перехваченных сообщений абонента"),
+		ADMIN_TASK_PERMIT_LIST(1.9, "Просмотр списка выданных санкций на обработку перехваченных сообщений абонента"),
+		SERVER_STATUS(1.14, "Проверка технического состояния оборудования"),//todo
+		ADMIN_CHANGE_PASSWORD(1.15, "Изменение пароля администратора"),
 
-		OPERATOR_TASK_LIST(2.1),
-		OPERATOR_TASK_VIEW(2.3),
+		OPERATOR_TASK_LIST(2.1, "Просмотр списка санкционированных заданий на перехват сообщений абонента"),
+		OPERATOR_TASK_VIEW(2.3, "Получение результатов перехвата сообщений абонента"),
 		//(2.4),//Просмотр списка реализованных запросов на получение служебной информации
 		//(2.5),//Получение служебной информации
-		OPERATOR_CHANGE_PASSWORD(2.6),
+		OPERATOR_CHANGE_PASSWORD(2.6, "Изменение пароля обработчика"),
 
-		SUPERVISOR_ACCOUNT_LIST(3.1),
-		SUPERVISOR_TASK_LIST(3.2),
-		SUPERVISOR_CHANGE_PASSWORD(3.4),
+		SUPERVISOR_ACCOUNT_LIST(3.1, "Просмотр сисков учётных записей"),
+		SUPERVISOR_TASK_LIST(3.2, "Просмотр списка заданий на перехват сообщений абонента"),
+		SUPERVISOR_CHANGE_PASSWORD(3.4, "Изменение пароля надзорщика"),
 		//End
+		//Replace: /([A-Z_]+)\((\d+\.\d+), "([^"]+)"\)/$1: '$2: $3'
 		;
 
 		private final double code;
+		private final String note;
 
-		EventType(double code) {
+		EventType(double code, String note) {
 			this.code = code;
+			this.note = note;
 		}
 	}
 

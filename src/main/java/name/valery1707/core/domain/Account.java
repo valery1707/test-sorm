@@ -39,6 +39,8 @@ public class Account extends ABaseEntity implements LogicRemovableEntity {
 				//Тех. состояние оборудования
 				, "serverStatus.list"
 				, "serverStatus.refresh"
+				//Журнал доступа к операциям/событий
+				, "event.list"
 				//Задание на перехват
 				, "task.list"
 				, "task.create"

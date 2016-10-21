@@ -185,3 +185,23 @@ directive('carousel', ['$timeout', function ($timeout) {
 	};
 }])
 ;
+
+function enumToFilterValues(enumObj) {
+	var filter = [];
+	for (var key in enumObj) {
+		if (enumObj.hasOwnProperty(key)) {
+			filter.push({
+				value: key,
+				label: enumObj[key]
+			});
+		}
+	}
+	return filter;
+}
+function enumToTranslate(enumObj, key) {
+	if (enumObj.hasOwnProperty(key)) {
+		return enumObj[key];
+	} else {
+		return key;
+	}
+}

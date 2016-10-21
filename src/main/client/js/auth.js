@@ -47,6 +47,8 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 			//Тех. состояние оборудования
 			, "serverStatus.list"
 			, "serverStatus.refresh"
+			//Журнал доступа к операциям/событий
+			, "event.list"
 			//Задание на перехват
 			, "task.list"
 			, "task.create"

@@ -105,6 +105,7 @@ public class AccountController extends BaseEntityController<Account, AccountRepo
 		;
 	}
 
+	@Override
 	@RequestMapping(method = RequestMethod.POST)
 	public Page<AccountDto> findByFilter(
 			@PageableDefault(size = 20) @SortDefault(sort = "id", direction = ASC) Pageable pageable,
