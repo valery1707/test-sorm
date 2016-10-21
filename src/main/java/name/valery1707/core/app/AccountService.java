@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static org.apache.commons.lang3.StringUtils.trimToEmpty;
-
 @Service
 @Scope(scopeName = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class AccountService implements AuditorAware<Account> {
@@ -153,12 +151,14 @@ public class AccountService implements AuditorAware<Account> {
 			return;
 		}
 		WebAuthenticationDetails details = (WebAuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-		Event event = new Event(getCurrentAuditor());
-		event.setType(type);
-		event.setSession(getUserDetails().map(AppUserDetails::getSession).orElse(null));
-		event.setSuccess(success);
-		event.setIp(details.getRemoteAddress());
-		event.setExt(trimToEmpty(ext));
+		Event event = Event.client(
+				getCurrentAuditor(),
+				getUserDetails().map(AppUserDetails::getSession).orElse(null),
+				type,
+				success,
+				details.getRemoteAddress(),
+				ext
+		);
 		eventRepo.save(event);
 	}
 }

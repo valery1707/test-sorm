@@ -1,8 +1,13 @@
 package name.valery1707.core.domain;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
+
+import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 //todo В таком виде класс не должен быть в ядре
 // Если оставлять в ядре, то нужно избавиться от специфики.
@@ -28,7 +33,7 @@ public class Event extends ABaseEntity {
 		ADMIN_TASK_PERMIT_CREATE(1.8, "Выдача санкций на обработку перехваченных сообщений абонента"),
 		ADMIN_TASK_PERMIT_DELETE(1.10, "Удаление санкции на обработку перехваченных сообщений абонента"),
 		ADMIN_TASK_PERMIT_LIST(1.9, "Просмотр списка выданных санкций на обработку перехваченных сообщений абонента"),
-		SERVER_STATUS(1.14, "Проверка технического состояния оборудования"),//todo
+		SERVER_STATUS(1.14, "Проверка технического состояния оборудования"),
 		ADMIN_CHANGE_PASSWORD(1.15, "Изменение пароля администратора"),
 
 		OPERATOR_TASK_LIST(2.1, "Просмотр списка санкционированных заданий на перехват сообщений абонента"),
@@ -83,6 +88,23 @@ public class Event extends ABaseEntity {
 		this();
 		setCreatedBy(createdBy);
 		setCreatedAt(ZonedDateTime.now());
+	}
+
+	public static Event server(@Nonnull EventType type, boolean success, @Nullable String ip, @Nullable String ext) {
+		Event event = new Event();
+		event.setCreatedAt(ZonedDateTime.now());
+		event.setType(type);
+		event.setSuccess(success);
+		event.setIp(defaultIfBlank(ip, "localhost"));
+		event.setExt(trimToEmpty(ext));
+		return event;
+	}
+
+	public static Event client(@Nonnull Account account, @Nonnull AccountSession session, @Nonnull EventType type, boolean success, @Nullable String ip, @Nullable String ext) {
+		Event event = server(type, success, ip, ext);
+		event.setCreatedBy(account);
+		event.setSession(session);
+		return event;
 	}
 
 	public Account getCreatedBy() {

@@ -54,6 +54,7 @@ public class ServerMonitoring {
 				.map(
 						server -> Future.of(executor, () -> checkStatus(server))
 								.onSuccess(saver::save)
+								.onFailure(e -> saver.fail(server, e))
 				);
 		futures.forEach(Future::await);
 	}

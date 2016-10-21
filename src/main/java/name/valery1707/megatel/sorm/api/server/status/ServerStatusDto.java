@@ -9,6 +9,7 @@ import static name.valery1707.core.utils.DateUtils.formatDateTime;
 @SuppressWarnings("unused")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ServerStatusDto implements BaseDto {
+	public static final String LOCAL_SERVER_NAME = "Пульт управления";
 	private long id;
 
 	private String serverName;
@@ -25,7 +26,7 @@ public class ServerStatusDto implements BaseDto {
 	public ServerStatusDto(ServerStatus src) {
 		this();
 		setId(src.getId());
-		setServerName(src.getServer() != null ? src.getServer().getName() : "Пульт управления");//todo Константа
+		setServerName(src.getServer() != null ? src.getServer().getName() : LOCAL_SERVER_NAME);
 		setModifiedAt(formatDateTime(src.getModifiedAt()));
 		setHostStatus(src.isHostStatus());
 		setDbStatus(src.isDbStatus());

@@ -3,7 +3,7 @@ package name.valery1707.megatel.sorm.api.server.status;
 import name.valery1707.core.api.BaseEntityController;
 import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.db.SpecificationMode;
-import name.valery1707.core.domain.Event;
+import name.valery1707.core.domain.Event.EventType;
 import name.valery1707.megatel.sorm.app.monitor.ServerMonitoring;
 import name.valery1707.megatel.sorm.app.monitor.ServerStatusRepo;
 import name.valery1707.megatel.sorm.domain.ServerStatus;
@@ -45,27 +45,27 @@ public class ServerStatusController extends BaseEntityController<ServerStatus, S
 	}
 
 	@Override
-	protected Event.EventType eventCreate() {
+	protected EventType eventCreate() {
 		return null;
 	}
 
 	@Override
-	protected Event.EventType eventRead() {
+	protected EventType eventRead() {
 		return null;
 	}
 
 	@Override
-	protected Event.EventType eventUpdate() {
+	protected EventType eventUpdate() {
 		return null;
 	}
 
 	@Override
-	protected Event.EventType eventDelete() {
+	protected EventType eventDelete() {
 		return null;
 	}
 
 	@Override
-	protected Event.EventType eventFind() {
+	protected EventType eventFind() {
 		return null;
 	}
 
@@ -85,6 +85,7 @@ public class ServerStatusController extends BaseEntityController<ServerStatus, S
 
 	@RequestMapping(path = "refresh", method = RequestMethod.GET)
 	public Map<String, Object> refresh() {
+		accountService().logEventSuccess(EventType.SERVER_STATUS);
 		monitoring.checkStatuses();
 		return Collections.singletonMap("status", "OK");
 	}
