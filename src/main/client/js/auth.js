@@ -44,6 +44,13 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 		],
 		//Администратор
 		ADMIN: [
+			//Пользователи
+			, "account.list"
+			, "account.create"
+			, "account.update"
+			, "account.delete"
+			//Сессии пользователей
+			, "accountSession.list"
 			//Тех. состояние оборудования
 			, "serverStatus.list"
 			, "serverStatus.refresh"

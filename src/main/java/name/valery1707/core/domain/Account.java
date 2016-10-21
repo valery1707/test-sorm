@@ -36,6 +36,13 @@ public class Account extends ABaseEntity implements LogicRemovableEntity {
 		)),
 		//Администратор
 		ADMIN(Arrays.asList(null
+				//Пользователи
+				, "account.list"
+				, "account.create"
+				, "account.update"
+				, "account.delete"
+				//Сессии пользователей
+				, "accountSession.list"
 				//Тех. состояние оборудования
 				, "serverStatus.list"
 				, "serverStatus.refresh"
