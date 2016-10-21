@@ -56,8 +56,8 @@ config(['$translateProvider', function ($translateProvider) {
 	$translateProvider.useSanitizeValueStrategy('sanitize');
 
 	// define translation maps you want to use on startup
-	$translateProvider.preferredLanguage('en-US');
-	$translateProvider.fallbackLanguage('en');
+	$translateProvider.preferredLanguage('ru-RU');
+	$translateProvider.fallbackLanguage('ru');
 }]).
 config(['uiSelectConfig', function (uiSelectConfig) {
 	uiSelectConfig.theme = 'bootstrap';
