@@ -43,6 +43,8 @@ factory('eventService', ['$resource', function ($resource) {
 	return $resource(apiBaseUrl + '/event', {}, serviceCommonConfig);
 }]).
 controller('eventCtrl', ['$scope', 'eventService', 'uiGridConstants', 'gridHelper', '$state', 'principal', function ($scope, service, uiGridConstants, gridHelper, $state, principal) {
+	$scope.principal = principal;
+
 	$scope.actions = [
 		{
 			type: 'refresh',
