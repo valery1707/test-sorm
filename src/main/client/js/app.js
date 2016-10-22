@@ -44,6 +44,23 @@ run(['$rootScope', '$state', '$stateParams', function ($rootScope, $state, $stat
 	$rootScope.$stateParams = $stateParams;
 }]).
 config(['$translateProvider', function ($translateProvider) {
+	//Dialogs
+	$translateProvider.translations('ru-RU', {
+		DIALOGS_ERROR: "Ошибка",
+		DIALOGS_ERROR_MSG: "Возникла неизвестная ошибка.",
+		DIALOGS_CLOSE: "Закрыть",
+		DIALOGS_PLEASE_WAIT: "Подождите",
+		DIALOGS_PLEASE_WAIT_ELIPS: "Подождите...",
+		DIALOGS_PLEASE_WAIT_MSG: "Ожидаю выполнения операции.",
+		DIALOGS_PERCENT_COMPLETE: "% Завершено",
+		DIALOGS_NOTIFICATION: "Уведомление",
+		DIALOGS_NOTIFICATION_MSG: "Неизвестное уведомление.",
+		DIALOGS_CONFIRMATION: "Подтверждение",
+		DIALOGS_CONFIRMATION_MSG: "Требуется подтверждение.",
+		DIALOGS_OK: "OK",
+		DIALOGS_YES: "Да",
+		DIALOGS_NO: "Нет"
+	});
 	$translateProvider.useStaticFilesLoader({
 		files: [
 			{
@@ -53,7 +70,7 @@ config(['$translateProvider', function ($translateProvider) {
 		]
 	});
 
-	$translateProvider.useSanitizeValueStrategy('sanitize');
+	//$translateProvider.useSanitizeValueStrategy('sanitize');
 
 	// define translation maps you want to use on startup
 	$translateProvider.preferredLanguage('ru-RU');
