@@ -43,6 +43,18 @@ run(['$rootScope', '$state', '$stateParams', function ($rootScope, $state, $stat
 	$rootScope.$state = $state;
 	$rootScope.$stateParams = $stateParams;
 }]).
+run(['$interval', '$http', function ($interval, $http) {
+	//Поддерживаем CSRF-токен актуальным, за счёт фоновых запросов к серверу
+	$interval(function () {
+		$http({
+			method: 'GET',
+			url: apiBaseUrl + '/auth/csrf'
+		}).then(function successCallback(response) {
+		}, function errorCallback(response) {
+			//todo Перезагрузить страницу?
+		});
+	}, 30 * 1000);//Раз в 30 секунд
+}]).
 config(['$translateProvider', function ($translateProvider) {
 	//Dialogs
 	$translateProvider.translations('ru-RU', {

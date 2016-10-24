@@ -1,6 +1,7 @@
 package name.valery1707.core.api.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javaslang.collection.LinkedHashMap;
 import name.valery1707.core.app.AccountService;
 import name.valery1707.core.app.AccountUtils;
 import name.valery1707.core.app.AppUserDetails;
@@ -23,6 +24,8 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +36,7 @@ import static java.util.stream.Collectors.toMap;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+	private ZonedDateTime startAt = ZonedDateTime.now();
 
 	/**
 	 * Spring сам автоматически определяет что запрос сюда это авторизация и логинит пользователя в сессию.
@@ -147,5 +151,14 @@ public class AuthController {
 		account.put("name", principal.getUsername());
 		account.put("permission", rights);
 		return account;
+	}
+
+	@RequestMapping(path = "csrf", method = RequestMethod.GET)
+	public Map<String, Object> csrfCheck() {
+		return LinkedHashMap.<String, Object>empty()
+				.put("success", true)
+				.put("startAt", startAt)
+				.put("uptime", Duration.between(startAt, ZonedDateTime.now()).toString())
+				.toJavaMap();
 	}
 }

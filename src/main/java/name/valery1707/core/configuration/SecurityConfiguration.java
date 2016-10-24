@@ -60,6 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http
 				.authorizeRequests()
 					.antMatchers("/api/auth").permitAll()
+					.antMatchers("/api/auth/csrf").permitAll()
 					.antMatchers(securityProperties.getBasic().getPath()).authenticated()
 			.and()
 				.formLogin()
