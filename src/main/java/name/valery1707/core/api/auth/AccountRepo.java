@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface AccountRepo extends JpaRepository<Account, Long>, JpaSpecificationExecutor<Account> {
+	//У нас может быть несолько Неактивных аккаунтов с одинаковым именем, но только один активный
 	Account getByUsernameAndIsActiveTrue(String username) throws IncorrectResultSizeDataAccessException;
 
 	@Modifying

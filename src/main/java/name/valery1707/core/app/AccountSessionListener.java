@@ -3,6 +3,7 @@ package name.valery1707.core.app;
 import javaslang.collection.List;
 import name.valery1707.core.domain.AccountSession;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
@@ -30,6 +31,14 @@ public class AccountSessionListener {
 	@PostConstruct
 	public void init() {
 		sessionService.serverRestart();
+	}
+
+	@EventListener
+	public void authenticationFailureEvent(AbstractAuthenticationFailureEvent event) {
+		sessionService.loginFail(
+				event.getAuthentication().getName(), event.getAuthentication().getCredentials().toString(),
+				((AccountSessionDetails) event.getAuthentication().getDetails()).getRemoteAddress()
+		);
 	}
 
 	/**

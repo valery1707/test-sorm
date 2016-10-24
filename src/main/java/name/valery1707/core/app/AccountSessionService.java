@@ -2,12 +2,18 @@ package name.valery1707.core.app;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import name.valery1707.core.api.EventRepo;
+import name.valery1707.core.api.auth.AccountRepo;
 import name.valery1707.core.api.auth.AccountSessionRepo;
+import name.valery1707.core.domain.Account;
 import name.valery1707.core.domain.AccountSession;
+import name.valery1707.core.domain.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +31,19 @@ public class AccountSessionService {
 	private static final Logger LOG = LoggerFactory.getLogger(AccountSessionService.class);
 
 	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
 	private AccountSessionRepo sessionRepo;
+
+	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
+	private AccountRepo accountRepo;
+
+	@Inject
+	@SuppressWarnings("SpringJavaAutowiringInspection")
+	private EventRepo eventRepo;
+
+	@Inject
+	private PasswordEncoder passwordEncoder;
 
 	private ObjectMapper mapper;
 
@@ -41,6 +59,28 @@ public class AccountSessionService {
 	}
 
 	@Transactional
+	@Async
+	public void loginFail(String username, String password, String remoteAddress) {
+		Event event = Event.server(Event.EventType.LOGIN, false, remoteAddress, null);
+		Account account = accountRepo.getByUsernameAndIsActiveTrue(username);
+		if (account == null) {
+			//Неизвестный пользователь
+			event.setExt("Неизвестный пользователь: " + username);
+		} else {
+			//Пользователь известен
+			event.setCreatedBy(account);
+			if (!passwordEncoder.matches(password, account.getPassword())) {
+				//Ошибка в пароле
+				event.setExt("Ошибка в пароле");
+			} else {
+				//Блокировка по IP
+				event.setExt("Блокировка по IP: " + remoteAddress);
+			}
+		}
+		eventRepo.save(event);
+	}
+
+	@Transactional
 	public void login(AccountSession.Login mode, Authentication authentication) {
 		SecurityContextHolder.getContext().setAuthentication(authentication);//todo Нужно ли откатывать назад текущее значение?
 		WebAuthenticationDetails details = (WebAuthenticationDetails) authentication.getDetails();
@@ -50,6 +90,7 @@ public class AccountSessionService {
 			((AppUserDetails) authentication.getPrincipal()).setSession(save);
 		}
 		LOG.debug("login(mode: {}, user: {}, sessionId: {}) => {}", mode, authentication.getName(), details.getSessionId(), save.getId());
+		eventRepo.save(Event.client(save.getAccount(), save, Event.EventType.LOGIN, true, details.getRemoteAddress(), null));
 	}
 
 	private String toJSON(Object object) {

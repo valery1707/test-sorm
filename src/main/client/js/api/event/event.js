@@ -1,4 +1,5 @@
 const Event_EventType = {
+	LOGIN: 'Вход в систему',
 	ADMIN_ACCOUNT_CREATE: '1.1: Добавление учётной записи',
 	ADMIN_ACCOUNT_UPDATE: '1.2: Модификация параметров учётной записи',
 	ADMIN_ACCOUNT_DELETE: '1.3: Удаление учётной записи',

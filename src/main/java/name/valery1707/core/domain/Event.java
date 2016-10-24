@@ -15,8 +15,7 @@ import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 @Entity
 public class Event extends ABaseEntity {
 	public enum EventType {
-		//todo Стоит реализовать логирование полезных событий
-//		LOGIN(0.0), name.valery1707.core.app.AppUserDetailsService.loadUserByUsername() + name.valery1707.core.app.AccountSessionListener
+		LOGIN(0.0, "Вход в систему"),
 
 		//todo Работа с сессиями никак не логируется: name.valery1707.core.api.account.session.AccountSessionController
 		//todo Работа со статусами серверов никак не логируется: name.valery1707.megatel.sorm.api.server.status.ServerStatusController
