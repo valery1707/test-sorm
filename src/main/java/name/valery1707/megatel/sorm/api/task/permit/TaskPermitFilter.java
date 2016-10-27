@@ -11,7 +11,7 @@ public class TaskPermitFilter {
 	@Null
 	private Agency agency;
 	private String agencyName;
-	private String taskId;
+	private String taskNumber;
 	private String accountId;
 	private List<ZonedDateTime> periodStart;
 	private List<ZonedDateTime> periodFinish;
@@ -41,12 +41,12 @@ public class TaskPermitFilter {
 		this.agencyName = agencyName;
 	}
 
-	public String getTaskId() {
-		return taskId;
+	public String getTaskNumber() {
+		return taskNumber;
 	}
 
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
+	public void setTaskNumber(String taskNumber) {
+		this.taskNumber = taskNumber;
 	}
 
 	public String getAccountId() {

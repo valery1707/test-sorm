@@ -103,7 +103,7 @@ controller('taskPermitCtrl', ['$scope', 'taskPermitService', 'uiGridConstants', 
 				name: 'Орган, осуществляющий проведение ОРМ или надзор'
 			},
 			{
-				field: 'taskId',
+				field: 'taskNumber',
 				name: 'Номер задания'
 			},
 			{

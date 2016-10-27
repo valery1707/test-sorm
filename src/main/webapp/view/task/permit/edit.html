@@ -12,28 +12,28 @@
         <ng-form novalidate role="form" name="entityForm">
 
             <!--createdBy-->
-            <div class="form-group" title="Created by" ng-if="model.id">
-                <label for="createdBy">Создана</label>
+            <div class="form-group" title="Создан (администратор)" ng-if="model.id">
+                <label for="createdBy">Создан (администратор)</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></div>
                     <input type="text" class="form-control"
                            name="createdBy" id="createdBy" ng-model="model.createdBy"
-                           placeholder="Создана" friendly-name="Создана"
+                           placeholder="Создан (администратор)" friendly-name="Создан (администратор)"
                            readonly
                     >
                 </div>
             </div>
 
             <!--createdAt-->
-            <div class="form-group" title="Created at" ng-if="model.id">
-                <label for="createdAt">Создана</label>
+            <div class="form-group" title="Создан (время)" ng-if="model.id">
+                <label for="createdAt">Создан (время)</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>
                     <input type="text" class="form-control"
                            name="createdAt" id="createdAt" ng-model="model.createdAt"
-                           placeholder="Создана" friendly-name="Создана"
+                           placeholder="Создан (время)" friendly-name="Создан (время)"
                            convert-to-date-time
                            readonly
                     >
@@ -48,6 +48,7 @@
                     <div class="input-group-addon"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></div>
                     <ui-select class="form-control"
                                name="agency" id="agency" ng-model="model.agency"
+                               on-select="optSelect($item, 'agencyId')"
                                sortable="true"
                                placeholder="Орган, осуществляющий проведение ОРМ или надзор" friendly-name="Орган, осуществляющий проведение ОРМ или надзор"
                                title="Select task"
@@ -77,14 +78,9 @@
                                placeholder="Задание" friendly-name="Задание"
                                title="Select task"
                     >
-                        <ui-select-match placeholder="Выберите из списка">{{$select.selected.id || $select.selected}}</ui-select-match>
-                        <ui-select-choices repeat="item in optTask track by item.id" group-by="optTaskGroup">
-                            <!-- | filter: {id: $select.search, clientAlias: $select.search, agencyName: $select.search}-->
-                            <div ng-bind-html="item.id | highlight: $select.search"></div>
-                            <small>
-                                Псевдоним абонента: <span ng-bind-html="''+item.clientAlias | highlight: $select.search"></span>.
-                                Орган, осуществляющий проведение ОРМ или надзор: <span ng-bind-html="''+item.agencyName | highlight: $select.search"></span>
-                            </small>
+                        <ui-select-match placeholder="Выберите из списка">{{$select.selected.agencyName + ' / ' + $select.selected.number || $select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="item in optTask track by item.id">
+                            <div ng-bind-html="item.agencyName + ' / ' + item.number | highlight: $select.search"></div>
                         </ui-select-choices>
                     </ui-select>
                     <input type="hidden"
@@ -101,19 +97,15 @@
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></div>
                     <ui-select class="form-control"
-                               name="accountId" id="accountId" ng-model="model.accountId"
+                               name="accountId" id="accountId" ng-model="model.account"
                                on-select="optSelect($item, 'accountId')"
                                sortable="true"
-                               tagging="selectTagSimple" tagging-label="" tagging-tokens="SPACE|ENTER|,"
                                placeholder="Оператор" friendly-name="Оператор"
                                title="Select account"
                     >
-                        <ui-select-match placeholder="Выберите из списка">{{$select.selected.id || $select.selected}}</ui-select-match>
-                        <ui-select-choices repeat="item in optAccount">
-                            <div ng-bind-html="item.id | highlight: $select.search"></div>
-                            <small>
-                                Имя пользователя: <span ng-bind-html="''+item.username | highlight: $select.search"></span>.
-                            </small>
+                        <ui-select-match placeholder="Выберите из списка">{{$select.selected.agencyName + ' / ' + $select.selected.username || $select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="item in optAccount track by item.id">
+                            <div ng-bind-html="item.agencyName + ' / ' + item.username | highlight: $select.search"></div>
                         </ui-select-choices>
                     </ui-select>
                     <input type="hidden"

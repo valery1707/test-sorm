@@ -65,6 +65,7 @@ public class TaskController extends BaseEntityController<Task, TaskRepo, TaskFil
 	protected SpecificationBuilder<Task, TaskFilter> buildUserFilter() {
 		return new SpecificationBuilder<Task, TaskFilter>(SpecificationMode.AND)
 				.withNumber(TaskFilter::getId, Task_.id)
+				.withString(TaskFilter::getNumber, Task_.number)
 				.withDateTime(TaskFilter::getPeriodStart, Task_.periodStart)
 				.withDateTime(TaskFilter::getPeriodFinish, Task_.periodFinish)
 				.withString(TaskFilter::getAgencyName, Task_.agency, Agency_.name)

@@ -137,7 +137,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 	var paginationOptions = {
 		pageNumber: 1,
 		pageSize: 25,
-		sort: ["id,ASC"]
+		sort: ["createdAt,ASC"]
 	};
 
 	gridHelper($scope, service, paginationOptions, {
@@ -146,7 +146,12 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 				field: '_actions'
 			},
 			{
-				field: 'id',
+				field: 'number',
+				name: 'Номер задания'
+			},
+			{
+				field: 'createdAt',
+				name: 'Дата и время постановки задания',
 				sort: {direction: uiGridConstants.ASC, priority: 0}
 			},
 			{

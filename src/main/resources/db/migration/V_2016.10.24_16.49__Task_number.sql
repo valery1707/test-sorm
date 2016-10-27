@@ -1,0 +1,10 @@
+ALTER TABLE task
+ADD COLUMN number VARCHAR(512)
+AFTER is_active;
+
+UPDATE task
+SET number = CAST(id AS CHAR(512));
+
+ALTER TABLE task
+MODIFY COLUMN number VARCHAR(512) NOT NULL
+COMMENT 'Номер задания';

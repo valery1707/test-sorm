@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class TaskFilter {
 	private String id;
+	private String number;
 	@Null
 	private Agency agency;
 	private String agencyName;
@@ -25,6 +26,14 @@ public class TaskFilter {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
 	public Agency getAgency() {

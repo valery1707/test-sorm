@@ -1,5 +1,6 @@
 package name.valery1707.core.api;
 
+import javaslang.Tuple;
 import javaslang.Value;
 import javaslang.collection.Seq;
 import name.valery1707.core.app.AccountService;
@@ -7,6 +8,7 @@ import name.valery1707.core.db.SpecificationBuilder;
 import name.valery1707.core.domain.Account;
 import name.valery1707.core.domain.Event.EventType;
 import name.valery1707.core.domain.LogicRemovableEntity;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -204,7 +206,10 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 					.ofAll(validation.getFieldErrors())
 					.groupBy(FieldError::getField)
 					.mapValues(Value::toJavaList);
-			accountService.logEventFail(isCreate ? eventCreate() : eventUpdate());
+			String errorDescription = fieldErrorMap
+					.map((name, errors) -> Tuple.of(name, javaslang.collection.List.ofAll(errors).map(DefaultMessageSourceResolvable::getDefaultMessage).mkString("[", ", ", "]")))
+					.mkString("\n");
+			accountService.logEventFail(isCreate ? eventCreate() : eventUpdate(), errorDescription);
 			return ResponseEntity.badRequest().body(fieldErrorMap.toJavaMap());
 		}
 

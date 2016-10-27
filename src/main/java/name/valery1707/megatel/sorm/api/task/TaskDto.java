@@ -30,6 +30,7 @@ public class TaskDto implements BaseDto {
 			.toMap(name -> Tuple.of(name, Collections.emptyList()));
 
 	private long id;
+	private String number;
 	private String createdBy;
 	private String createdAt;
 
@@ -59,6 +60,7 @@ public class TaskDto implements BaseDto {
 	public TaskDto(Task src) {
 		this();
 		setId(src.getId());
+		setNumber(src.getNumber());
 		setCreatedBy(src.getCreatedBy().getUsername());
 		setCreatedAt(formatDateTime(src.getCreatedAt()));
 		setAgency(new AgencyDto(src.getAgency()));
@@ -83,6 +85,14 @@ public class TaskDto implements BaseDto {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
 	public String getCreatedBy() {

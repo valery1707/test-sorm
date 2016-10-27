@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <span ng-if="model.id">
-            Редактирование задания {{model.id}}
+            Редактирование задания '{{model.number}}'
         </span>
         <span ng-if="!model.id">
             Создание задания
@@ -11,9 +11,23 @@
         <!--todo https://www.forms-angular.org/#/schemas-->
         <ng-form novalidate role="form" name="entityForm">
 
+            <!--number-->
+            <div class="form-group" title="Номер задания">
+                <label for="number">Номер задания</label>
+
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           name="number" id="number" ng-model="model.number"
+                           placeholder="Номер задания" friendly-name="Номер задания"
+                           validation="custom:serverErrorValidator('number')|required|min_len:1"
+                    >
+                </div>
+            </div>
+
             <!--createdBy-->
             <div class="form-group" title="Created by" ng-if="model.id">
-                <label for="createdBy">Created by</label>
+                <label for="createdBy">Создан (администратор)</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></div>
@@ -27,7 +41,7 @@
 
             <!--createdAt-->
             <div class="form-group" title="Created at" ng-if="model.id">
-                <label for="createdAt">Создан</label>
+                <label for="createdAt">Создан (время)</label>
 
                 <div class="input-group">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span></div>

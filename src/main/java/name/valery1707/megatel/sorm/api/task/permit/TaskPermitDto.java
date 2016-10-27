@@ -27,6 +27,8 @@ public class TaskPermitDto implements BaseDto {
 	@NotNull
 	@Min(0)
 	private Long taskId;
+	private String taskNumber;
+
 	@NotNull
 	@Min(0)
 	private Long accountId;
@@ -51,6 +53,7 @@ public class TaskPermitDto implements BaseDto {
 		setAgencyId(src.getAgency().getId());
 		setAgencyName(src.getAgency().getName());
 		setTaskId(src.getTask().getId());
+		setTaskNumber(src.getTask().getNumber());
 		setAccountId(src.getAccount().getId());
 		setAccountName(src.getAccount().getUsername());
 		setPeriodStart(formatDateTime(src.getPeriodStart()));
@@ -112,6 +115,14 @@ public class TaskPermitDto implements BaseDto {
 
 	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
+	}
+
+	public String getTaskNumber() {
+		return taskNumber;
+	}
+
+	public void setTaskNumber(String taskNumber) {
+		this.taskNumber = taskNumber;
 	}
 
 	public Long getAccountId() {

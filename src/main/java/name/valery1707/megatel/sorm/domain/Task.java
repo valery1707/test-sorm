@@ -20,6 +20,10 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class Task extends ABaseEntity implements LogicRemovableEntity {
 	@NotNull
+	@Size(max = 512)
+	private String number;
+
+	@NotNull
 	@ManyToOne
 	@CreatedBy
 	private Account createdBy;
@@ -63,6 +67,14 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 
 	@NotNull
 	private boolean isActive;
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
 
 	public Account getCreatedBy() {
 		return createdBy;

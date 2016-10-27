@@ -65,7 +65,7 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 		return new SpecificationBuilder<TaskPermit, TaskPermitFilter>(SpecificationMode.AND)
 				.withNumber(TaskPermitFilter::getId, TaskPermit_.id)
 				.withString(TaskPermitFilter::getAgencyName, TaskPermit_.agency, Agency_.name)
-				.withNumber(TaskPermitFilter::getTaskId, field(TaskPermit_.task).nest(Task_.id))
+				.withString(TaskPermitFilter::getTaskNumber, field(TaskPermit_.task).nest(Task_.number))
 				.withNumber(TaskPermitFilter::getAccountId, field(TaskPermit_.account).nest(Account_.id))
 				.withDateTime(TaskPermitFilter::getPeriodStart, TaskPermit_.periodStart)
 				.withDateTime(TaskPermitFilter::getPeriodFinish, TaskPermit_.periodFinish)
@@ -127,30 +127,34 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 		}
 
 		//Если у пользователя есть привязка к агенству, то при создании он может выбрать только доступные ему агенства
+		Agency agency
+				= dto.getAgencyId() != null ? agencyRepo.findOne(dto.getAgencyId())
+				: dto.getAgency() != null ? agencyRepo.findOne(dto.getAgency().getId())
+				: null;
 		if (
-				dto.getAgency() != null &&
+				agency != null &&
 				accountService().getAccount().get().getAgency() != null &&
-				dto.getAgency().getId() != accountService().getAccount().get().getAgency().getId()
+				!agency.equals(accountService().getAccount().get().getAgency())
 				) {
 			validation.rejectValue("agency", "{TaskPermit.agency.constraint.inaccessible}", "Agency must be accessible for current Account");
 		}
 
 		//Агенство у Санкции и у Задания должно быть одинаковым
 		if (
-				dto.getAgency() != null &&
+				agency != null &&
 				dto.getTaskId() != null &&
 				task != null &&
-				task.getAgency().getId() != dto.getAgency().getId()
+				!agency.equals(task.getAgency())
 				) {
 			validation.rejectValue("taskId", "{TaskPermit.taskId.constraint.invalidAgency}", "Agency must be same as agency in separate field");
 		}
 
 		//Агенство у Санкции и у Оператора должно быть одинаковым
 		if (
-				dto.getAgency() != null &&
+				agency != null &&
 				dto.getAccountId() != null &&
 				account != null &&
-				account.getAgency().getId() != dto.getAgency().getId()
+				!agency.equals(account.getAgency())
 				) {
 			validation.rejectValue("accountId", "{TaskPermit.accountId.constraint.invalidAgency}", "Agency must be same as agency in separate field");
 		}
@@ -164,7 +168,7 @@ public class TaskPermitController extends BaseEntityController<TaskPermit, TaskP
 
 	@Override
 	protected void dto2domain(TaskPermitDto dto, TaskPermit entity) {
-		entity.setAgency(agencyRepo.getOne(dto.getAgency().getId()));
+		entity.setAgency(agencyRepo.getOne(dto.getAgencyId()));
 		entity.setTask(taskRepo.getOne(dto.getTaskId()));
 		entity.setAccount(accountRepo.getOne(dto.getAccountId()));
 		entity.setPeriodStart(parseDateTime(dto.getPeriodStart()));
