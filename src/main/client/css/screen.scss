@@ -46,9 +46,12 @@
 @for $i from 10 through 20 {
   @media (min-height: 50px * $i) {
     .grid {
-      height: (50px * $i) - 150px;
+      height: (50px * $i) - 100px;
     }
   }
+}
+a.tab-inner {
+  padding: 2px 10px !important;
 }
 
 .form-horizontal .form-group-sm {
