@@ -22,7 +22,7 @@
                 <li ng-class="{active: $state.includes('serverStatus')}" ng-if="principal.hasPermission('serverStatus.list')"><a ui-sref="serverStatus.list">Тех.состояние оборудования</a></li>
                 <li class="dropdown" ng-class="{active: $state.includes('task') || $state.includes('taskPermit')}" ng-if="principal.hasAnyPermission(['task.list', 'taskPermit.list'])">
                     <a data-target="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" nav-dropdown-hover>
-                        Задания <span class="caret"></span>
+                        Задания/Санкции <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
                         <li ng-class="{active: $state.includes('task')}" ng-if="principal.hasPermission('task.list')"><a ui-sref="task.list">Задания на перехват</a></li>
