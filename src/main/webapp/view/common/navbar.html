@@ -18,7 +18,6 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li ng-class="{active: $state.includes('account')}" ng-if="principal.hasPermission('account.list')"><a ui-sref="account.list">Пользователи</a></li>
-                <li ng-class="{active: $state.includes('accountSession')}" ng-if="principal.hasPermission('accountSession.list')"><a ui-sref="accountSession.list">Сеансы работы пользователей</a></li>
                 <li ng-class="{active: $state.includes('serverStatus')}" ng-if="principal.hasPermission('serverStatus.list')"><a ui-sref="serverStatus.list">Тех.состояние оборудования</a></li>
                 <li class="dropdown" ng-class="{active: $state.includes('task') || $state.includes('taskPermit')}" ng-if="principal.hasAnyPermission(['task.list', 'taskPermit.list'])">
                     <a data-target="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" nav-dropdown-hover>
@@ -29,7 +28,15 @@
                         <li ng-class="{active: $state.includes('taskPermit')}" ng-if="principal.hasPermission('taskPermit.list')"><a ui-sref="taskPermit.list">Санкции на обработку</a></li>
                     </ul>
                 </li>
-                <li ng-class="{active: $state.includes('event')}" ng-if="principal.hasPermission('event.list')"><a ui-sref="event.list">События</a></li>
+                <li class="dropdown" ng-class="{active: $state.includes('accountSession') || $state.includes('event')}" ng-if="principal.hasAnyPermission(['accountSession.list', 'event.list'])">
+                    <a data-target="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" nav-dropdown-hover>
+                        Журналы <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-class="{active: $state.includes('accountSession')}" ng-if="principal.hasPermission('accountSession.list')"><a ui-sref="accountSession.list">Сеансы работы пользователей</a></li>
+                        <li ng-class="{active: $state.includes('event')}" ng-if="principal.hasPermission('event.list')"><a ui-sref="event.list">События</a></li>
+                    </ul>
+                </li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
