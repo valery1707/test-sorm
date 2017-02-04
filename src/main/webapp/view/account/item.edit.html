@@ -20,7 +20,7 @@
                     <input type="text" class="form-control"
                            name="username" id="username" ng-model="model.username"
                            placeholder="Имя пользователя" friendly-name="Имя пользователя"
-                           validation="custom:serverErrorValidator('username')|min_len:3"
+                           validation="custom:serverErrorValidator('username')|min_len:3|required"
                     >
                 </div>
             </div>
@@ -110,7 +110,7 @@
                            convert-to-date
                            name="activeUntil" id="activeUntil" ng-model="model.activeUntil"
                            placeholder="Дата деактивации" friendly-name="Дата деактивации"
-                           validation="custom:serverErrorValidator('activeUntil')"
+                           validation="custom:serverErrorValidator('activeUntil')|required"
                     >
                 </div>
             </div>
@@ -134,7 +134,7 @@
                     </ui-select>
                     <input type="hidden"
                            name="agencyId" ng-model="model.agency"
-                           validation="custom:serverErrorValidator('agency')"
+                           validation="custom:serverErrorValidator('agency')|required"
                     >
                 </div>
             </div>
