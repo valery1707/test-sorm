@@ -5,7 +5,7 @@ config(['$stateProvider', function ($stateProvider) {
 				abstract: true,
 				data: {
 					permissions: {
-						only: ['SUPER']
+						only: ['SUPER', 'SUPERVISOR']
 					}
 				},
 				url: '/account',

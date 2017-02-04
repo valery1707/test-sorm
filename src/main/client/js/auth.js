@@ -74,6 +74,8 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 		],
 		//Надзор
 		SUPERVISOR: [
+			//Пользователи
+			, "account.list"
 			//Задание на перехват
 			, "task.list"
 			, "task.list.active"

@@ -66,6 +66,8 @@ public class Account extends ABaseEntity implements LogicRemovableEntity {
 		)),
 		//Надзор
 		SUPERVISOR(Arrays.asList(null
+				//Пользователи
+				, "account.list"
 				//Задание на перехват
 				, "task.list"
 				, "task.list.active"
