@@ -51,7 +51,7 @@ public class Account extends ABaseEntity implements LogicRemovableEntity {
 				//Задание на перехват
 				, "task.list"
 				, "task.create"
-				, "task.update"
+//				, "task.update"
 				, "task.delete"
 				//Санкции на перехват
 				, "taskPermit.list"

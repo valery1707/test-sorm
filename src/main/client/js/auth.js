@@ -59,7 +59,7 @@ run(['$q', 'PermissionStore', 'RoleStore', 'principal', function ($q, Permission
 			//Задание на перехват
 			, "task.list"
 			, "task.create"
-			, "task.update"
+			// , "task.update"
 			, "task.delete"
 			//Санкции на перехват
 			, "taskPermit.list"
