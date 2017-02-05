@@ -184,8 +184,11 @@ public abstract class BaseEntityController<D, R extends JpaRepository<D, Long> &
 			throw new AccessDeniedException(String.format("Entity '%s' with id %d not found", domainClass.getName(), id));
 		}
 		if (entity instanceof LogicRemovableEntity) {
-			((LogicRemovableEntity) entity).setActive(false);
-			repo.save(entity);
+			LogicRemovableEntity removableEntity = (LogicRemovableEntity) entity;
+			if (removableEntity.isActive()) {
+				removableEntity.setActive(false);
+				repo.save(entity);
+			}
 		} else {
 			repo.delete(entity);
 		}
