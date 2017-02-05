@@ -166,7 +166,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 				field: 'periodStart',
 				name: 'Период перехвата. Начало',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
-				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
+				filters: [{placeholder: 'с'}, {placeholder: 'по'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
@@ -175,7 +175,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 				field: 'periodFinish',
 				name: 'Период перехвата. Конец',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
-				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
+				filters: [{placeholder: 'с'}, {placeholder: 'по'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
@@ -195,7 +195,7 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 
 	$scope.loadPage();
 }]).
-controller('taskCtrlEdit', ['$scope', '$state', '$stateParams', 'taskService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, service, toastr, formBuilder) {
+controller('taskCtrlEdit', ['$scope', '$state', '$stateParams', '$translate', 'taskService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, $translate, service, toastr, formBuilder) {
 	$scope.selectTagSimple = function (tag) {
 		return tag.replace(',', '').trim();
 	};
@@ -209,7 +209,7 @@ controller('taskCtrlEdit', ['$scope', '$state', '$stateParams', 'taskService', '
 			function (error) {
 				toastr.error(error.statusText, 'Error');
 			});
-	formBuilder($scope, $state, $stateParams, service, toastr, 'task', {
+	formBuilder($scope, $state, $stateParams, $translate, service, toastr, 'task', {
 		filter: {
 			email: [],
 			ip: []

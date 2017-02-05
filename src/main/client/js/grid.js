@@ -139,7 +139,7 @@ service('gridHelper', [function () {
 	}
 }]).
 service('formBuilder', [function () {
-	return function ($scope, $state, $stateParams, service, toastr, prefix, defs) {
+	return function ($scope, $state, $stateParams, $translate, service, toastr, prefix, defs) {
 		$scope.model = {};
 		$scope.serverErrors = {};
 		$scope.serverErrorValidator = function (field) {
@@ -157,9 +157,10 @@ service('formBuilder', [function () {
 						const errorDef = errorsDef[errorI];
 						if (object_equals(errorDef.rejectedValue, fieldValue)) {
 							const msg = errorDef.defaultMessage;
-							const args = [errorDef.rejectedValue];
+							const args = {'value': errorDef.rejectedValue};
+							const localizedMessage = $translate.instant(msg, args);
 							Array.prototype.push.apply(args, errorDef.arguments);
-							errors.push(msg.format(args));
+							errors.push(localizedMessage);
 						}
 					}
 				}

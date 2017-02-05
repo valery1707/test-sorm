@@ -77,7 +77,7 @@ controller('serverStatusCtrl', ['$scope', 'serverStatusService', 'uiGridConstant
 				field: 'modifiedAt',
 				name: 'Данные на момент',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
-				filters: [{placeholder: 'from', picker: {onlyDate: true}}, {placeholder: 'to', picker: {onlyDate: true}}],
+				filters: [{placeholder: 'с', picker: {onlyDate: true}}, {placeholder: 'по', picker: {onlyDate: true}}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD');
 				}

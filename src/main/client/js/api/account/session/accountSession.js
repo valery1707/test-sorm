@@ -50,7 +50,7 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 				name: 'Время входа',
 				sort: {direction: uiGridConstants.DESC, priority: 0},
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
-				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
+				filters: [{placeholder: 'с'}, {placeholder: 'по'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
@@ -74,7 +74,7 @@ controller('accountSessionCtrl', ['$scope', 'accountSessionService', 'uiGridCons
 				field: 'logoutAt',
 				name: 'Время выхода',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
-				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
+				filters: [{placeholder: 'с'}, {placeholder: 'по'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}

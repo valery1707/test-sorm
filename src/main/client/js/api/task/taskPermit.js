@@ -114,7 +114,7 @@ controller('taskPermitCtrl', ['$scope', 'taskPermitService', 'uiGridConstants', 
 				field: 'periodStart',
 				name: 'Период действия санции. Начало',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
-				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
+				filters: [{placeholder: 'с'}, {placeholder: 'по'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
@@ -123,7 +123,7 @@ controller('taskPermitCtrl', ['$scope', 'taskPermitService', 'uiGridConstants', 
 				field: 'periodFinish',
 				name: 'Период действия санции. Конец',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
-				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
+				filters: [{placeholder: 'с'}, {placeholder: 'по'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}
@@ -133,7 +133,7 @@ controller('taskPermitCtrl', ['$scope', 'taskPermitService', 'uiGridConstants', 
 
 	$scope.loadPage();
 }]).
-controller('taskPermitCtrlEdit', ['$scope', '$state', '$stateParams', 'taskPermitService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, service, toastr, formBuilder) {
+controller('taskPermitCtrlEdit', ['$scope', '$state', '$stateParams', '$translate', 'taskPermitService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, $translate, service, toastr, formBuilder) {
 	$scope.optSelect = function (item, field) {
 		$scope.model[field] = item.id;
 	};
@@ -161,6 +161,6 @@ controller('taskPermitCtrlEdit', ['$scope', '$state', '$stateParams', 'taskPermi
 			function (error) {
 				toastr.error(error.statusText, 'Error');
 			});
-	formBuilder($scope, $state, $stateParams, service, toastr, 'taskPermit');
+	formBuilder($scope, $state, $stateParams, $translate, service, toastr, 'taskPermit');
 }])
 ;

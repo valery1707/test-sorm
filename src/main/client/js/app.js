@@ -72,6 +72,12 @@ config(['$translateProvider', function ($translateProvider) {
 		DIALOGS_OK: "OK",
 		DIALOGS_YES: "Да",
 		DIALOGS_NO: "Нет"
+		, "Username must be unique": "Имя пользователя должно быть уникальным: {{value}}"
+		, "Agency must be accessible for current Account": "Орган должен быть доступ текущему Пользователю"
+		, "Filters must be non empty": "Фильтры должны быть заполнены"
+		, "Task must exists": "Задание должно существовать"
+		, "Operator account must exists": "Оператор должен существовать"
+		, "Agency must be same as agency in separate field": "Необходимо указать тот же Орган что и в соседнем поле"
 	});
 	$translateProvider.useStaticFilesLoader({
 		files: [

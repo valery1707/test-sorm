@@ -58,7 +58,7 @@ controller('broHttpCtrl', ['$scope', 'broHttpService', 'uiGridConstants', 'gridH
 				field: 'ts',
 				sort: {direction: uiGridConstants.DESC, priority: 0},
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
-				filters: [{placeholder: 'from'}, {placeholder: 'to'}],
+				filters: [{placeholder: 'с'}, {placeholder: 'по'}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD[T]HH:mm:ss.SSSZ');
 				}

@@ -141,7 +141,7 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 				field: 'activeUntil',
 				name: 'Дата деактивации',
 				filterHeaderTemplate: 'view/common/grid/filter/dateTime.html',
-				filters: [{placeholder: 'from', picker: {onlyDate: true}}, {placeholder: 'to', picker: {onlyDate: true}}],
+				filters: [{placeholder: 'с', picker: {onlyDate: true}}, {placeholder: 'по', picker: {onlyDate: true}}],
 				filterTermMapper: function (value) {
 					return moment(value).format('YYYY-MM-DD');
 				}
@@ -155,7 +155,7 @@ controller('accountCtrl', ['$scope', 'accountService', 'uiGridConstants', 'gridH
 
 	$scope.loadPage();
 }]).
-controller('accountCtrlEdit', ['$scope', '$state', '$stateParams', 'accountService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, service, toastr, formBuilder) {
+controller('accountCtrlEdit', ['$scope', '$state', '$stateParams', '$translate', 'accountService', 'toastr', 'formBuilder', function ($scope, $state, $stateParams, $translate, service, toastr, formBuilder) {
 	$scope.optSelect = function (item, field) {
 		$scope.model[field] = item.id;
 	};
@@ -166,7 +166,7 @@ controller('accountCtrlEdit', ['$scope', '$state', '$stateParams', 'accountServi
 			function (error) {
 				toastr.error(error.statusText, 'Error');
 			});
-	formBuilder($scope, $state, $stateParams, service, toastr, 'account');
+	formBuilder($scope, $state, $stateParams, $translate, service, toastr, 'account');
 }]).
 filter('Account_Role', function () {
 	return function (val) {
