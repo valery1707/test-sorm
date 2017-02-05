@@ -119,7 +119,7 @@
             <div class="form-group" title="Agency">
                 <label for="agency">Орган, осуществляющий проведение ОРМ или надзор</label>
 
-                <div class="input-group">
+                <div class="input-group" ng-if="!model.id">
                     <div class="input-group-addon"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></div>
                     <ui-select class="form-control"
                                name="agency" id="agency" ng-model="model.agency"
@@ -135,6 +135,14 @@
                     <input type="hidden"
                            name="agencyId" ng-model="model.agency"
                            validation="custom:serverErrorValidator('agency')|required"
+                    >
+                </div>
+                <div class="input-group" ng-if="model.id">
+                    <div class="input-group-addon"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span></div>
+                    <input type="text" class="form-control"
+                           name="agency" id="agencyView" ng-model="model.agency.name"
+                           placeholder="Agency" friendly-name="Agency"
+                           readonly
                     >
                 </div>
             </div>

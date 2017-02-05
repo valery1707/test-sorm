@@ -144,7 +144,7 @@ public class AccountController extends BaseEntityController<Account, AccountRepo
 		entity.setActive(dto.isActive());
 		entity.setRole(dto.getRole());
 		entity.setActiveUntil(parseDate(dto.getActiveUntil()));
-		if (dto.getAgency() != null) {
+		if (dto.getAgency() != null && entity.getId() == null) {
 			entity.setAgency(agencyRepo.findOne(dto.getAgency().getId()));
 		}
 	}
