@@ -1,0 +1,7 @@
+DROP TABLE task_filter_value;
+DROP TABLE task_filter;
+
+ALTER TABLE task
+		ADD COLUMN mode VARCHAR(25) NOT NULL DEFAULT 'FULL';
+ALTER TABLE task
+		ALTER COLUMN mode DROP DEFAULT;

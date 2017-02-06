@@ -1,6 +1,7 @@
 package name.valery1707.megatel.sorm.api.task;
 
 import name.valery1707.megatel.sorm.domain.Agency;
+import name.valery1707.megatel.sorm.domain.Task;
 
 import javax.validation.constraints.Null;
 import java.time.ZonedDateTime;
@@ -16,6 +17,7 @@ public class TaskFilter {
 	private String clientAlias;
 	private List<ZonedDateTime> periodStart;
 	private List<ZonedDateTime> periodFinish;
+	private Task.Mode mode;
 	private String note;
 	private Boolean showOnlyActive;
 	private Set<Long> allowedIds;
@@ -74,6 +76,14 @@ public class TaskFilter {
 
 	public void setPeriodFinish(List<ZonedDateTime> periodFinish) {
 		this.periodFinish = periodFinish;
+	}
+
+	public Task.Mode getMode() {
+		return mode;
+	}
+
+	public void setMode(Task.Mode mode) {
+		this.mode = mode;
 	}
 
 	public String getNote() {

@@ -8,17 +8,21 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.*;
-import javax.validation.Valid;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @Entity
 @SuppressWarnings("unused")
 public class Task extends ABaseEntity implements LogicRemovableEntity {
+	public enum Mode {
+		FULL, STATISTIC
+	}
+
 	@NotNull
 	@Size(max = 512)
 	private String number;
@@ -57,11 +61,8 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 	private ZonedDateTime periodFinish;
 
 	@NotNull
-	@Size(min = 1)
-	@Valid
-	@OneToMany(mappedBy = "task", cascade = {CascadeType.ALL}, orphanRemoval = true)
-	@MapKey(name = "name")
-	private Map<String, TaskFilter> filter = new HashMap<>();
+	@Enumerated(EnumType.STRING)
+	private Mode mode;
 
 	private String note;
 
@@ -140,13 +141,12 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 		this.periodFinish = periodFinish;
 	}
 
-	public Map<String, TaskFilter> getFilter() {
-		return filter;
+	public Mode getMode() {
+		return mode;
 	}
 
-	public void setFilter(Map<String, TaskFilter> filter) {
-		this.filter = filter;
-		filter.values().forEach(v -> v.setTask(this));
+	public void setMode(Mode mode) {
+		this.mode = mode;
 	}
 
 	public String getNote() {
@@ -174,7 +174,7 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 		private String clientAlias;
 		private ZonedDateTime periodStart;
 		private ZonedDateTime periodFinish;
-		private Map<String, TaskFilter> filter = new HashMap<>();
+		private Mode mode;
 		private String note;
 		private Long id;
 
@@ -225,8 +225,8 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 			return this;
 		}
 
-		public TaskBuilder withFilter(Map<String, TaskFilter> filter) {
-			this.filter = filter;
+		public TaskBuilder withMode(Mode mode) {
+			this.mode = mode;
 			return this;
 		}
 
@@ -250,7 +250,7 @@ public class Task extends ABaseEntity implements LogicRemovableEntity {
 			task.setClientAlias(clientAlias);
 			task.setPeriodStart(periodStart);
 			task.setPeriodFinish(periodFinish);
-			task.setFilter(filter);
+			task.setMode(mode);
 			task.setNote(note);
 			task.setId(id);
 			return task;

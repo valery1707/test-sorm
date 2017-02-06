@@ -1,3 +1,7 @@
+const Task_Mode = {
+	FULL: 'Полный контроль',
+	STATISTIC: 'Статистический контроль',
+};
 angular.module('app').
 config(['$stateProvider', function ($stateProvider) {
 	$stateProvider
@@ -155,6 +159,15 @@ controller('taskCtrl', ['$scope', 'taskService', 'uiGridConstants', 'gridHelper'
 				sort: {direction: uiGridConstants.ASC, priority: 0}
 			},
 			{
+				field: 'mode',
+				name: 'Признак собираемых сведений',
+				cellFilter: 'Task_Mode',
+				filter: {
+					type: uiGridConstants.filter.SELECT,
+					selectOptions: enumToFilterValues(Task_Mode)
+				}
+			},
+			{
 				field: 'agencyName',
 				name: 'Орган, осуществляющий проведение ОРМ или надзор'
 			},
@@ -238,5 +251,10 @@ controller('taskViewCtrl', ['$scope', '$state', function ($scope, $state) {
 			tab.active = $scope.isActive(tab.route);
 		});
 	});
-}])
+}]).
+filter('Task_Mode', function () {
+	return function (val) {
+		return enumToTranslate(Task_Mode, val);
+	}
+})
 ;
