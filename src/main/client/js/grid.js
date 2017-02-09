@@ -26,6 +26,7 @@ service('gridHelper', [function () {
 					enableFiltering: false,
 					enableSorting: false,
 					enableColumnMenu: false,
+					enableHiding: false,
 					cellTemplate: 'view/common/grid/row-actions.html',
 					width: actionColWidth,
 					maxWidth: actionColWidth,
@@ -83,6 +84,7 @@ service('gridHelper', [function () {
 			useExternalSorting: true,
 			enableFiltering: true,
 			useExternalFiltering: true,
+			enableGridMenu: true,
 			onRegisterApi: function (gridApi) {
 				$scope.gridApi = gridApi;
 				$scope.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
